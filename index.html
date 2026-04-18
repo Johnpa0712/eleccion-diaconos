@@ -6,891 +6,765 @@
 <title>Elección de Diáconos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
-<!-- Firebase SDK (Compat v9) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
 <style>
+/* ─── RESET & THEME ─────────────────────────────── */
 :root {
-  --gold: #c9a84c; --gold-light: #e8c96e; --gold-dark: #9a7a2e;
-  --bg-dark: #0d0f14; --bg-card: #161a24; --bg-card2: #1e2435;
-  --text: #f0ece0; --text-dim: #8a8070;
-  --win-glow: rgba(201,168,76,0.35);
-  --lose-filter: grayscale(1) brightness(0.42);
+  --gold:#c9a84c; --gold-l:#e8c96e; --gold-d:#9a7a2e;
+  --bg:#0d0f14; --card:#161a24; --card2:#1e2435;
+  --text:#f0ece0; --dim:#8a8070;
+  --win-glow:rgba(201,168,76,.35);
+  --lose:grayscale(1) brightness(.42);
+  color-scheme: dark;
 }
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Lato',sans-serif; background:var(--bg-dark); color:var(--text); min-height:100vh; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-height:100vh}
 
-/* ── SHARED BUTTONS ── */
-.btn { font-family:'Cinzel',serif; font-size:.9rem; letter-spacing:.08em; padding:.85rem 2rem; border:none; border-radius:6px; cursor:pointer; transition:all .2s; display:inline-block; text-align:center; }
-.btn-gold { background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light)); color:#1a1000; font-weight:700; box-shadow:0 4px 20px rgba(201,168,76,.35); }
-.btn-gold:hover { transform:translateY(-2px); box-shadow:0 6px 28px rgba(201,168,76,.55); }
-.btn-outline { background:transparent; color:var(--gold); border:1px solid var(--gold-dark); }
-.btn-outline:hover { background:rgba(201,168,76,.08); }
-.btn-sm { font-size:.75rem; padding:.45rem 1rem; letter-spacing:.06em; }
-.btn-danger { background:rgba(180,60,60,.15); color:#e08080; border:1px solid rgba(180,60,60,.35); }
-.btn-danger:hover { background:rgba(180,60,60,.3); }
-.btn-ghost { background:rgba(255,255,255,.05); color:var(--text-dim); border:1px solid rgba(255,255,255,.08); }
-.btn-ghost:hover { background:rgba(255,255,255,.1); color:var(--text); }
+/* ─── BUTTONS ────────────────────────────────────── */
+.btn{font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.08em;padding:.85rem 2rem;border:none;border-radius:6px;cursor:pointer;transition:all .2s;display:inline-block;text-align:center}
+.btn-gold{background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));color:#1a1000;font-weight:700;box-shadow:0 4px 20px rgba(201,168,76,.35)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(201,168,76,.55)}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold-d)}
+.btn-outline:hover{background:rgba(201,168,76,.08)}
+.btn-sm{font-size:.75rem;padding:.45rem 1rem;letter-spacing:.06em}
+.btn-danger{background:rgba(180,60,60,.15);color:#e08080;border:1px solid rgba(180,60,60,.35)}
+.btn-danger:hover{background:rgba(180,60,60,.3)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid rgba(255,255,255,.08)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);color:var(--text)}
 
-/* ══════════════════════════════════════
+/* ════════════════════════════════════════════════════
    LANDING
-══════════════════════════════════════ */
-#landing {
-  display:flex; flex-direction:column; align-items:center;
-  min-height:100vh; padding:2.5rem 1.5rem 3rem;
-  background:radial-gradient(ellipse at 50% 20%,#1a2040 0%,var(--bg-dark) 65%);
-}
-.landing-hero { text-align:center; margin-bottom:2rem; }
-.landing-hero .cross { font-size:2.8rem; filter:drop-shadow(0 0 18px rgba(201,168,76,.5)); margin-bottom:.8rem; }
-.landing-hero h1 { font-family:'Cinzel',serif; font-size:clamp(1.4rem,4vw,2.4rem); color:var(--gold); letter-spacing:.1em; text-shadow:0 0 35px rgba(201,168,76,.4); margin-bottom:.5rem; }
-.landing-hero p { color:var(--text-dim); font-size:.9rem; }
+════════════════════════════════════════════════════ */
+#landing{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:2.5rem 1.5rem 3rem;background:radial-gradient(ellipse at 50% 20%,#1a2040 0%,var(--bg) 65%)}
+.hero{text-align:center;margin-bottom:2rem}
+.hero .cross{font-size:2.8rem;filter:drop-shadow(0 0 18px rgba(201,168,76,.5));margin-bottom:.8rem}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2.4rem);color:var(--gold);letter-spacing:.1em;text-shadow:0 0 35px rgba(201,168,76,.4);margin-bottom:.5rem}
+.hero p{color:var(--dim);font-size:.9rem}
+.card{background:var(--card);border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:1.8rem;width:100%;max-width:840px;margin-bottom:1.4rem}
+.card h3{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);letter-spacing:.12em;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+.card h3::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.18)}
+.row{display:flex;gap:.8rem;align-items:center;margin-bottom:.85rem;flex-wrap:wrap}
+.row label{font-size:.82rem;color:var(--dim);white-space:nowrap;min-width:140px}
+.inp{flex:1;min-width:180px;background:var(--card2);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.55rem .9rem;color:var(--text);font-family:'Lato',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--gold-d)}
 
-.setup-card { background:var(--bg-card); border:1px solid rgba(201,168,76,.18); border-radius:14px; padding:1.8rem; width:100%; max-width:840px; margin-bottom:1.4rem; }
-.setup-card h3 { font-family:'Cinzel',serif; font-size:.9rem; color:var(--gold); letter-spacing:.12em; margin-bottom:1.2rem; display:flex; align-items:center; gap:.5rem; }
-.setup-card h3::after { content:''; flex:1; height:1px; background:rgba(201,168,76,.18); }
+/* Firebase status */
+.fbpill{display:inline-flex;align-items:center;gap:.45rem;font-size:.75rem;padding:.3rem .8rem;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.fbdot{width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;transition:background .3s}
+.fbdot.ok{background:#4caf50;animation:blink 2s infinite}
+.fbdot.err{background:#e05050}
+.fbdot.wait{background:var(--gold);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-.field-row { display:flex; gap:.8rem; align-items:center; margin-bottom:.85rem; flex-wrap:wrap; }
-.field-row label { font-size:.82rem; color:var(--text-dim); white-space:nowrap; min-width:140px; }
-.setup-input { flex:1; min-width:180px; background:var(--bg-card2); border:1px solid rgba(255,255,255,.1); border-radius:6px; padding:.55rem .9rem; color:var(--text); font-family:'Lato',sans-serif; font-size:.88rem; outline:none; transition:border-color .2s; }
-.setup-input:focus { border-color:var(--gold-dark); }
+/* Candidates editor */
+.ced{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.75rem;margin-bottom:1.2rem}
+.crow{display:flex;align-items:center;gap:.7rem;background:var(--card2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.65rem .85rem;transition:border-color .2s}
+.crow:hover{border-color:rgba(201,168,76,.2)}
+.cnum{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold-d);font-weight:700;min-width:16px}
+.puwrap{position:relative;flex-shrink:0;width:48px;height:48px;border-radius:50%;cursor:pointer;overflow:hidden}
+.prev{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#fff;overflow:hidden;border:2px solid rgba(255,255,255,.12);transition:border-color .2s}
+.prev img{width:100%;height:100%;object-fit:cover;display:block}
+.prev.hp{border-color:rgba(201,168,76,.55)}
+.povl{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;font-size:1.15rem}
+.puwrap:hover .povl{opacity:1}
+.pfinput{display:none}
+.cfields{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+.cfields input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.1);color:var(--text);font-family:'Lato',sans-serif;font-size:.85rem;padding:.18rem .1rem;outline:none;transition:border-color .2s;width:100%}
+.cfields input:focus{border-bottom-color:var(--gold)}
+.cfields input::placeholder{color:var(--dim)}
+.clrbtn{font-size:.62rem;color:var(--dim);background:none;border:none;cursor:pointer;padding:0;transition:color .15s;display:none;text-align:left}
+.clrbtn.v{display:block}
+.clrbtn:hover{color:#e08080}
+.saverow{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.savemsg{font-size:.8rem;color:#6abf6a;opacity:0;transition:opacity .3s}
+.savemsg.on{opacity:1}
+.launchrow{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem}
+.lcard{background:var(--card);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:1.5rem 2rem;text-align:center;cursor:pointer;transition:all .2s;max-width:220px}
+.lcard:hover{border-color:var(--gold);background:var(--card2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.lcard .li{font-size:2rem;margin-bottom:.7rem}
+.lcard .lt{font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold);font-weight:700;letter-spacing:.08em;margin-bottom:.4rem}
+.lcard .ld{font-size:.75rem;color:var(--dim);line-height:1.5}
+.cfgtxt{width:100%;min-height:90px;background:var(--card2);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.65rem .9rem;color:#a8d4a8;font-family:monospace;font-size:.78rem;outline:none;resize:vertical;transition:border-color .2s;line-height:1.5}
+.cfgtxt:focus{border-color:var(--gold-d)}
+.cfghelp{font-size:.76rem;color:var(--dim);line-height:1.6;margin-top:.7rem}
+.cfghelp a{color:var(--gold-d)}
+.cfghelp code{background:rgba(255,255,255,.06);padding:.1rem .3rem;border-radius:3px;font-size:.74rem}
 
-/* Firebase status pill */
-.fb-status { display:inline-flex; align-items:center; gap:.45rem; font-size:.75rem; padding:.3rem .8rem; border-radius:20px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
-.fb-dot { width:8px; height:8px; border-radius:50%; background:#555; flex-shrink:0; transition:background .3s; }
-.fb-dot.ok   { background:#4caf50; animation:blink 2s infinite; }
-.fb-dot.err  { background:#e05050; }
-.fb-dot.wait { background:#c9a84c; animation:blink 1s infinite; }
-
-/* Candidate editor */
-.candidates-editor { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.75rem; margin-bottom:1.2rem; }
-.candidate-edit-row { display:flex; align-items:center; gap:.7rem; background:var(--bg-card2); border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:.65rem .85rem; transition:border-color .2s; }
-.candidate-edit-row:hover { border-color:rgba(201,168,76,.2); }
-.cnum { font-family:'Cinzel',serif; font-size:.72rem; color:var(--gold-dark); font-weight:700; min-width:16px; }
-
-.photo-upload-wrap { position:relative; flex-shrink:0; width:48px; height:48px; border-radius:50%; cursor:pointer; overflow:hidden; }
-.photo-preview { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:1rem; font-weight:700; color:#fff; overflow:hidden; border:2px solid rgba(255,255,255,.12); transition:border-color .2s; }
-.photo-preview img { width:100%; height:100%; object-fit:cover; display:block; }
-.photo-preview.has-photo { border-color:rgba(201,168,76,.55); }
-.photo-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.58); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .18s; font-size:1.15rem; }
-.photo-upload-wrap:hover .photo-overlay { opacity:1; }
-.photo-file-input { display:none; }
-.candidate-edit-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:.3rem; }
-.candidate-edit-fields input { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.1); color:var(--text); font-family:'Lato',sans-serif; font-size:.85rem; padding:.18rem .1rem; outline:none; transition:border-color .2s; width:100%; }
-.candidate-edit-fields input:focus { border-bottom-color:var(--gold); }
-.candidate-edit-fields input::placeholder { color:var(--text-dim); }
-.photo-clear-btn { font-size:.62rem; color:var(--text-dim); background:none; border:none; cursor:pointer; padding:0; transition:color .15s; display:none; text-align:left; }
-.photo-clear-btn.visible { display:block; }
-.photo-clear-btn:hover { color:#e08080; }
-
-.setup-save-row { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
-.save-msg { font-size:.8rem; color:#6abf6a; opacity:0; transition:opacity .3s; }
-.save-msg.show { opacity:1; }
-.launch-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:.5rem; }
-.launch-card { background:var(--bg-card); border:1px solid rgba(201,168,76,.2); border-radius:12px; padding:1.5rem 2rem; text-align:center; cursor:pointer; transition:all .2s; max-width:220px; }
-.launch-card:hover { border-color:var(--gold); background:var(--bg-card2); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.4); }
-.launch-card .lc-icon { font-size:2rem; margin-bottom:.7rem; }
-.launch-card .lc-title { font-family:'Cinzel',serif; font-size:.88rem; color:var(--gold); font-weight:700; letter-spacing:.08em; margin-bottom:.4rem; }
-.launch-card .lc-desc { font-size:.75rem; color:var(--text-dim); line-height:1.5; }
-
-/* Textarea for firebase config */
-.config-textarea {
-  width:100%; min-height:90px; background:var(--bg-card2); border:1px solid rgba(255,255,255,.1);
-  border-radius:6px; padding:.65rem .9rem; color:#a8d4a8; font-family:monospace; font-size:.78rem;
-  outline:none; resize:vertical; transition:border-color .2s; line-height:1.5;
-}
-.config-textarea:focus { border-color:var(--gold-dark); }
-.config-help { font-size:.76rem; color:var(--text-dim); line-height:1.6; margin-top:.7rem; }
-.config-help a { color:var(--gold-dark); }
-.config-help code { background:rgba(255,255,255,.06); padding:.1rem .3rem; border-radius:3px; font-size:.74rem; }
-
-/* ══════════════════════════════════════
+/* ════════════════════════════════════════════════════
    CONTROL
-══════════════════════════════════════ */
-#control { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#10131c,#0d0f14); }
-.ctrl-header { display:flex; align-items:center; justify-content:space-between; padding:.9rem 1.4rem; border-bottom:1px solid rgba(201,168,76,.15); background:rgba(0,0,0,.35); flex-wrap:wrap; gap:.7rem; }
-.ctrl-header h2 { font-family:'Cinzel',serif; font-size:.92rem; color:var(--gold); letter-spacing:.1em; }
-.ballot-counter { font-size:.82rem; color:var(--text-dim); }
-.ballot-counter span { color:var(--gold-light); font-weight:700; }
-.ctrl-body { flex:1; padding:1.2rem 1.4rem; max-width:920px; margin:0 auto; width:100%; }
-.ctrl-instruction { background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.18); border-radius:8px; padding:.85rem 1.1rem; margin-bottom:1.2rem; font-size:.88rem; line-height:1.55; color:#c8b87a; }
-.ctrl-instruction strong { color:var(--gold-light); }
-.candidates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.75rem; margin-bottom:1.2rem; }
-.candidate-check { display:flex; align-items:center; gap:.75rem; background:var(--bg-card); border:2px solid transparent; border-radius:10px; padding:.85rem .95rem; cursor:pointer; transition:all .16s; user-select:none; }
-.candidate-check:hover { border-color:rgba(201,168,76,.25); background:var(--bg-card2); }
-.candidate-check.not-selected { border-color:#b03030; background:rgba(160,35,35,.18); }
-.candidate-check.not-selected .ccheck-name { color:#e07070; }
-.ccheck-avatar { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:.95rem; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
-.ccheck-avatar img { width:100%; height:100%; object-fit:cover; }
-.ccheck-info { flex:1; min-width:0; }
-.ccheck-name { font-family:'Cinzel',serif; font-size:.8rem; font-weight:600; color:var(--text); line-height:1.3; letter-spacing:.03em; }
-.ccheck-votes { font-size:.72rem; color:var(--text-dim); margin-top:2px; }
-.ccheck-votes span { color:var(--gold-light); font-weight:700; }
-.ccheck-box { width:22px; height:22px; border:2px solid #444; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.95rem; transition:all .15s; color:#fff; }
-.candidate-check.not-selected .ccheck-box { background:#b03030; border-color:#b03030; }
-.ctrl-footer { display:flex; align-items:center; gap:1rem; padding:1rem 1.4rem; border-top:1px solid rgba(255,255,255,.05); background:rgba(0,0,0,.3); flex-wrap:wrap; justify-content:space-between; }
-.selection-status { font-size:.88rem; color:var(--text-dim); }
-.selection-status.ok { color:#6abf6a; }
-.selection-status.bad { color:#e08080; }
-.btn-submit { font-family:'Cinzel',serif; font-size:.95rem; letter-spacing:.1em; padding:.8rem 2.2rem; border:none; border-radius:6px; cursor:pointer; background:linear-gradient(135deg,#2a6e2a,#3a9a3a); color:#fff; font-weight:700; box-shadow:0 4px 16px rgba(40,150,40,.25); transition:all .2s; opacity:.35; pointer-events:none; }
-.btn-submit.active { opacity:1; pointer-events:all; }
-.btn-submit.active:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(40,150,40,.45); }
-.vote-flash { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.85); background:rgba(42,120,42,.96); color:#fff; font-family:'Cinzel',serif; font-size:1.5rem; padding:1.1rem 2.8rem; border-radius:12px; opacity:0; pointer-events:none; z-index:999; transition:all .14s; text-align:center; }
-.vote-flash.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
-.conn-row { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+════════════════════════════════════════════════════ */
+#control{display:none;flex-direction:column;min-height:100vh;background:linear-gradient(160deg,#10131c,#0d0f14)}
+.ctrl-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.4rem;border-bottom:1px solid rgba(201,168,76,.15);background:rgba(0,0,0,.35);flex-wrap:wrap;gap:.7rem}
+.ctrl-hdr h2{font-family:'Cinzel',serif;font-size:.92rem;color:var(--gold);letter-spacing:.1em}
+.ballotcnt{font-size:.82rem;color:var(--dim)}
+.ballotcnt span{color:var(--gold-l);font-weight:700}
+.ctrl-body{flex:1;padding:1.2rem 1.4rem;max-width:920px;margin:0 auto;width:100%}
+.ctrl-note{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:.85rem 1.1rem;margin-bottom:1.2rem;font-size:.88rem;line-height:1.55;color:#c8b87a}
+.ctrl-note strong{color:var(--gold-l)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem;margin-bottom:1.2rem}
+.ccheck{display:flex;align-items:center;gap:.75rem;background:var(--card);border:2px solid transparent;border-radius:10px;padding:.85rem .95rem;cursor:pointer;transition:all .16s;user-select:none}
+.ccheck:hover{border-color:rgba(201,168,76,.25);background:var(--card2)}
+.ccheck.ns{border-color:#b03030;background:rgba(160,35,35,.18)}
+.ccheck.ns .ccname{color:#e07070}
+.ccav{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.ccav img{width:100%;height:100%;object-fit:cover}
+.ccinfo{flex:1;min-width:0}
+.ccname{font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;color:var(--text);line-height:1.3;letter-spacing:.03em}
+.ccvotes{font-size:.72rem;color:var(--dim);margin-top:2px}
+.ccvotes span{color:var(--gold-l);font-weight:700}
+.ccbox{width:22px;height:22px;border:2px solid #444;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.95rem;transition:all .15s;color:#fff}
+.ccheck.ns .ccbox{background:#b03030;border-color:#b03030}
+.ctrl-ftr{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.3);flex-wrap:wrap;justify-content:space-between}
+.selst{font-size:.88rem;color:var(--dim)}
+.selst.ok{color:#6abf6a}
+.selst.bad{color:#e08080}
+.submibtn{font-family:'Cinzel',serif;font-size:.95rem;letter-spacing:.1em;padding:.8rem 2.2rem;border:none;border-radius:6px;cursor:pointer;background:linear-gradient(135deg,#2a6e2a,#3a9a3a);color:#fff;font-weight:700;box-shadow:0 4px 16px rgba(40,150,40,.25);transition:all .2s;opacity:.35;pointer-events:none}
+.submibtn.on{opacity:1;pointer-events:all}
+.submibtn.on:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(40,150,40,.45)}
+.vflash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.85);background:rgba(42,120,42,.96);color:#fff;font-family:'Cinzel',serif;font-size:1.5rem;padding:1.1rem 2.8rem;border-radius:12px;opacity:0;pointer-events:none;z-index:999;transition:all .14s;text-align:center}
+.vflash.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.connrow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 
-/* ══════════════════════════════════════
-   DISPLAY (LED SCREEN)  — redesigned
-══════════════════════════════════════ */
-#display { display:none; flex-direction:column; min-height:100vh; background:var(--bg-dark); overflow:hidden; }
+/* ════════════════════════════════════════════════════
+   DISPLAY — LED SCREEN
+   Cards: photo contained, no overflow
+════════════════════════════════════════════════════ */
+#display{display:none;flex-direction:column;height:100vh;overflow:hidden;background:var(--bg)}
 
-.disp-header { text-align:center; padding:1.1rem 1rem .5rem; }
-.disp-header::after { content:''; display:block; width:90px; height:1.5px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:.5rem auto 0; }
-.disp-title { font-family:'Cinzel',serif; font-size:clamp(1rem,2.4vw,1.8rem); color:var(--gold); letter-spacing:.18em; text-shadow:0 0 28px rgba(201,168,76,.45); }
-.disp-subtitle { font-size:.68rem; color:var(--text-dim); letter-spacing:.22em; text-transform:uppercase; margin-top:.18rem; }
-.total-ballots-disp { text-align:center; font-size:clamp(.6rem,1vw,.76rem); color:var(--text-dim); letter-spacing:.1em; padding:.2rem; }
-.total-ballots-disp span { color:var(--gold); font-weight:700; }
+.dhdr{text-align:center;padding:1rem 1rem .4rem;flex-shrink:0}
+.dhdr::after{content:'';display:block;width:90px;height:1.5px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.45rem auto 0}
+.dtitle{font-family:'Cinzel',serif;font-size:clamp(1rem,2.4vw,1.8rem);color:var(--gold);letter-spacing:.18em;text-shadow:0 0 28px rgba(201,168,76,.45)}
+.dsub{font-size:.68rem;color:var(--dim);letter-spacing:.22em;text-transform:uppercase;margin-top:.15rem}
+.dballots{text-align:center;font-size:clamp(.6rem,1vw,.76rem);color:var(--dim);letter-spacing:.1em;padding:.15rem;flex-shrink:0}
+.dballots span{color:var(--gold);font-weight:700}
 
-/* 3×3 grid — fills the screen */
-.disp-grid {
+/* 3×3 grid fills remaining height */
+.dgrid{
   flex:1;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(3,1fr);
-  gap:.5rem;
-  padding:.4rem .7rem .7rem;
-  min-height:0;
+  gap:.55rem;
+  padding:.4rem .7rem .6rem;
+  min-height:0;        /* allow grid to shrink */
+  overflow:hidden;
 }
 
-/* Each card: photo on top ~60%, name + votes below */
-.disp-card {
-  background:var(--bg-card);
+/* Each card: column layout, photo stays INSIDE */
+.dcard{
+  background:var(--card);
   border-radius:12px;
-  border:1.5px solid rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.07);
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:flex-end;
-  padding:0 .4rem .55rem;
+  justify-content:center;
+  padding:.55rem .4rem .5rem;
   position:relative;
-  overflow:visible;
-  transition:border-color .5s, box-shadow .5s, filter .6s;
+  overflow:hidden;          /* ← key: nothing escapes */
+  transition:border-color .5s, box-shadow .5s, filter .6s, background .5s;
+  gap:.25rem;
 }
+.dcard.rw{
+  border-color:rgba(201,168,76,.55);
+  background:linear-gradient(170deg,#17192a,#1c2032);
+  box-shadow:0 0 28px var(--win-glow);
+}
+.dcard.rl{filter:var(--lose)}
 
-/* Big circular photo fills top of card */
-.disp-avatar-wrap {
-  position:absolute;
-  top:0; left:50%;
-  transform:translate(-50%, -10%);
-  width:clamp(70px,15vw,180px);
-  height:clamp(70px,15vw,180px);
-  flex-shrink:0;
-}
-.disp-avatar {
-  width:100%; height:100%;
+/* Photo: fills available space but stays inside card */
+.dav{
+  width: clamp(56px, 17vmin, 170px);
+  height:clamp(56px, 17vmin, 170px);
   border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   font-family:'Cinzel',serif;
-  font-size:clamp(1.2rem,3vw,2.8rem);
-  font-weight:700; color:#fff;
+  font-size:clamp(1rem,3.5vmin,2.4rem);
+  font-weight:700;color:#fff;
   overflow:hidden;
   border:3px solid rgba(255,255,255,.12);
-  background:var(--bg-card2);
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+  flex-shrink:0;
   transition:border-color .4s, box-shadow .4s;
-  box-shadow:0 6px 20px rgba(0,0,0,.5);
 }
-.disp-card.result-winner .disp-avatar { border-color:rgba(201,168,76,.7); box-shadow:0 0 24px rgba(201,168,76,.4), 0 6px 20px rgba(0,0,0,.5); }
-.disp-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.dcard.rw .dav{border-color:rgba(201,168,76,.7);box-shadow:0 0 18px rgba(201,168,76,.35),0 4px 16px rgba(0,0,0,.5)}
+.dav img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* Bottom info area */
-.disp-info {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  /* push down to leave room for the floating avatar */
-  margin-top:calc(clamp(70px,15vw,180px) * .55);
-  width:100%;
-}
-.disp-name {
+.dname{
   font-family:'Cinzel',serif;
-  font-size:clamp(.56rem,1.15vw,.92rem);
-  font-weight:700;
-  color:var(--text);
-  text-align:center;
-  letter-spacing:.03em;
-  line-height:1.2;
-  margin-bottom:.22rem;
+  font-size:clamp(.52rem,1.1vw,.88rem);
+  font-weight:700;color:var(--text);
+  text-align:center;letter-spacing:.03em;line-height:1.2;
   padding:0 .2rem;
 }
-.disp-votes {
-  font-size:clamp(1.5rem,3.8vw,3.2rem);
-  font-weight:700;
-  color:var(--text-dim);
+.dvotes{
+  font-size:clamp(1.4rem,3.5vw,3rem);
+  font-weight:700;color:var(--dim);
   font-variant-numeric:tabular-nums;
   line-height:1;
   transition:color .4s;
   display:inline-block;
 }
-.disp-card.result-winner .disp-votes { color:var(--gold-light); }
-.disp-votes-label { font-size:clamp(.44rem,.85vw,.62rem); color:var(--text-dim); letter-spacing:.14em; text-transform:uppercase; margin-top:1px; }
+.dcard.rw .dvotes{color:var(--gold-l)}
+.dvlabel{font-size:clamp(.42rem,.82vw,.6rem);color:var(--dim);letter-spacing:.14em;text-transform:uppercase}
 
-/* Winner/loser */
-.disp-card.result-winner { border-color:rgba(201,168,76,.5); background:linear-gradient(180deg,#16192a,#1a1e2e); box-shadow:0 0 26px var(--win-glow); }
-.disp-card.result-loser  { filter:var(--lose-filter); }
-
-/* Rank & crown badges */
-.disp-rank  { position:absolute; bottom:6px; left:9px; font-family:'Cinzel',serif; font-size:.62rem; color:var(--gold-dark); font-weight:700; opacity:0; transition:opacity .4s; }
-.disp-crown { position:absolute; top:6px; right:9px; font-size:.95rem; opacity:0; transition:opacity .4s; }
-.disp-card.result-winner .disp-rank  { opacity:1; }
-.disp-card.result-winner .disp-crown { opacity:1; }
+/* Rank & crown */
+.drank{position:absolute;bottom:5px;left:8px;font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold-d);font-weight:700;opacity:0;transition:opacity .4s}
+.dcrown{position:absolute;top:5px;right:8px;font-size:.9rem;opacity:0;transition:opacity .4s}
+.dcard.rw .drank{opacity:1}
+.dcard.rw .dcrown{opacity:1}
 
 /* ── Vote animation ── */
-.disp-card.vote-pulse { animation:votePulse 1.3s cubic-bezier(.22,1,.36,1) forwards; }
-@keyframes votePulse {
-  0%   { transform:scale(1);    border-color:rgba(255,255,255,.06); box-shadow:none; }
-  12%  { transform:scale(1.06); border-color:rgba(201,168,76,1);   box-shadow:0 0 0 3px rgba(201,168,76,.5), 0 0 48px rgba(201,168,76,.6); }
-  32%  { transform:scale(1.04); box-shadow:0 0 0 7px rgba(201,168,76,.2),0 0 64px rgba(201,168,76,.4); }
-  65%  { transform:scale(1.02); border-color:rgba(201,168,76,.4); box-shadow:0 0 0 3px rgba(201,168,76,.08),0 0 30px rgba(201,168,76,.2); }
-  100% { transform:scale(1);    border-color:rgba(255,255,255,.06); box-shadow:none; }
+.dcard.vpulse{animation:vpulse 1.3s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes vpulse{
+  0%  {transform:scale(1);   border-color:rgba(255,255,255,.07);box-shadow:none}
+  12% {transform:scale(1.06);border-color:rgba(201,168,76,1);  box-shadow:0 0 0 3px rgba(201,168,76,.5),0 0 50px rgba(201,168,76,.6)}
+  32% {transform:scale(1.04);box-shadow:0 0 0 7px rgba(201,168,76,.2),0 0 65px rgba(201,168,76,.4)}
+  65% {transform:scale(1.02);border-color:rgba(201,168,76,.4); box-shadow:0 0 0 3px rgba(201,168,76,.08),0 0 30px rgba(201,168,76,.2)}
+  100%{transform:scale(1);   border-color:rgba(255,255,255,.07);box-shadow:none}
 }
-.disp-card.result-winner.vote-pulse { animation:votePulseW 1.3s cubic-bezier(.22,1,.36,1) forwards; }
-@keyframes votePulseW {
-  0%   { transform:scale(1);    box-shadow:0 0 26px var(--win-glow); }
-  12%  { transform:scale(1.06); box-shadow:0 0 0 4px rgba(201,168,76,.65),0 0 68px rgba(201,168,76,.8); }
-  32%  { transform:scale(1.04); box-shadow:0 0 0 8px rgba(201,168,76,.25),0 0 78px rgba(201,168,76,.55); }
-  65%  { transform:scale(1.02); box-shadow:0 0 0 3px rgba(201,168,76,.1),0 0 40px rgba(201,168,76,.35); }
-  100% { transform:scale(1);    box-shadow:0 0 26px var(--win-glow); }
+.dcard.rw.vpulse{animation:vpulseW 1.3s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes vpulseW{
+  0%  {transform:scale(1);   box-shadow:0 0 28px var(--win-glow)}
+  12% {transform:scale(1.06);box-shadow:0 0 0 4px rgba(201,168,76,.65),0 0 70px rgba(201,168,76,.8)}
+  32% {transform:scale(1.04);box-shadow:0 0 0 8px rgba(201,168,76,.25),0 0 80px rgba(201,168,76,.55)}
+  65% {transform:scale(1.02);box-shadow:0 0 0 3px rgba(201,168,76,.1),0 0 42px rgba(201,168,76,.35)}
+  100%{transform:scale(1);   box-shadow:0 0 28px var(--win-glow)}
 }
-.plus-one { position:absolute; top:8%; right:10%; font-family:'Cinzel',serif; font-size:clamp(.85rem,1.8vw,1.3rem); font-weight:700; color:var(--gold-light); text-shadow:0 0 14px rgba(201,168,76,.95); pointer-events:none; z-index:20; animation:floatUp 1.3s ease-out forwards; }
-@keyframes floatUp { 0%{opacity:0;transform:translateY(4px) scale(1.3)} 12%{opacity:1;transform:translateY(0) scale(1)} 75%{opacity:.7;transform:translateY(-28px)} 100%{opacity:0;transform:translateY(-48px)} }
-.disp-votes.num-pop { animation:numPop .5s cubic-bezier(.34,1.56,.64,1); }
-@keyframes numPop { 0%{transform:scale(1)} 42%{transform:scale(1.42);color:var(--gold-light)} 100%{transform:scale(1)} }
+.plusone{position:absolute;top:8%;right:10%;font-family:'Cinzel',serif;font-size:clamp(.8rem,1.8vw,1.3rem);font-weight:700;color:var(--gold-l);text-shadow:0 0 14px rgba(201,168,76,.95);pointer-events:none;z-index:20;animation:floatup 1.3s ease-out forwards}
+@keyframes floatup{0%{opacity:0;transform:translateY(4px) scale(1.3)}12%{opacity:1;transform:translateY(0) scale(1)}75%{opacity:.7;transform:translateY(-28px)}100%{opacity:0;transform:translateY(-48px)}}
+.dvotes.npop{animation:npop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes npop{0%{transform:scale(1)}42%{transform:scale(1.42);color:var(--gold-l)}100%{transform:scale(1)}}
 
-.disp-footer { text-align:center; padding:.4rem; font-size:.62rem; color:rgba(255,255,255,.09); letter-spacing:.15em; text-transform:uppercase; }
+.dftr{text-align:center;padding:.35rem;font-size:.62rem;color:rgba(255,255,255,.09);letter-spacing:.15em;text-transform:uppercase;flex-shrink:0}
 
-/* ══════════════════════════════════════
+/* ════════════════════════════════════════════════════
    RESULTS OVERLAY
-══════════════════════════════════════ */
-#results-overlay { display:none; position:fixed; inset:0; background:radial-gradient(ellipse at 50% 35%,#0e1525 0%,#050709 100%); z-index:100; flex-direction:column; align-items:center; padding:1.5rem 1rem; overflow-y:auto; }
-.results-title { font-family:'Cinzel',serif; font-size:clamp(1.2rem,2.8vw,2rem); color:var(--gold); text-align:center; letter-spacing:.15em; margin-bottom:.3rem; text-shadow:0 0 36px rgba(201,168,76,.5); }
-.results-divider { width:180px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:.6rem auto 1.1rem; }
-.results-section-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim); width:100%; max-width:960px; margin-bottom:.4rem; padding-left:2px; }
-.results-section-label.elected { color:var(--gold-dark); }
-.results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:.9rem; width:100%; max-width:960px; }
-.result-card { border-radius:13px; padding:1.1rem .9rem; display:flex; flex-direction:column; align-items:center; text-align:center; animation:fadeInUp .45s both; position:relative; overflow:hidden; }
-@keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-.result-card.win-card { background:linear-gradient(160deg,#1a2035,#161c2e); border:1.5px solid rgba(201,168,76,.5); box-shadow:0 8px 28px rgba(201,168,76,.18); }
-.result-card.lose-card { background:#111318; border:1.5px solid rgba(255,255,255,.05); filter:grayscale(1) brightness(.52); }
-.result-card-avatar { width:76px; height:76px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:#fff; margin-bottom:.75rem; overflow:hidden; border:2px solid rgba(201,168,76,.35); }
-.result-card.lose-card .result-card-avatar { border-color:transparent; }
-.result-card-avatar img { width:100%; height:100%; object-fit:cover; }
-.result-card-name { font-family:'Cinzel',serif; font-size:.82rem; font-weight:700; color:var(--text); margin-bottom:.45rem; letter-spacing:.04em; line-height:1.3; }
-.result-card-votes { font-size:2rem; font-weight:700; color:var(--gold-light); line-height:1; }
-.result-card.lose-card .result-card-votes { color:#555; }
-.result-card-label { font-size:.58rem; text-transform:uppercase; letter-spacing:.15em; color:var(--text-dim); margin-top:2px; }
-.result-card-badge { position:absolute; top:7px; right:9px; font-size:1rem; }
-.results-actions { display:flex; gap:.9rem; margin-top:1.4rem; flex-wrap:wrap; justify-content:center; }
+════════════════════════════════════════════════════ */
+#results-overlay{display:none;position:fixed;inset:0;background:radial-gradient(ellipse at 50% 35%,#0e1525 0%,#050709 100%);z-index:100;flex-direction:column;align-items:center;padding:1.5rem 1rem;overflow-y:auto}
+.rtitle{font-family:'Cinzel',serif;font-size:clamp(1.2rem,2.8vw,2rem);color:var(--gold);text-align:center;letter-spacing:.15em;margin-bottom:.3rem;text-shadow:0 0 36px rgba(201,168,76,.5)}
+.rdiv{width:180px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.6rem auto 1.1rem}
+.rseclbl{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);width:100%;max-width:960px;margin-bottom:.4rem;padding-left:2px}
+.rseclbl.el{color:var(--gold-d)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.9rem;width:100%;max-width:960px}
+.rcard{border-radius:13px;padding:1.1rem .9rem;display:flex;flex-direction:column;align-items:center;text-align:center;animation:fiu .45s both;position:relative;overflow:hidden}
+@keyframes fiu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.rcard.rw2{background:linear-gradient(160deg,#1a2035,#161c2e);border:1.5px solid rgba(201,168,76,.5);box-shadow:0 8px 28px rgba(201,168,76,.18)}
+.rcard.rl2{background:#111318;border:1.5px solid rgba(255,255,255,.05);filter:grayscale(1) brightness(.52)}
+.rav{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.7rem;font-weight:700;color:#fff;margin-bottom:.75rem;overflow:hidden;border:2px solid rgba(201,168,76,.35)}
+.rcard.rl2 .rav{border-color:transparent}
+.rav img{width:100%;height:100%;object-fit:cover}
+.rname{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.45rem;letter-spacing:.04em;line-height:1.3}
+.rvotes{font-size:2rem;font-weight:700;color:var(--gold-l);line-height:1}
+.rcard.rl2 .rvotes{color:#555}
+.rlabel{font-size:.58rem;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);margin-top:2px}
+.rbadge{position:absolute;top:7px;right:9px;font-size:1rem}
+.ract{display:flex;gap:.9rem;margin-top:1.4rem;flex-wrap:wrap;justify-content:center}
 
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ LANDING ══════════════ -->
+<!-- ══════════ LANDING ══════════ -->
 <div id="landing">
-  <div class="landing-hero">
+  <div class="hero">
     <div class="cross">✝</div>
     <h1>Elección de Diáconos</h1>
-    <p>Configura candidatos, conecta con Firebase y abre las dos ventanas en computadoras distintas.</p>
+    <p>Configura candidatos, conecta Firebase y abre las dos ventanas en computadoras distintas.</p>
   </div>
 
-  <!-- General config -->
-  <div class="setup-card">
+  <div class="card">
     <h3>⚙ Configuración General</h3>
-    <div class="field-row">
-      <label>Nombre de la iglesia:</label>
-      <input class="setup-input" id="cfg-church" placeholder="Mi Iglesia Local" maxlength="60">
-    </div>
-    <div class="field-row">
-      <label>Código de sala:</label>
-      <input class="setup-input" id="cfg-room" placeholder="ej: eleccion2025" maxlength="30" style="max-width:200px;">
-      <span style="font-size:.76rem;color:var(--text-dim);">Ambas computadoras deben usar el mismo código.</span>
-    </div>
+    <div class="row"><label>Nombre de la iglesia:</label><input class="inp" id="cfg-church" placeholder="Mi Iglesia Local" maxlength="60"></div>
+    <div class="row"><label>Código de sala:</label><input class="inp" id="cfg-room" placeholder="eleccion2025" maxlength="30" style="max-width:200px"><span style="font-size:.76rem;color:var(--dim)">Igual en ambas computadoras.</span></div>
   </div>
 
-  <!-- Firebase connection -->
-  <div class="setup-card">
-    <h3>🔗 Conexión entre Computadoras (Firebase)</h3>
-    <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem;line-height:1.6;">
-      Para sincronizar entre dos computadoras distintas necesitas una cuenta gratuita de Firebase.
-      Sigue los pasos del cuadro de abajo, luego pega el objeto de configuración aquí:
-    </p>
-    <textarea class="config-textarea" id="cfg-firebase" placeholder='{
+  <div class="card">
+    <h3>🔗 Conexión Firebase (dos computadoras)</h3>
+    <p style="font-size:.82rem;color:var(--dim);margin-bottom:1rem;line-height:1.6">Pega aquí tu objeto <code style="background:rgba(255,255,255,.06);padding:.1rem .3rem;border-radius:3px">firebaseConfig</code> para sincronizar votos, nombres y fotos entre ambas computadoras en tiempo real.</p>
+    <textarea class="cfgtxt" id="cfg-firebase" placeholder='{
   "apiKey": "AIza...",
   "authDomain": "mi-proyecto.firebaseapp.com",
   "databaseURL": "https://mi-proyecto-default-rtdb.firebaseio.com",
   "projectId": "mi-proyecto"
 }'></textarea>
-    <div style="display:flex;align-items:center;gap:1rem;margin-top:.9rem;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:.9rem;flex-wrap:wrap">
       <button class="btn btn-outline btn-sm" onclick="testFirebase()">Probar conexión</button>
-      <span class="fb-status" id="fb-status-pill">
-        <span class="fb-dot" id="fb-dot"></span>
-        <span id="fb-status-txt">Sin configurar</span>
-      </span>
+      <span class="fbpill"><span class="fbdot" id="fbdot"></span><span id="fbtxt">Sin configurar</span></span>
     </div>
-    <div class="config-help">
-      <strong style="color:var(--gold-dark);">Pasos para crear tu Firebase gratis:</strong><br>
-      1. Ve a <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> e inicia sesión con tu cuenta Google.<br>
-      2. Clic en <strong>Agregar proyecto</strong> → ponle un nombre → desactiva Google Analytics → <strong>Crear proyecto</strong>.<br>
-      3. En el menú izquierdo ve a <strong>Realtime Database</strong> → <strong>Crear base de datos</strong> → elige la región más cercana → modo <strong>Test</strong>.<br>
-      4. En <strong>Descripción general del proyecto</strong> (ícono ⚙) → <strong>Configuración del proyecto</strong> → sección "Tus apps" → clic en <code>&lt;/&gt;</code> → registra la app → copia el objeto <code>firebaseConfig</code> y pégalo arriba.
+    <div class="cfghelp">
+      <strong style="color:var(--gold-d)">Pasos rápidos:</strong><br>
+      1. <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → Crear proyecto → Realtime Database → modo Test.<br>
+      2. Configuración del proyecto → icono <code>&lt;/&gt;</code> → registrar app → copiar el objeto <code>firebaseConfig</code>.<br>
+      3. En Realtime Database → Reglas → pegar <code>{"rules":{".read":true,".write":true}}</code> → Publicar.
     </div>
   </div>
 
-  <!-- Candidates -->
-  <div class="setup-card">
+  <div class="card">
     <h3>👤 Candidatos — Nombres y Fotos</h3>
-    <div class="candidates-editor" id="candidates-editor"></div>
-    <div class="setup-save-row">
-      <button class="btn btn-gold" onclick="saveConfig()">💾 Guardar Configuración</button>
-      <span class="save-msg" id="save-msg">✓ Guardado correctamente</span>
+    <div class="ced" id="ced"></div>
+    <div class="saverow">
+      <button class="btn btn-gold" onclick="saveConfig()">💾 Guardar y Sincronizar</button>
+      <span class="savemsg" id="savemsg">✓ Guardado y enviado a Firebase</span>
     </div>
-    <p style="font-size:.75rem;color:var(--text-dim);margin-top:.9rem;">
-      Haz clic en el círculo para subir la foto de cada candidato. Se guarda en este navegador.<br>
-      <strong style="color:var(--text-dim);">Nota:</strong> las fotos deben subirse en <em>cada computadora</em> por separado (son locales). Los votos sí se sincronizan automáticamente entre computadoras vía Firebase.
+    <p style="font-size:.75rem;color:var(--dim);margin-top:.9rem;line-height:1.6">
+      Al guardar, los nombres y fotos se sincronizan automáticamente a la otra computadora vía Firebase.<br>
+      Sube las fotos en <em>una sola computadora</em> y el resto las recibe automáticamente.
     </p>
   </div>
 
-  <!-- Launch -->
-  <div class="setup-card" style="text-align:center;">
+  <div class="card" style="text-align:center">
     <h3>🚀 Iniciar Escrutinio</h3>
-    <div class="launch-row">
-      <div class="launch-card" onclick="openMode('control')">
-        <div class="lc-icon">🎛️</div>
-        <div class="lc-title">Panel de Control</div>
-        <div class="lc-desc">Laptop del comunicador. Registra cada cédula.</div>
-      </div>
-      <div class="launch-card" onclick="openMode('display')">
-        <div class="lc-icon">📺</div>
-        <div class="lc-title">Pantalla LED</div>
-        <div class="lc-desc">Computadora conectada al proyector o TV.</div>
-      </div>
+    <div class="launchrow">
+      <div class="lcard" onclick="openMode('control')"><div class="li">🎛️</div><div class="lt">Panel de Control</div><div class="ld">Laptop del comunicador. Registra cada cédula.</div></div>
+      <div class="lcard" onclick="openMode('display')"><div class="li">📺</div><div class="lt">Pantalla LED</div><div class="ld">Computadora conectada al proyector o TV.</div></div>
     </div>
-    <p style="font-size:.75rem;color:var(--text-dim);margin-top:1rem;">
-      También puedes abrir directamente con <code style="color:var(--gold-dark);">?modo=control</code> o <code style="color:var(--gold-dark);">?modo=pantalla</code>
+    <p style="font-size:.75rem;color:var(--dim);margin-top:1rem">
+      También: <code style="color:var(--gold-d)">?modo=control</code> / <code style="color:var(--gold-d)">?modo=pantalla</code>
     </p>
   </div>
 
-  <button class="btn btn-danger btn-sm" onclick="resetAll(true)">↺ Reiniciar todos los votos</button>
+  <button class="btn btn-danger btn-sm" onclick="resetAll(true)" style="margin-top:.5rem">↺ Reiniciar todos los votos</button>
 </div>
 
-<!-- ══════════════ CONTROL ══════════════ -->
+<!-- ══════════ CONTROL ══════════ -->
 <div id="control">
-  <div class="ctrl-header">
+  <div class="ctrl-hdr">
     <h2>✝ Panel de Control — Escrutinio</h2>
-    <div class="ballot-counter">Cédulas: <span id="ballot-count">0</span></div>
-    <div class="conn-row">
-      <span class="fb-status" id="ctrl-fb-pill">
-        <span class="fb-dot" id="ctrl-fb-dot"></span>
-        <span id="ctrl-fb-txt">Conectando…</span>
-      </span>
+    <div class="ballotcnt">Cédulas: <span id="bcount">0</span></div>
+    <div class="connrow">
+      <span class="fbpill"><span class="fbdot" id="cfbdot"></span><span id="cfbtxt">Conectando…</span></span>
       <button class="btn btn-ghost btn-sm" onclick="showResults()">Ver Resultados</button>
       <button class="btn btn-danger btn-sm" onclick="resetAll(false)">↺ Reiniciar</button>
       <button class="btn btn-ghost btn-sm" onclick="backToLanding()">← Inicio</button>
     </div>
   </div>
   <div class="ctrl-body">
-    <div class="ctrl-instruction">
-      Lee la cédula y marca los <strong>2 candidatos que NO fueron elegidos</strong>.
-      Los demás recibirán un voto automáticamente.<br>
-      <span style="font-size:.8rem;opacity:.75;">Si la cédula tiene menos de 7 marcas, selecciona los que correspondan.</span>
+    <div class="ctrl-note">
+      Lee la cédula y marca los <strong>2 candidatos que NO fueron elegidos</strong>. Los demás recibirán un voto automáticamente.<br>
+      <span style="font-size:.8rem;opacity:.75">Si la cédula tiene menos de 7 marcas, selecciona los que correspondan.</span>
     </div>
-    <div class="candidates-grid" id="ctrl-candidates"></div>
+    <div class="cgrid" id="cgrid"></div>
   </div>
-  <div class="ctrl-footer">
-    <div class="selection-status" id="sel-status">Selecciona los candidatos no elegidos en esta cédula</div>
-    <button class="btn-submit" id="submit-btn" onclick="submitVote()">✔ Registrar Voto</button>
+  <div class="ctrl-ftr">
+    <div class="selst" id="selst">Selecciona los candidatos no elegidos en esta cédula</div>
+    <button class="submibtn" id="submibtn" onclick="submitVote()">✔ Registrar Voto</button>
   </div>
-  <div class="vote-flash" id="vote-flash">
-    ¡Voto registrado!<br>
-    <span id="flash-detail" style="font-size:.8rem;font-family:'Lato',sans-serif;opacity:.8;"></span>
-  </div>
+  <div class="vflash" id="vflash">¡Voto registrado!<br><span id="fdet" style="font-size:.8rem;font-family:'Lato',sans-serif;opacity:.8"></span></div>
 </div>
 
-<!-- ══════════════ DISPLAY ══════════════ -->
+<!-- ══════════ DISPLAY ══════════ -->
 <div id="display">
-  <div class="disp-header">
-    <div class="disp-title">ELECCIÓN DE DIÁCONOS</div>
-    <div class="disp-subtitle" id="disp-church-sub">Iglesia Local</div>
+  <div class="dhdr">
+    <div class="dtitle">ELECCIÓN DE DIÁCONOS</div>
+    <div class="dsub" id="dsub">Iglesia Local</div>
   </div>
-  <div class="total-ballots-disp">Cédulas contadas: <span id="disp-ballot-count">0</span></div>
-  <div class="disp-grid" id="disp-candidates"></div>
-  <div class="disp-footer">✝ Sistema de votación</div>
+  <div class="dballots">Cédulas contadas: <span id="dbc">0</span></div>
+  <div class="dgrid" id="dgrid"></div>
+  <div class="dftr">✝ Sistema de votación</div>
 </div>
 
-<!-- ══════════════ RESULTS ══════════════ -->
+<!-- ══════════ RESULTS ══════════ -->
 <div id="results-overlay">
-  <div class="results-title">🏅 RESULTADO FINAL</div>
-  <div class="results-divider"></div>
-  <div class="results-section-label elected">✦ Elegidos como Diáconos (7)</div>
-  <div class="results-grid" id="results-winners"></div>
-  <div class="results-section-label" style="margin-top:1.1rem;">✧ No elegidos (2)</div>
-  <div class="results-grid" id="results-losers"></div>
-  <div class="results-actions">
+  <div class="rtitle">🏅 RESULTADO FINAL</div>
+  <div class="rdiv"></div>
+  <div class="rseclbl el">✦ Elegidos como Diáconos (7)</div>
+  <div class="rgrid" id="rwgrid"></div>
+  <div class="rseclbl" style="margin-top:1.1rem">✧ No elegidos (2)</div>
+  <div class="rgrid" id="rlgrid"></div>
+  <div class="ract">
     <button class="btn btn-gold" onclick="hideResults()">← Volver al Escrutinio</button>
     <button class="btn btn-danger" onclick="resetAll(false)">↺ Nueva Elección</button>
   </div>
 </div>
 
 <script>
-// ─────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────
-const TOTAL_CANDIDATES = 9;
-const TOTAL_TO_ELECT   = 7;
-const MAX_NOT_SELECTED = 4;
-const PHOTO_MAX_PX     = 300;
-const PHOTO_QUALITY    = 0.78;
+// ── CONSTANTS ──────────────────────────────────────────────
+const TOTAL = 9, ELECT = 7, MAX_NS = 4;
+const PHOTO_PX = 250, PHOTO_Q = 0.72;
 const COLORS = ["#3d6b8e","#6b3d8e","#8e6b3d","#3d8e5a","#8e3d3d","#3d7a8e","#8e843d","#5a3d8e","#3d8e77"];
 
-// ─────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────
-let candidates  = Array.from({length:9},(_,i)=>({id:i,name:`Candidato ${i+1}`,color:COLORS[i],photo:null}));
-let votes       = Array(9).fill(0);
-let ballotCount = 0;
-let churchName  = 'Iglesia Local';
-let roomCode    = 'eleccion2025';
-let selected    = new Set();
-let currentMode = 'landing';
-let showFinalMode = false;
+// ── STATE ──────────────────────────────────────────────────
+let cands     = Array.from({length:9},(_,i)=>({id:i,name:`Candidato ${i+1}`,color:COLORS[i],photo:null}));
+let votes     = Array(9).fill(0);
+let ballots   = 0;
+let church    = 'Iglesia Local';
+let room      = 'eleccion2025';
+let sel       = new Set();
+let mode      = 'landing';
+let finalMode = false;
 
-// Firebase
-let fbApp = null, fbDb = null, fbRef = null;
-let lastPushedAt = 0;   // debounce local echoes
+// ── FIREBASE ───────────────────────────────────────────────
+let fbApp=null, fbDb=null, stateRef=null, candsRef=null;
+let lastPush=0;
 
-// BroadcastChannel (same-browser fallback)
-let channel;
-try { channel = new BroadcastChannel('diacono-v4'); channel.onmessage = e => handleBCMsg(e.data); }
-catch(e){ channel = null; }
-
-// ─────────────────────────────────────────────────
-// LOCAL STORAGE
-// ─────────────────────────────────────────────────
-function saveLocal() {
-  const meta = candidates.map(c=>({id:c.id,name:c.name,color:c.color,hasPhoto:!!c.photo}));
-  localStorage.setItem('diac-meta',    JSON.stringify(meta));
-  localStorage.setItem('diac-votes',   JSON.stringify(votes));
-  localStorage.setItem('diac-ballots', String(ballotCount));
-  localStorage.setItem('diac-church',  churchName);
-  localStorage.setItem('diac-room',    roomCode);
-  localStorage.setItem('diac-fbcfg',   document.getElementById('cfg-firebase')?.value || '');
-  candidates.forEach(c=>{
-    if(c.photo) localStorage.setItem(`diac-photo-${c.id}`,c.photo);
-    else        localStorage.removeItem(`diac-photo-${c.id}`);
-  });
+function parseCfg(raw){
+  try{
+    const s=raw.trim().replace(/^[^{]*/,'').replace(/[^}]*$/,'')
+      .replace(/([{,]\s*)(\w+)\s*:/g,'$1"$2":').replace(/,\s*}/g,'}');
+    return JSON.parse(s);
+  }catch(e){ try{return JSON.parse(raw.trim())}catch(e2){return null} }
 }
 
-function loadLocal() {
-  try {
-    const meta=JSON.parse(localStorage.getItem('diac-meta'));
-    if(meta) candidates=meta.map(m=>({id:m.id,name:m.name,color:m.color,
-      photo:m.hasPhoto?(localStorage.getItem(`diac-photo-${m.id}`)||null):null}));
-    const v=JSON.parse(localStorage.getItem('diac-votes'));
-    if(v) votes=v;
-    const b=localStorage.getItem('diac-ballots');
-    if(b) ballotCount=parseInt(b)||0;
-    const ch=localStorage.getItem('diac-church'); if(ch) churchName=ch;
-    const rm=localStorage.getItem('diac-room');   if(rm) roomCode=rm;
-    const fb=localStorage.getItem('diac-fbcfg');
-    if(fb && document.getElementById('cfg-firebase')) document.getElementById('cfg-firebase').value=fb;
-  } catch(e){}
-}
-
-// ─────────────────────────────────────────────────
-// FIREBASE
-// ─────────────────────────────────────────────────
-function parseFirebaseConfig(raw) {
-  try {
-    // Accept either raw JSON object or JS object literal
-    const clean = raw.trim()
-      .replace(/^[^{]*/, '')   // strip anything before {
-      .replace(/[^}]*$/, '')   // strip anything after }
-      .replace(/(\w+)\s*:/g, '"$1":')  // quote unquoted keys
-      .replace(/,\s*}/, '}');  // trailing comma
-    return JSON.parse(clean);
-  } catch(e){
-    try { return JSON.parse(raw.trim()); } catch(e2){ return null; }
-  }
-}
-
-function initFirebase(cfg) {
-  try {
-    // If already init with same project, reuse
-    if(fbApp && fbApp.options.projectId === cfg.projectId) return true;
-    // Clean up old
-    if(fbApp) { try { fbApp.delete(); } catch(e){} }
-    fbApp = firebase.initializeApp(cfg, 'election-'+Date.now());
+function initFb(cfg){
+  try{
+    if(fbApp && fbApp.options.projectId===cfg.projectId) return true;
+    if(fbApp){ try{fbApp.delete()}catch(e){} }
+    fbApp = firebase.initializeApp(cfg,'diac-'+Date.now());
     fbDb  = firebase.database(fbApp);
     return true;
-  } catch(e){ console.error('Firebase init error', e); return false; }
+  }catch(e){console.error(e);return false}
 }
 
-function connectFirebase() {
-  const raw = document.getElementById('cfg-firebase')?.value || '';
-  if(!raw.trim()) { setFbStatus('none'); return; }
-  const cfg = parseFirebaseConfig(raw);
-  if(!cfg || !cfg.databaseURL) { setFbStatus('err','Config inválida o falta databaseURL'); return; }
-  setFbStatus('wait','Conectando…');
-  if(!initFirebase(cfg)) { setFbStatus('err','Error al inicializar'); return; }
-  fbRef = fbDb.ref(`/${roomCode}/state`);
-  fbRef.on('value', snap => {
-    const data = snap.val();
-    if(!data) return;
-    // Ignore echoes from our own push (within 2s)
-    if(Date.now() - lastPushedAt < 2000) return;
-    if(data.votes)   votes       = data.votes;
-    if(data.ballots !== undefined) ballotCount = data.ballots;
-    applyRemoteState(data);
-  }, err => {
-    setFbStatus('err', 'Sin permisos o DB no creada');
+function connectFb(){
+  const raw = document.getElementById('cfg-firebase')?.value||'';
+  if(!raw.trim()){setFbSt('none');return}
+  const cfg = parseCfg(raw);
+  if(!cfg||!cfg.databaseURL){setFbSt('err','Config inválida');return}
+  setFbSt('wait','Conectando…');
+  if(!initFb(cfg)){setFbSt('err','Error al inicializar');return}
+
+  stateRef = fbDb.ref(`/${room}/state`);
+  candsRef  = fbDb.ref(`/${room}/candidates`);
+
+  // Listen to votes/state
+  stateRef.on('value', snap=>{
+    const d=snap.val(); if(!d) return;
+    if(Date.now()-lastPush < 1500) return; // ignore own echo
+    if(d.votes)   votes   = d.votes;
+    if(d.ballots!==undefined) ballots = d.ballots;
+    applyState(d);
+  }, ()=>setFbSt('err','Sin permisos'));
+
+  // Listen to candidates (names + photos)
+  candsRef.on('value', snap=>{
+    const d=snap.val(); if(!d||!Array.isArray(d)) return;
+    if(Date.now()-lastPush < 1500) return;
+    // Merge: keep local photos if firebase doesn't have them
+    d.forEach((c,i)=>{
+      if(c.name) cands[i].name = c.name;
+      if(c.photo) cands[i].photo = c.photo;
+      if(c.color) cands[i].color = c.color;
+    });
+    saveLocal();
+    if(mode==='control')  buildControlGrid();
+    if(mode==='display')  buildDisplayGrid();
+    if(mode==='landing')  buildEditor();
   });
-  // Confirm connection
-  fbDb.ref('.info/connected').on('value', snap => {
-    if(snap.val()) setFbStatus('ok','Conectado en vivo');
-    else           setFbStatus('wait','Reconectando…');
+
+  fbDb.ref('.info/connected').on('value',snap=>{
+    if(snap.val()) setFbSt('ok','Conectado en vivo');
+    else           setFbSt('wait','Reconectando…');
   });
 }
 
-function applyRemoteState(data) {
-  if(data.votes)   votes       = data.votes;
-  if(data.ballots !== undefined) ballotCount = data.ballots;
+function pushState(extra={}){
+  if(!stateRef) return;
+  lastPush=Date.now();
+  stateRef.set({votes,ballots,ts:lastPush,...extra}).catch(console.warn);
+}
+
+function pushCandidates(){
+  if(!candsRef) return;
+  lastPush=Date.now();
+  // Strip null photos to save space; send empty string as marker
+  const data = cands.map(c=>({id:c.id,name:c.name,color:c.color,photo:c.photo||''}));
+  candsRef.set(data).catch(console.warn);
+}
+
+function applyState(d){
+  if(d.votes)   votes   = d.votes;
+  if(d.ballots!==undefined) ballots = d.ballots;
   saveLocal();
-  if(currentMode==='display') {
-    if(data.cmd==='results') {
-      updateDisplayUI(true);
-      if(data.cmd==='results') { renderResultsOverlay(); document.getElementById('results-overlay').style.display='flex'; }
-    } else if(data.cmd==='hide-results') {
-      updateDisplayUI(false);
+  if(mode==='display'){
+    if(d.cmd==='results'){
+      updateDisplay(true);
+      renderResults();
+      document.getElementById('results-overlay').style.display='flex';
+    } else if(d.cmd==='hide-results'){
+      updateDisplay(false);
       document.getElementById('results-overlay').style.display='none';
+    } else if(d.cmd==='reset'){
+      doReset();
     } else {
-      updateDisplayUI(showFinalMode);
-      if(data.animateIds) data.animateIds.forEach(id=>triggerVoteAnimation(id));
+      updateDisplay(finalMode);
+      if(d.anim) d.anim.forEach(id=>animateCard(id));
     }
   }
-  if(currentMode==='control') { updateControlTallies(); }
+  if(mode==='control') updateControlTallies();
 }
 
-function pushToFirebase(extra={}) {
-  if(!fbRef) return false;
-  lastPushedAt = Date.now();
-  fbRef.set({ votes, ballots:ballotCount, ts:lastPushedAt, ...extra })
-    .catch(e=>console.warn('Firebase write error',e));
-  return true;
+function setFbSt(st,msg){
+  const map={ok:'Conectado en vivo',wait:'Conectando…',err:'Sin conexión',none:'Sin configurar'};
+  const label=msg||map[st]||st;
+  ['fbdot','cfbdot'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.className='fbdot'; if(st==='ok'||st==='wait'||st==='err') el.classList.add(st);
+  });
+  ['fbtxt','cfbtxt'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=label; });
 }
 
-function testFirebase() {
-  const raw = document.getElementById('cfg-firebase').value;
-  const cfg = parseFirebaseConfig(raw);
-  if(!cfg || !cfg.databaseURL) { setFbStatus('err','Falta databaseURL en la config'); return; }
-  setFbStatus('wait','Probando…');
-  if(!initFirebase(cfg)) { setFbStatus('err','Error al inicializar Firebase'); return; }
+function testFirebase(){
+  const cfg=parseCfg(document.getElementById('cfg-firebase').value||'');
+  if(!cfg||!cfg.databaseURL){setFbSt('err','Falta databaseURL');return}
+  setFbSt('wait','Probando…');
+  if(!initFb(cfg)){setFbSt('err','Error al inicializar');return}
   fbDb.ref('.info/connected').once('value')
-    .then(snap => {
-      setFbStatus('ok','¡Conexión exitosa!');
-      connectFirebase();
-    })
-    .catch(e => setFbStatus('err','No se pudo conectar: '+e.message));
+    .then(()=>{ setFbSt('ok','¡Conexión exitosa!'); connectFb(); })
+    .catch(e=>setFbSt('err','Error: '+e.message));
 }
 
-function setFbStatus(state, msg) {
-  const dot  = document.getElementById('fb-dot');
-  const txt  = document.getElementById('fb-status-txt');
-  const cdot = document.getElementById('ctrl-fb-dot');
-  const ctxt = document.getElementById('ctrl-fb-txt');
-  const map  = {ok:'Conectado en vivo', wait:'Conectando…', err:'Sin conexión', none:'Sin configurar'};
-  const label = msg || map[state] || state;
-  [dot,cdot].forEach(d=>{ if(!d) return; d.className='fb-dot'; if(state==='ok'||state==='wait'||state==='err') d.classList.add(state); });
-  [txt,ctxt].forEach(t=>{ if(t) t.textContent=label; });
-}
+// BroadcastChannel (same-browser fallback)
+let bc; try{bc=new BroadcastChannel('diac-v5');bc.onmessage=e=>applyState(e.data)}catch(e){bc=null}
+function bcSend(d){ if(bc) bc.postMessage(d); }
 
-// BroadcastChannel (same browser, same computer)
-function handleBCMsg(data) {
-  if(data.type==='state')        applyRemoteState(data);
-  if(data.type==='results')      { applyRemoteState({...data,cmd:'results'}); }
-  if(data.type==='hide-results') { applyRemoteState({cmd:'hide-results'}); }
-  if(data.type==='reset')        doReset();
-}
-function bcBroadcast(data) { if(channel) channel.postMessage(data); }
-
-// ─────────────────────────────────────────────────
-// SYNC — push to both Firebase AND BroadcastChannel
-// ─────────────────────────────────────────────────
-function syncState(extra={}) {
+function syncAll(extra={}){
   saveLocal();
-  const pushed = pushToFirebase(extra);
-  bcBroadcast({type:'state', votes, ballotCount, ...extra});
+  pushState(extra);
+  bcSend({votes,ballots,...extra});
 }
 
-// ─────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────
-function getInitials(name){ return name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase()||'?'; }
-function avatarInner(c){
-  if(c.photo) return `<img src="${c.photo}" alt="${c.name}">`;
-  return getInitials(c.name);
+// ── LOCAL STORAGE ──────────────────────────────────────────
+function saveLocal(){
+  const meta=cands.map(c=>({id:c.id,name:c.name,color:c.color,hp:!!c.photo}));
+  localStorage.setItem('dm',JSON.stringify(meta));
+  localStorage.setItem('dv',JSON.stringify(votes));
+  localStorage.setItem('db',String(ballots));
+  localStorage.setItem('dc',church);
+  localStorage.setItem('dr',room);
+  localStorage.setItem('dfb',document.getElementById('cfg-firebase')?.value||'');
+  cands.forEach(c=>{ if(c.photo) localStorage.setItem('dp'+c.id,c.photo); else localStorage.removeItem('dp'+c.id); });
 }
-function resizeImage(file,cb){
+function loadLocal(){
+  try{
+    const m=JSON.parse(localStorage.getItem('dm'));
+    if(m) cands=m.map(x=>({id:x.id,name:x.name,color:x.color,photo:x.hp?(localStorage.getItem('dp'+x.id)||null):null}));
+    const v=JSON.parse(localStorage.getItem('dv')); if(v) votes=v;
+    const b=localStorage.getItem('db'); if(b) ballots=parseInt(b)||0;
+    const c=localStorage.getItem('dc'); if(c) church=c;
+    const r=localStorage.getItem('dr'); if(r) room=r;
+    const f=localStorage.getItem('dfb'); if(f){ const el=document.getElementById('cfg-firebase'); if(el) el.value=f; }
+  }catch(e){}
+}
+
+// ── HELPERS ────────────────────────────────────────────────
+function ini(name){ return name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase()||'?'; }
+function avHtml(c){ return c.photo?`<img src="${c.photo}" alt="${c.name}">`+'' : ini(c.name); }
+function resize(file,cb){
   const r=new FileReader(); r.onload=e=>{
     const img=new Image(); img.onload=()=>{
-      const side=Math.min(img.width,img.height), sz=Math.min(side,PHOTO_MAX_PX);
-      const canvas=document.createElement('canvas'); canvas.width=sz; canvas.height=sz;
-      const ctx=canvas.getContext('2d');
-      ctx.drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,sz,sz);
-      cb(canvas.toDataURL('image/jpeg',PHOTO_QUALITY));
+      const side=Math.min(img.width,img.height),sz=Math.min(side,PHOTO_PX);
+      const cv=document.createElement('canvas'); cv.width=sz;cv.height=sz;
+      cv.getContext('2d').drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,sz,sz);
+      cb(cv.toDataURL('image/jpeg',PHOTO_Q));
     }; img.src=e.target.result;
   }; r.readAsDataURL(file);
 }
 
-// ─────────────────────────────────────────────────
-// LANDING EDITOR
-// ─────────────────────────────────────────────────
-function buildLandingEditor(){
-  document.getElementById('cfg-church').value=churchName;
-  document.getElementById('cfg-room').value=roomCode;
-  const grid=document.getElementById('candidates-editor'); grid.innerHTML='';
-  candidates.forEach((c,i)=>{
-    const div=document.createElement('div'); div.className='candidate-edit-row';
-    div.innerHTML=`
-      <span class="cnum">${i+1}</span>
-      <div class="photo-upload-wrap" onclick="document.getElementById('fup-${i}').click()" title="Clic para subir foto">
-        <div class="photo-preview${c.photo?' has-photo':''}" id="prev-${i}" style="background:${c.color};">
-          ${c.photo?`<img src="${c.photo}" alt="">`:getInitials(c.name)}
-        </div>
-        <div class="photo-overlay">📷</div>
-        <input class="photo-file-input" type="file" id="fup-${i}" accept="image/*" onchange="handlePhotoUpload(${i},this)">
+// ── LANDING EDITOR ─────────────────────────────────────────
+function buildEditor(){
+  document.getElementById('cfg-church').value=church;
+  document.getElementById('cfg-room').value=room;
+  const g=document.getElementById('ced'); g.innerHTML='';
+  cands.forEach((c,i)=>{
+    const d=document.createElement('div'); d.className='crow';
+    d.innerHTML=`<span class="cnum">${i+1}</span>
+      <div class="puwrap" onclick="document.getElementById('pf${i}').click()" title="Subir foto">
+        <div class="prev${c.photo?' hp':''}" id="pv${i}" style="background:${c.color}">${c.photo?`<img src="${c.photo}" alt="">`:ini(c.name)}</div>
+        <div class="povl">📷</div>
+        <input class="pfinput" type="file" id="pf${i}" accept="image/*" onchange="onPhoto(${i},this)">
       </div>
-      <div class="candidate-edit-fields">
-        <input type="text" id="ename-${i}" value="${c.name}" placeholder="Nombre" maxlength="40">
-        <button class="photo-clear-btn${c.photo?' visible':''}" id="clr-${i}" onclick="clearPhoto(${i})">✕ Quitar foto</button>
+      <div class="cfields">
+        <input type="text" id="en${i}" value="${c.name}" placeholder="Nombre" maxlength="40">
+        <button class="clrbtn${c.photo?' v':''}" id="cb${i}" onclick="clrPhoto(${i})">✕ Quitar foto</button>
       </div>`;
-    grid.appendChild(div);
+    g.appendChild(d);
   });
 }
-
-function handlePhotoUpload(idx,input){
-  const file=input.files[0]; if(!file) return;
-  resizeImage(file,b64=>{
-    candidates[idx].photo=b64;
-    const prev=document.getElementById(`prev-${idx}`);
-    prev.innerHTML=`<img src="${b64}" alt="">`; prev.classList.add('has-photo');
-    document.getElementById(`clr-${idx}`).classList.add('visible');
+function onPhoto(i,inp){
+  const f=inp.files[0]; if(!f) return;
+  resize(f,b64=>{
+    cands[i].photo=b64;
+    const p=document.getElementById('pv'+i); p.innerHTML=`<img src="${b64}" alt="">`; p.classList.add('hp');
+    document.getElementById('cb'+i).classList.add('v');
     saveLocal();
-    if(currentMode==='control'){ const av=document.querySelector(`#ctrl-c-${idx} .ccheck-avatar`); if(av) av.innerHTML=`<img src="${b64}" alt="">`; }
-    if(currentMode==='display'){ const av=document.querySelector(`#disp-c-${idx} .disp-avatar`); if(av) av.innerHTML=`<img src="${b64}" alt="">`; }
   });
-  input.value='';
+  inp.value='';
 }
-
-function clearPhoto(idx){
-  candidates[idx].photo=null;
-  const prev=document.getElementById(`prev-${idx}`);
-  prev.innerHTML=getInitials(candidates[idx].name); prev.classList.remove('has-photo');
-  document.getElementById(`clr-${idx}`).classList.remove('visible');
+function clrPhoto(i){
+  cands[i].photo=null;
+  const p=document.getElementById('pv'+i);
+  p.innerHTML=ini(cands[i].name); p.classList.remove('hp');
+  document.getElementById('cb'+i).classList.remove('v');
   saveLocal();
 }
-
 function saveConfig(){
-  candidates.forEach((_,i)=>{ const inp=document.getElementById(`ename-${i}`); if(inp) candidates[i].name=inp.value.trim()||`Candidato ${i+1}`; });
-  const ch=document.getElementById('cfg-church').value.trim(); if(ch) churchName=ch;
-  const rm=document.getElementById('cfg-room').value.trim().replace(/\s+/g,'_'); if(rm) roomCode=rm;
+  cands.forEach((_,i)=>{ const e=document.getElementById('en'+i); if(e) cands[i].name=e.value.trim()||`Candidato ${i+1}`; });
+  const c=document.getElementById('cfg-church').value.trim(); if(c) church=c;
+  const r=document.getElementById('cfg-room').value.trim().replace(/\s+/g,'_'); if(r) room=r;
   saveLocal();
-  // Update initials in previews
-  candidates.forEach((c,i)=>{ if(!c.photo){ const p=document.getElementById(`prev-${i}`); if(p) p.textContent=getInitials(c.name); } });
-  const msg=document.getElementById('save-msg'); msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2200);
+  pushCandidates(); // ← sync names+photos to Firebase
+  // refresh initials
+  cands.forEach((c,i)=>{ if(!c.photo){ const p=document.getElementById('pv'+i); if(p) p.textContent=ini(c.name); } });
+  const m=document.getElementById('savemsg'); m.classList.add('on'); setTimeout(()=>m.classList.remove('on'),2500);
 }
-
 function backToLanding(){
-  document.getElementById('control').style.display='none';
-  document.getElementById('display').style.display='none';
-  document.getElementById('results-overlay').style.display='none';
+  ['control','display','results-overlay'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('landing').style.display='flex';
-  currentMode='landing'; buildLandingEditor();
+  mode='landing'; buildEditor();
 }
 
-// ─────────────────────────────────────────────────
-// OPEN MODE
-// ─────────────────────────────────────────────────
-function openMode(mode){
-  saveConfig();
-  connectFirebase(); // ensure connected
-  currentMode=mode;
+// ── OPEN MODE ──────────────────────────────────────────────
+function openMode(m){
+  saveConfig(); connectFb();
+  mode=m;
   document.getElementById('landing').style.display='none';
   document.getElementById('control').style.display='none';
   document.getElementById('display').style.display='none';
-  if(mode==='control'){
+  if(m==='control'){
     document.getElementById('control').style.display='flex';
     buildControlGrid(); updateControlTallies();
-    // Request current state from Firebase
-    if(fbRef) fbRef.once('value').then(s=>{ const d=s.val(); if(d){ votes=d.votes||votes; ballotCount=d.ballots||ballotCount; updateControlTallies(); } });
+    // Pull latest from Firebase
+    stateRef?.once('value').then(s=>{ const d=s.val(); if(d){if(d.votes)votes=d.votes;if(d.ballots!==undefined)ballots=d.ballots;updateControlTallies();} });
+    candsRef?.once('value').then(s=>{ const d=s.val(); if(d&&Array.isArray(d)){d.forEach((c,i)=>{if(c.name)cands[i].name=c.name;if(c.photo)cands[i].photo=c.photo;});buildControlGrid();} });
   }
-  if(mode==='display'){
+  if(m==='display'){
     document.getElementById('display').style.display='flex';
-    document.getElementById('disp-church-sub').textContent=churchName;
-    buildDisplayGrid(); updateDisplayUI(false);
-    if(fbRef) fbRef.once('value').then(s=>{ const d=s.val(); if(d){ votes=d.votes||votes; ballotCount=d.ballots||ballotCount; updateDisplayUI(d.cmd==='results'); } });
+    document.getElementById('dsub').textContent=church;
+    buildDisplayGrid(); updateDisplay(false);
+    stateRef?.once('value').then(s=>{ const d=s.val(); if(d){if(d.votes)votes=d.votes;if(d.ballots!==undefined)ballots=d.ballots;updateDisplay(d.cmd==='results');} });
+    candsRef?.once('value').then(s=>{ const d=s.val(); if(d&&Array.isArray(d)){d.forEach((c,i)=>{if(c.name)cands[i].name=c.name;if(c.photo&&c.photo!=='')cands[i].photo=c.photo;});buildDisplayGrid();updateDisplay(finalMode);} });
   }
 }
 
-// ─────────────────────────────────────────────────
-// CONTROL PANEL
-// ─────────────────────────────────────────────────
+// ── CONTROL PANEL ──────────────────────────────────────────
 function buildControlGrid(){
-  const grid=document.getElementById('ctrl-candidates'); grid.innerHTML='';
-  candidates.forEach(c=>{
-    const div=document.createElement('div'); div.className='candidate-check'; div.id=`ctrl-c-${c.id}`; div.onclick=()=>toggleSelect(c.id);
-    div.innerHTML=`<div class="ccheck-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="ccheck-info"><div class="ccheck-name">${c.name}</div><div class="ccheck-votes">Votos: <span id="cv-${c.id}">${votes[c.id]}</span></div></div>
-      <div class="ccheck-box" id="cb-${c.id}"></div>`;
-    grid.appendChild(div);
+  const g=document.getElementById('cgrid'); g.innerHTML='';
+  cands.forEach(c=>{
+    const d=document.createElement('div'); d.className='ccheck'; d.id='cc'+c.id; d.onclick=()=>toggleSel(c.id);
+    d.innerHTML=`<div class="ccav" style="background:${c.color}">${avHtml(c)}</div>
+      <div class="ccinfo"><div class="ccname">${c.name}</div><div class="ccvotes">Votos: <span id="cv${c.id}">${votes[c.id]}</span></div></div>
+      <div class="ccbox" id="cbox${c.id}"></div>`;
+    g.appendChild(d);
   });
 }
-function toggleSelect(id){ if(selected.has(id)) selected.delete(id); else{ if(selected.size>=MAX_NOT_SELECTED) return; selected.add(id); } updateSelectionUI(); }
-function updateSelectionUI(){
-  candidates.forEach(c=>{
-    const el=document.getElementById(`ctrl-c-${c.id}`), box=document.getElementById(`cb-${c.id}`); if(!el) return;
-    if(selected.has(c.id)){ el.classList.add('not-selected'); box.textContent='✕'; }
-    else{ el.classList.remove('not-selected'); box.textContent=''; }
+function toggleSel(id){ if(sel.has(id)) sel.delete(id); else{ if(sel.size>=MAX_NS) return; sel.add(id); } updateSelUI(); }
+function updateSelUI(){
+  cands.forEach(c=>{
+    const el=document.getElementById('cc'+c.id),bx=document.getElementById('cbox'+c.id); if(!el) return;
+    if(sel.has(c.id)){el.classList.add('ns');bx.textContent='✕'}else{el.classList.remove('ns');bx.textContent=''}
   });
-  const n=selected.size, status=document.getElementById('sel-status'), btn=document.getElementById('submit-btn');
-  if(n>=1&&n<=MAX_NOT_SELECTED){ status.textContent=`✓ ${TOTAL_CANDIDATES-n} candidatos recibirán un voto`; status.className='selection-status ok'; btn.classList.add('active'); }
-  else if(n===0){ status.textContent='Selecciona los candidatos no elegidos en esta cédula'; status.className='selection-status'; btn.classList.remove('active'); }
-  else{ status.textContent=`Máximo ${MAX_NOT_SELECTED} no elegidos por cédula`; status.className='selection-status bad'; btn.classList.remove('active'); }
+  const n=sel.size, st=document.getElementById('selst'), btn=document.getElementById('submibtn');
+  if(n>=1&&n<=MAX_NS){st.textContent=`✓ ${TOTAL-n} candidatos recibirán un voto`;st.className='selst ok';btn.classList.add('on')}
+  else if(n===0){st.textContent='Selecciona los candidatos no elegidos en esta cédula';st.className='selst';btn.classList.remove('on')}
+  else{st.textContent=`Máximo ${MAX_NS} no elegidos`;st.className='selst bad';btn.classList.remove('on')}
 }
 function submitVote(){
-  if(selected.size<1||selected.size>MAX_NOT_SELECTED) return;
-  const votedIds=[];
-  candidates.forEach(c=>{ if(!selected.has(c.id)){ votes[c.id]++; votedIds.push(c.id); } });
-  ballotCount++;
-  const counted=TOTAL_CANDIDATES-selected.size;
-  selected.clear(); updateSelectionUI(); updateControlTallies();
-  syncState({animateIds:votedIds});
-  document.getElementById('flash-detail').textContent=`+1 para ${counted} candidatos`;
-  const flash=document.getElementById('vote-flash'); flash.classList.add('show'); setTimeout(()=>flash.classList.remove('show'),1100);
+  if(sel.size<1||sel.size>MAX_NS) return;
+  const anim=[];
+  cands.forEach(c=>{ if(!sel.has(c.id)){votes[c.id]++;anim.push(c.id)} });
+  ballots++;
+  const cnt=TOTAL-sel.size;
+  sel.clear(); updateSelUI(); updateControlTallies();
+  syncAll({anim});
+  document.getElementById('fdet').textContent=`+1 para ${cnt} candidatos`;
+  const fl=document.getElementById('vflash'); fl.classList.add('on'); setTimeout(()=>fl.classList.remove('on'),1100);
 }
 function updateControlTallies(){
-  candidates.forEach(c=>{ const el=document.getElementById(`cv-${c.id}`); if(el) el.textContent=votes[c.id]; });
-  const el=document.getElementById('ballot-count'); if(el) el.textContent=ballotCount;
+  cands.forEach(c=>{ const e=document.getElementById('cv'+c.id); if(e) e.textContent=votes[c.id]; });
+  const e=document.getElementById('bcount'); if(e) e.textContent=ballots;
 }
 
-// ─────────────────────────────────────────────────
-// DISPLAY (LED SCREEN)
-// ─────────────────────────────────────────────────
+// ── DISPLAY ────────────────────────────────────────────────
 function buildDisplayGrid(){
-  const grid=document.getElementById('disp-candidates'); grid.innerHTML='';
-  candidates.forEach(c=>{
-    const div=document.createElement('div'); div.className='disp-card'; div.id=`disp-c-${c.id}`;
-    div.innerHTML=`
-      <span class="disp-rank"  id="dr-${c.id}">#1</span>
-      <span class="disp-crown" id="dc-${c.id}">✦</span>
-      <div class="disp-avatar-wrap">
-        <div class="disp-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      </div>
-      <div class="disp-info">
-        <div class="disp-name">${c.name}</div>
-        <div class="disp-votes" id="dv-${c.id}">0</div>
-        <div class="disp-votes-label">votos</div>
-      </div>`;
-    grid.appendChild(div);
+  const g=document.getElementById('dgrid'); g.innerHTML='';
+  cands.forEach(c=>{
+    const d=document.createElement('div'); d.className='dcard'; d.id='dc'+c.id;
+    d.innerHTML=`
+      <span class="drank"  id="drk${c.id}">#1</span>
+      <span class="dcrown" id="dcr${c.id}">✦</span>
+      <div class="dav" style="background:${c.color}">${avHtml(c)}</div>
+      <div class="dname">${c.name}</div>
+      <div class="dvotes" id="dv${c.id}">0</div>
+      <div class="dvlabel">votos</div>`;
+    g.appendChild(d);
   });
 }
-
-function triggerVoteAnimation(id){
-  const card=document.getElementById(`disp-c-${id}`), vEl=document.getElementById(`dv-${id}`);
+function animateCard(id){
+  const card=document.getElementById('dc'+id), vEl=document.getElementById('dv'+id);
   if(!card||!vEl) return;
-  // +1 badge
-  const badge=document.createElement('span'); badge.className='plus-one'; badge.textContent='+1';
-  card.appendChild(badge); setTimeout(()=>badge.remove(),1400);
-  // num pop
-  vEl.classList.remove('num-pop'); void vEl.offsetWidth; vEl.classList.add('num-pop'); setTimeout(()=>vEl.classList.remove('num-pop'),600);
-  // card glow
-  card.classList.remove('vote-pulse'); void card.offsetWidth; card.classList.add('vote-pulse'); setTimeout(()=>card.classList.remove('vote-pulse'),1400);
+  const b=document.createElement('span'); b.className='plusone'; b.textContent='+1';
+  card.appendChild(b); setTimeout(()=>b.remove(),1400);
+  vEl.classList.remove('npop'); void vEl.offsetWidth; vEl.classList.add('npop'); setTimeout(()=>vEl.classList.remove('npop'),600);
+  card.classList.remove('vpulse'); void card.offsetWidth; card.classList.add('vpulse'); setTimeout(()=>card.classList.remove('vpulse'),1400);
 }
-
-function updateDisplayUI(finalMode){
-  showFinalMode=finalMode;
-  document.getElementById('disp-ballot-count').textContent=ballotCount;
+function updateDisplay(fin){
+  finalMode=fin;
+  document.getElementById('dbc').textContent=ballots;
   const sorted=votes.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
-  const rankOf={}; sorted.forEach((item,rank)=>{ rankOf[item.i]=rank; });
-  candidates.forEach(c=>{
-    const vEl=document.getElementById(`dv-${c.id}`), card=document.getElementById(`disp-c-${c.id}`);
-    const rankEl=document.getElementById(`dr-${c.id}`), crownEl=document.getElementById(`dc-${c.id}`);
+  const rankOf={}; sorted.forEach((x,r)=>rankOf[x.i]=r);
+  cands.forEach(c=>{
+    const vEl=document.getElementById('dv'+c.id),card=document.getElementById('dc'+c.id);
+    const rkEl=document.getElementById('drk'+c.id),crEl=document.getElementById('dcr'+c.id);
     if(!vEl||!card) return;
     vEl.textContent=votes[c.id];
-    const rank=rankOf[c.id]; rankEl.textContent=`#${rank+1}`;
-    card.classList.remove('result-winner','result-loser');
-    if(finalMode&&ballotCount>0){
-      if(rank<TOTAL_TO_ELECT){ card.classList.add('result-winner'); crownEl.textContent=rank===0?'★':'✦'; }
-      else                    { card.classList.add('result-loser'); }
+    const rk=rankOf[c.id]; rkEl.textContent=`#${rk+1}`;
+    card.classList.remove('rw','rl');
+    if(fin&&ballots>0){
+      if(rk<ELECT){card.classList.add('rw');crEl.textContent=rk===0?'★':'✦'}
+      else card.classList.add('rl');
     }
   });
 }
 
-// ─────────────────────────────────────────────────
-// RESULTS
-// ─────────────────────────────────────────────────
+// ── RESULTS ────────────────────────────────────────────────
 function showResults(){
-  renderResultsOverlay();
+  renderResults();
   document.getElementById('results-overlay').style.display='flex';
-  syncState({cmd:'results'});
-  if(currentMode==='display') updateDisplayUI(true);
+  syncAll({cmd:'results'});
+  if(mode==='display') updateDisplay(true);
 }
-function renderResultsOverlay(){
-  const sorted=candidates.map(c=>({...c,votes:votes[c.id]})).sort((a,b)=>b.votes-a.votes);
-  document.getElementById('results-winners').innerHTML=sorted.slice(0,TOTAL_TO_ELECT).map((c,i)=>`
-    <div class="result-card win-card" style="animation-delay:${i*.07}s">
-      <span class="result-card-badge">${['🥇','🥈','🥉'][i]||'✦'}</span>
-      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="result-card-name">${c.name}</div><div class="result-card-votes">${c.votes}</div>
-      <div class="result-card-label">votos</div></div>`).join('');
-  document.getElementById('results-losers').innerHTML=sorted.slice(TOTAL_TO_ELECT).map((c,i)=>`
-    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*.07}s">
-      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="result-card-name">${c.name}</div><div class="result-card-votes">${c.votes}</div>
-      <div class="result-card-label">votos</div></div>`).join('');
+function renderResults(){
+  const sorted=cands.map(c=>({...c,votes:votes[c.id]})).sort((a,b)=>b.votes-a.votes);
+  document.getElementById('rwgrid').innerHTML=sorted.slice(0,ELECT).map((c,i)=>`
+    <div class="rcard rw2" style="animation-delay:${i*.07}s">
+      <span class="rbadge">${['🥇','🥈','🥉'][i]||'✦'}</span>
+      <div class="rav" style="background:${c.color}">${avHtml(c)}</div>
+      <div class="rname">${c.name}</div><div class="rvotes">${c.votes}</div>
+      <div class="rlabel">votos</div></div>`).join('');
+  document.getElementById('rlgrid').innerHTML=sorted.slice(ELECT).map((c,i)=>`
+    <div class="rcard rl2" style="animation-delay:${(ELECT+i)*.07}s">
+      <div class="rav" style="background:${c.color}">${avHtml(c)}</div>
+      <div class="rname">${c.name}</div><div class="rvotes">${c.votes}</div>
+      <div class="rlabel">votos</div></div>`).join('');
 }
 function hideResults(){
   document.getElementById('results-overlay').style.display='none';
-  updateDisplayUI(false); syncState({cmd:'hide-results'});
+  updateDisplay(false); syncAll({cmd:'hide-results'});
 }
 
-// ─────────────────────────────────────────────────
-// RESET
-// ─────────────────────────────────────────────────
-function resetAll(fromLanding){
-  if(!confirm(fromLanding?'¿Reiniciar todos los votos? Nombres y fotos se conservarán.':'¿Reiniciar todos los votos?')) return;
-  doReset(); syncState({cmd:'reset'}); bcBroadcast({type:'reset'});
+// ── RESET ──────────────────────────────────────────────────
+function resetAll(fl){
+  if(!confirm(fl?'¿Reiniciar votos? Nombres y fotos se conservan.':'¿Reiniciar todos los votos?')) return;
+  doReset(); syncAll({cmd:'reset'}); bcSend({cmd:'reset'});
 }
 function doReset(){
-  votes=candidates.map(()=>0); ballotCount=0; selected.clear(); showFinalMode=false; saveLocal();
-  if(currentMode==='control'){ updateSelectionUI(); updateControlTallies(); }
-  if(currentMode==='display') updateDisplayUI(false);
+  votes=cands.map(()=>0); ballots=0; sel.clear(); finalMode=false; saveLocal();
+  if(mode==='control'){updateSelUI();updateControlTallies()}
+  if(mode==='display') updateDisplay(false);
   document.getElementById('results-overlay').style.display='none';
 }
 
-// ─────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────
 loadLocal();
-buildLandingEditor();
-(function(){
-  const p=new URLSearchParams(window.location.search);
-  const m=p.get('modo')||p.get('mode');
-  if(m==='control')                  openMode('control');
-  if(m==='pantalla'||m==='display')  openMode('display');
+buildEditor();
+(()=>{
+  const p=new URLSearchParams(window.location.search), m=p.get('modo')||p.get('mode');
+  if(m==='control')               openMode('control');
+  if(m==='pantalla'||m==='display') openMode('display');
 })();
 </script>
 </body>
