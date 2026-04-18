@@ -25,558 +25,394 @@
   /* ===== SHARED ===== */
   .btn {
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-block;
-    text-align: center;
+    font-size: 0.9rem; letter-spacing: 0.08em;
+    padding: 0.85rem 2rem; border: none; border-radius: 6px;
+    cursor: pointer; transition: all 0.2s; display: inline-block; text-align: center;
   }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
-    color: #1a1000;
-    font-weight: 700;
+    color: #1a1000; font-weight: 700;
     box-shadow: 0 4px 20px rgba(201,168,76,0.35);
   }
   .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.55); }
-  .btn-outline {
-    background: transparent;
-    color: var(--gold);
-    border: 1px solid var(--gold-dark);
-  }
+  .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold-dark); }
   .btn-outline:hover { background: rgba(201,168,76,0.08); }
-  .btn-sm {
-    font-size: 0.75rem;
-    padding: 0.45rem 1rem;
-    letter-spacing: 0.06em;
-  }
-  .btn-danger {
-    background: rgba(180,60,60,0.15);
-    color: #e08080;
-    border: 1px solid rgba(180,60,60,0.35);
-  }
+  .btn-sm { font-size: 0.75rem; padding: 0.45rem 1rem; letter-spacing: 0.06em; }
+  .btn-danger { background: rgba(180,60,60,0.15); color: #e08080; border: 1px solid rgba(180,60,60,0.35); }
   .btn-danger:hover { background: rgba(180,60,60,0.3); }
-  .btn-ghost {
-    background: rgba(255,255,255,0.05);
-    color: var(--text-dim);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
+  .btn-ghost { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.08); }
   .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
 
-  /* ===== LANDING / SETUP ===== */
+  /* ===== LANDING ===== */
   #landing {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 2.5rem 1.5rem 3rem;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 2.5rem 1.5rem 3rem;
     background: radial-gradient(ellipse at 50% 20%, #1a2040 0%, var(--bg-dark) 65%);
   }
-  .landing-hero {
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
+  .landing-hero { text-align: center; margin-bottom: 2.5rem; }
   .landing-hero .cross { font-size: 2.8rem; filter: drop-shadow(0 0 18px rgba(201,168,76,0.5)); margin-bottom: 0.8rem; }
   .landing-hero h1 {
     font-family: 'Cinzel', serif;
-    font-size: clamp(1.4rem, 4vw, 2.4rem);
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    text-shadow: 0 0 35px rgba(201,168,76,0.4);
-    margin-bottom: 0.5rem;
+    font-size: clamp(1.4rem, 4vw, 2.4rem); color: var(--gold);
+    letter-spacing: 0.1em; text-shadow: 0 0 35px rgba(201,168,76,0.4); margin-bottom: 0.5rem;
   }
   .landing-hero p { color: var(--text-dim); font-size: 0.9rem; }
-
   .setup-card {
-    background: var(--bg-card);
-    border: 1px solid rgba(201,168,76,0.18);
-    border-radius: 14px;
-    padding: 1.8rem;
-    width: 100%;
-    max-width: 780px;
-    margin-bottom: 1.5rem;
+    background: var(--bg-card); border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 14px; padding: 1.8rem; width: 100%; max-width: 820px; margin-bottom: 1.5rem;
   }
   .setup-card h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--gold);
+    letter-spacing: 0.12em; margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.5rem;
   }
-  .setup-card h3::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(201,168,76,0.18);
-  }
-  .church-input-row {
-    display: flex;
-    gap: 0.8rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    flex-wrap: wrap;
-  }
-  .church-input-row label { font-size: 0.82rem; color: var(--text-dim); white-space: nowrap; }
+  .setup-card h3::after { content:''; flex:1; height:1px; background:rgba(201,168,76,0.18); }
+  .church-input-row { display:flex; gap:0.8rem; align-items:center; margin-bottom:0.9rem; flex-wrap:wrap; }
+  .church-input-row label { font-size:0.82rem; color:var(--text-dim); white-space:nowrap; }
   .setup-input {
-    flex: 1;
-    min-width: 180px;
-    background: var(--bg-card2);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    padding: 0.55rem 0.9rem;
-    color: var(--text);
-    font-family: 'Lato', sans-serif;
-    font-size: 0.88rem;
-    outline: none;
-    transition: border-color 0.2s;
+    flex:1; min-width:180px;
+    background:var(--bg-card2); border:1px solid rgba(255,255,255,0.1);
+    border-radius:6px; padding:0.55rem 0.9rem;
+    color:var(--text); font-family:'Lato',sans-serif; font-size:0.88rem;
+    outline:none; transition:border-color 0.2s;
   }
-  .setup-input:focus { border-color: var(--gold-dark); }
+  .setup-input:focus { border-color:var(--gold-dark); }
 
+  /* Candidate editor */
   .candidates-editor {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.7rem;
-    margin-bottom: 1.2rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.75rem; margin-bottom: 1.2rem;
   }
   .candidate-edit-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: var(--bg-card2);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    padding: 0.6rem 0.8rem;
+    display: flex; align-items: center; gap: 0.7rem;
+    background: var(--bg-card2); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 0.65rem 0.85rem; transition: border-color 0.2s;
   }
-  .cnum {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-    min-width: 18px;
+  .candidate-edit-row:hover { border-color: rgba(201,168,76,0.2); }
+  .cnum { font-family:'Cinzel',serif; font-size:0.72rem; color:var(--gold-dark); font-weight:700; min-width:16px; }
+
+  /* Photo upload */
+  .photo-upload-wrap {
+    position: relative; flex-shrink: 0;
+    width: 48px; height: 48px; border-radius: 50%;
+    cursor: pointer; overflow: hidden;
   }
-  .candidate-edit-row input {
-    flex: 1;
-    background: transparent;
-    border: none;
+  .photo-preview {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; color: #fff;
+    overflow: hidden; border: 2px solid rgba(255,255,255,0.12); transition: border-color 0.2s;
+  }
+  .photo-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-preview.has-photo { border-color: rgba(201,168,76,0.55); }
+  .photo-overlay {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: rgba(0,0,0,0.58);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.18s; font-size: 1.15rem;
+  }
+  .photo-upload-wrap:hover .photo-overlay { opacity: 1; }
+  .photo-file-input { display: none; }
+
+  .candidate-edit-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:0.3rem; }
+  .candidate-edit-fields input {
+    background: transparent; border: none;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    color: var(--text);
-    font-family: 'Lato', sans-serif;
-    font-size: 0.85rem;
-    padding: 0.2rem 0.1rem;
-    outline: none;
-    transition: border-color 0.2s;
-    min-width: 0;
+    color: var(--text); font-family:'Lato',sans-serif; font-size:0.85rem;
+    padding: 0.18rem 0.1rem; outline: none; transition: border-color 0.2s; width:100%;
   }
-  .candidate-edit-row input:focus { border-bottom-color: var(--gold); }
-  .candidate-edit-row input::placeholder { color: var(--text-dim); }
+  .candidate-edit-fields input:focus { border-bottom-color: var(--gold); }
+  .candidate-edit-fields input::placeholder { color: var(--text-dim); }
+  .photo-clear-btn {
+    font-size: 0.62rem; color: var(--text-dim); background: none; border: none;
+    cursor: pointer; padding: 0; transition: color 0.15s; display: none; text-align: left;
+  }
+  .photo-clear-btn.visible { display: block; }
+  .photo-clear-btn:hover { color: #e08080; }
 
-  .setup-save-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .save-msg {
-    font-size: 0.8rem;
-    color: #6abf6a;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .save-msg.show { opacity: 1; }
+  .setup-save-row { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .save-msg { font-size:0.8rem; color:#6abf6a; opacity:0; transition:opacity 0.3s; }
+  .save-msg.show { opacity:1; }
 
-  .launch-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 0.5rem;
-  }
+  .launch-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:0.5rem; }
   .launch-card {
-    background: var(--bg-card);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    max-width: 220px;
+    background:var(--bg-card); border:1px solid rgba(201,168,76,0.2);
+    border-radius:12px; padding:1.5rem 2rem;
+    text-align:center; cursor:pointer; transition:all 0.2s; max-width:220px;
   }
-  .launch-card:hover { border-color: var(--gold); background: var(--bg-card2); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  .launch-card .lc-icon { font-size: 2rem; margin-bottom: 0.7rem; }
-  .launch-card .lc-title { font-family: 'Cinzel', serif; font-size: 0.88rem; color: var(--gold); font-weight: 700; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
-  .launch-card .lc-desc { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+  .launch-card:hover { border-color:var(--gold); background:var(--bg-card2); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+  .launch-card .lc-icon { font-size:2rem; margin-bottom:0.7rem; }
+  .launch-card .lc-title { font-family:'Cinzel',serif; font-size:0.88rem; color:var(--gold); font-weight:700; letter-spacing:0.08em; margin-bottom:0.4rem; }
+  .launch-card .lc-desc { font-size:0.75rem; color:var(--text-dim); line-height:1.5; }
 
   /* ===== CONTROL ===== */
-  #control {
-    display: none;
-    flex-direction: column;
-    min-height: 100vh;
-    background: linear-gradient(160deg, #10131c 0%, #0d0f14 100%);
-  }
+  #control { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#10131c,#0d0f14); }
   .ctrl-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.9rem 1.4rem;
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-    background: rgba(0,0,0,0.35);
-    flex-wrap: wrap;
-    gap: 0.7rem;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.9rem 1.4rem; border-bottom:1px solid rgba(201,168,76,0.15);
+    background:rgba(0,0,0,0.35); flex-wrap:wrap; gap:0.7rem;
   }
-  .ctrl-header h2 { font-family: 'Cinzel', serif; font-size: 0.92rem; color: var(--gold); letter-spacing: 0.1em; }
-  .ballot-counter { font-size: 0.82rem; color: var(--text-dim); }
-  .ballot-counter span { color: var(--gold-light); font-weight: 700; }
-  .ctrl-body { flex: 1; padding: 1.2rem 1.4rem; max-width: 920px; margin: 0 auto; width: 100%; }
+  .ctrl-header h2 { font-family:'Cinzel',serif; font-size:0.92rem; color:var(--gold); letter-spacing:0.1em; }
+  .ballot-counter { font-size:0.82rem; color:var(--text-dim); }
+  .ballot-counter span { color:var(--gold-light); font-weight:700; }
+  .ctrl-body { flex:1; padding:1.2rem 1.4rem; max-width:920px; margin:0 auto; width:100%; }
   .ctrl-instruction {
-    background: rgba(201,168,76,0.07);
-    border: 1px solid rgba(201,168,76,0.18);
-    border-radius: 8px;
-    padding: 0.85rem 1.1rem;
-    margin-bottom: 1.2rem;
-    font-size: 0.88rem;
-    line-height: 1.55;
-    color: #c8b87a;
+    background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.18);
+    border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1.2rem;
+    font-size:0.88rem; line-height:1.55; color:#c8b87a;
   }
-  .ctrl-instruction strong { color: var(--gold-light); }
-  .candidates-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.2rem;
-  }
+  .ctrl-instruction strong { color:var(--gold-light); }
+  .candidates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:0.75rem; margin-bottom:1.2rem; }
   .candidate-check {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: var(--bg-card);
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 0.85rem 0.95rem;
-    cursor: pointer;
-    transition: all 0.16s;
-    user-select: none;
+    display:flex; align-items:center; gap:0.75rem;
+    background:var(--bg-card); border:2px solid transparent;
+    border-radius:10px; padding:0.85rem 0.95rem;
+    cursor:pointer; transition:all 0.16s; user-select:none;
   }
-  .candidate-check:hover { border-color: rgba(201,168,76,0.25); background: var(--bg-card2); }
-  .candidate-check.not-selected {
-    border-color: #b03030;
-    background: rgba(160,35,35,0.18);
-  }
-  .candidate-check.not-selected .ccheck-name { color: #e07070; }
+  .candidate-check:hover { border-color:rgba(201,168,76,0.25); background:var(--bg-card2); }
+  .candidate-check.not-selected { border-color:#b03030; background:rgba(160,35,35,0.18); }
+  .candidate-check.not-selected .ccheck-name { color:#e07070; }
   .ccheck-avatar {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-    overflow: hidden;
+    width:42px; height:42px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700; color:#fff;
+    flex-shrink:0; overflow:hidden;
   }
-  .ccheck-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .ccheck-info { flex: 1; min-width: 0; }
-  .ccheck-name { font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 600; color: var(--text); line-height: 1.3; letter-spacing: 0.03em; }
-  .ccheck-votes { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
-  .ccheck-votes span { color: var(--gold-light); font-weight: 700; }
+  .ccheck-avatar img { width:100%; height:100%; object-fit:cover; }
+  .ccheck-info { flex:1; min-width:0; }
+  .ccheck-name { font-family:'Cinzel',serif; font-size:0.8rem; font-weight:600; color:var(--text); line-height:1.3; letter-spacing:0.03em; }
+  .ccheck-votes { font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+  .ccheck-votes span { color:var(--gold-light); font-weight:700; }
   .ccheck-box {
-    width: 22px; height: 22px;
-    border: 2px solid #444;
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-size: 0.95rem;
-    transition: all 0.15s;
-    color: #fff;
+    width:22px; height:22px; border:2px solid #444; border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; font-size:0.95rem; transition:all 0.15s; color:#fff;
   }
-  .candidate-check.not-selected .ccheck-box { background: #b03030; border-color: #b03030; }
+  .candidate-check.not-selected .ccheck-box { background:#b03030; border-color:#b03030; }
   .ctrl-footer {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.4rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    background: rgba(0,0,0,0.3);
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display:flex; align-items:center; gap:1rem;
+    padding:1rem 1.4rem; border-top:1px solid rgba(255,255,255,0.05);
+    background:rgba(0,0,0,0.3); flex-wrap:wrap; justify-content:space-between;
   }
-  .selection-status { font-size: 0.88rem; color: var(--text-dim); }
-  .selection-status.ok { color: #6abf6a; }
-  .selection-status.bad { color: #e08080; }
+  .selection-status { font-size:0.88rem; color:var(--text-dim); }
+  .selection-status.ok { color:#6abf6a; }
+  .selection-status.bad { color:#e08080; }
   .btn-submit {
-    font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
-    letter-spacing: 0.1em;
-    padding: 0.8rem 2.2rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #2a6e2a, #3a9a3a);
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 4px 16px rgba(40,150,40,0.25);
-    transition: all 0.2s;
-    opacity: 0.35;
-    pointer-events: none;
+    font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.1em;
+    padding:0.8rem 2.2rem; border:none; border-radius:6px; cursor:pointer;
+    background:linear-gradient(135deg,#2a6e2a,#3a9a3a); color:#fff; font-weight:700;
+    box-shadow:0 4px 16px rgba(40,150,40,0.25); transition:all 0.2s;
+    opacity:0.35; pointer-events:none;
   }
-  .btn-submit.active { opacity: 1; pointer-events: all; }
-  .btn-submit.active:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(40,150,40,0.45); }
+  .btn-submit.active { opacity:1; pointer-events:all; }
+  .btn-submit.active:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(40,150,40,0.45); }
   .vote-flash {
-    position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0.85);
-    background: rgba(42,120,42,0.96);
-    color: #fff;
-    font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
-    padding: 1.1rem 2.8rem;
-    border-radius: 12px;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 999;
-    transition: all 0.14s;
-    text-align: center;
+    position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%) scale(0.85);
+    background:rgba(42,120,42,0.96); color:#fff;
+    font-family:'Cinzel',serif; font-size:1.5rem;
+    padding:1.1rem 2.8rem; border-radius:12px;
+    opacity:0; pointer-events:none; z-index:999;
+    transition:all 0.14s; text-align:center;
   }
-  .vote-flash.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .vote-flash.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
 
   /* ===== DISPLAY (LED) ===== */
-  #display {
-    display: none;
-    flex-direction: column;
-    min-height: 100vh;
-    background: var(--bg-dark);
-  }
-  .disp-header {
-    text-align: center;
-    padding: 1.4rem 1rem 0.8rem;
-  }
+  #display { display:none; flex-direction:column; min-height:100vh; background:var(--bg-dark); }
+  .disp-header { text-align:center; padding:1.4rem 1rem 0.8rem; }
   .disp-header::after {
-    content: '';
-    display: block;
-    width: 100px;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0.7rem auto 0;
+    content:''; display:block; width:100px; height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    margin:0.7rem auto 0;
   }
   .disp-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.1rem, 2.8vw, 1.9rem);
-    color: var(--gold);
-    letter-spacing: 0.15em;
-    text-shadow: 0 0 28px rgba(201,168,76,0.45);
+    font-family:'Cinzel',serif; font-size:clamp(1.1rem,2.8vw,1.9rem); color:var(--gold);
+    letter-spacing:0.15em; text-shadow:0 0 28px rgba(201,168,76,0.45);
   }
-  .disp-subtitle { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.25rem; }
-  .total-ballots-disp { text-align: center; padding: 0.3rem; font-size: clamp(0.62rem, 1.1vw, 0.78rem); color: var(--text-dim); letter-spacing: 0.1em; }
-  .total-ballots-disp span { color: var(--gold); font-weight: 700; }
+  .disp-subtitle { font-size:0.72rem; color:var(--text-dim); letter-spacing:0.2em; text-transform:uppercase; margin-top:0.25rem; }
+  .total-ballots-disp { text-align:center; padding:0.3rem; font-size:clamp(0.62rem,1.1vw,0.78rem); color:var(--text-dim); letter-spacing:0.1em; }
+  .total-ballots-disp span { color:var(--gold); font-weight:700; }
   .disp-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 0.6rem;
-    padding: 0.5rem 0.8rem 0.8rem;
-    min-height: 0;
+    flex:1; display:grid;
+    grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+    gap:0.6rem; padding:0.5rem 0.8rem 0.8rem; min-height:0;
   }
   .disp-card {
-    background: var(--bg-card);
-    border-radius: 10px;
-    border: 1.5px solid rgba(255,255,255,0.06);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 0.3rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.4s, box-shadow 0.4s, filter 0.6s;
+    background:var(--bg-card); border-radius:10px;
+    border:1.5px solid rgba(255,255,255,0.06);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:0.5rem 0.3rem; position:relative; overflow:visible;
+    transition:border-color 0.5s, box-shadow 0.5s, filter 0.6s;
   }
-  /* Winner/loser only applied in results mode */
   .disp-card.result-winner {
-    border-color: rgba(201,168,76,0.55);
-    background: linear-gradient(160deg, #1a1e2e, #1e2030);
-    box-shadow: 0 0 28px var(--win-glow);
+    border-color:rgba(201,168,76,0.55);
+    background:linear-gradient(160deg,#1a1e2e,#1e2030);
+    box-shadow:0 0 28px var(--win-glow);
   }
-  .disp-card.result-loser { filter: var(--lose-filter); }
-  .disp-card.pulse { animation: cardPulse 0.45s ease; }
-  @keyframes cardPulse {
-    0% { transform: scale(1); }
-    38% { transform: scale(1.045); border-color: rgba(201,168,76,0.8); }
-    100% { transform: scale(1); }
+  .disp-card.result-loser { filter:var(--lose-filter); }
+
+  /* ── VOTE ANIMATION ── */
+  .disp-card.vote-pulse {
+    animation: votePulse 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
   }
+  @keyframes votePulse {
+    0%   { transform:scale(1);    border-color:rgba(255,255,255,0.06); box-shadow:none; }
+    12%  { transform:scale(1.07); border-color:rgba(201,168,76,1);    box-shadow:0 0 0 3px rgba(201,168,76,0.55), 0 0 45px rgba(201,168,76,0.6); }
+    30%  { transform:scale(1.045);box-shadow:0 0 0 7px rgba(201,168,76,0.22), 0 0 60px rgba(201,168,76,0.4); }
+    60%  { transform:scale(1.02); border-color:rgba(201,168,76,0.45); box-shadow:0 0 0 3px rgba(201,168,76,0.1), 0 0 30px rgba(201,168,76,0.2); }
+    100% { transform:scale(1);    border-color:rgba(255,255,255,0.06); box-shadow:none; }
+  }
+  .disp-card.result-winner.vote-pulse {
+    animation: votePulseWinner 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes votePulseWinner {
+    0%   { transform:scale(1);    box-shadow:0 0 28px var(--win-glow); }
+    12%  { transform:scale(1.07); box-shadow:0 0 0 4px rgba(201,168,76,0.6), 0 0 65px rgba(201,168,76,0.75); }
+    30%  { transform:scale(1.045);box-shadow:0 0 0 8px rgba(201,168,76,0.25), 0 0 75px rgba(201,168,76,0.5); }
+    60%  { transform:scale(1.02); box-shadow:0 0 0 3px rgba(201,168,76,0.12), 0 0 40px rgba(201,168,76,0.35); }
+    100% { transform:scale(1);    box-shadow:0 0 28px var(--win-glow); }
+  }
+
+  /* Floating +1 */
+  .plus-one {
+    position: absolute; top: 8%; right: 10%;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.8rem, 1.7vw, 1.2rem);
+    font-weight: 700; color: var(--gold-light);
+    text-shadow: 0 0 14px rgba(201,168,76,0.95);
+    pointer-events: none; z-index: 20;
+    animation: floatUp 1.2s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0%   { opacity:0;   transform:translateY(4px) scale(1.3); }
+    12%  { opacity:1;   transform:translateY(0)   scale(1); }
+    75%  { opacity:0.7; transform:translateY(-26px); }
+    100% { opacity:0;   transform:translateY(-44px); }
+  }
+
+  /* Number pop */
+  .disp-votes.num-pop { animation: numPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes numPop {
+    0%   { transform:scale(1); }
+    42%  { transform:scale(1.4); color:var(--gold-light); }
+    100% { transform:scale(1); }
+  }
+
   .disp-avatar {
-    width: clamp(46px, 7.5vw, 84px);
-    height: clamp(46px, 7.5vw, 84px);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1rem, 2.2vw, 1.85rem);
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.45rem;
-    border: 2px solid rgba(255,255,255,0.1);
-    flex-shrink: 0;
-    overflow: hidden;
-    transition: border-color 0.4s;
+    width:clamp(46px,7.5vw,84px); height:clamp(46px,7.5vw,84px);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Cinzel',serif; font-size:clamp(1rem,2.2vw,1.85rem); font-weight:700; color:#fff;
+    margin-bottom:0.45rem; border:2px solid rgba(255,255,255,0.1);
+    flex-shrink:0; overflow:hidden; transition:border-color 0.4s;
   }
-  .disp-card.result-winner .disp-avatar { border-color: rgba(201,168,76,0.6); }
-  .disp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .disp-card.result-winner .disp-avatar { border-color:rgba(201,168,76,0.6); }
+  .disp-avatar img { width:100%; height:100%; object-fit:cover; }
   .disp-name {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(0.56rem, 1.2vw, 0.9rem);
-    font-weight: 700;
-    color: var(--text);
-    text-align: center;
-    letter-spacing: 0.03em;
-    line-height: 1.22;
-    margin-bottom: 0.28rem;
+    font-family:'Cinzel',serif; font-size:clamp(0.56rem,1.2vw,0.9rem); font-weight:700;
+    color:var(--text); text-align:center; letter-spacing:0.03em; line-height:1.22; margin-bottom:0.28rem;
   }
   .disp-votes {
-    font-size: clamp(1.3rem, 3.2vw, 2.6rem);
-    font-weight: 700;
-    color: var(--text-dim);
-    font-variant-numeric: tabular-nums;
-    transition: color 0.4s;
-    line-height: 1;
+    font-size:clamp(1.3rem,3.2vw,2.6rem); font-weight:700; color:var(--text-dim);
+    font-variant-numeric:tabular-nums; line-height:1; transition:color 0.4s; display:inline-block;
   }
-  .disp-card.result-winner .disp-votes { color: var(--gold-light); }
-  .disp-votes-label { font-size: clamp(0.48rem, 0.9vw, 0.62rem); color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+  .disp-card.result-winner .disp-votes { color:var(--gold-light); }
+  .disp-votes-label { font-size:clamp(0.48rem,0.9vw,0.62rem); color:var(--text-dim); letter-spacing:0.12em; text-transform:uppercase; margin-top:2px; }
   .disp-rank {
-    position: absolute; top: 5px; left: 7px;
-    font-family: 'Cinzel', serif; font-size: 0.6rem; color: var(--gold-dark); font-weight: 700;
-    opacity: 0; transition: opacity 0.4s;
+    position:absolute; top:5px; left:7px;
+    font-family:'Cinzel',serif; font-size:0.6rem; color:var(--gold-dark); font-weight:700;
+    opacity:0; transition:opacity 0.4s;
   }
-  .disp-card.result-winner .disp-rank { opacity: 1; }
-  .disp-crown { position: absolute; top: 4px; right: 7px; font-size: 0.85rem; opacity: 0; transition: opacity 0.4s; }
-  .disp-card.result-winner .disp-crown { opacity: 1; }
-  .disp-footer { text-align: center; padding: 0.5rem; font-size: 0.65rem; color: rgba(255,255,255,0.1); letter-spacing: 0.15em; text-transform: uppercase; }
+  .disp-card.result-winner .disp-rank { opacity:1; }
+  .disp-crown { position:absolute; top:4px; right:7px; font-size:0.85rem; opacity:0; transition:opacity 0.4s; }
+  .disp-card.result-winner .disp-crown { opacity:1; }
+  .disp-footer { text-align:center; padding:0.5rem; font-size:0.65rem; color:rgba(255,255,255,0.1); letter-spacing:0.15em; text-transform:uppercase; }
 
-  /* ===== RESULTS OVERLAY ===== */
+  /* ===== RESULTS ===== */
   #results-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at 50% 35%, #0e1525 0%, #050709 100%);
-    z-index: 100;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 1rem;
-    overflow-y: auto;
+    display:none; position:fixed; inset:0;
+    background:radial-gradient(ellipse at 50% 35%,#0e1525 0%,#050709 100%);
+    z-index:100; flex-direction:column; align-items:center;
+    padding:1.5rem 1rem; overflow-y:auto;
   }
   .results-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.2rem, 2.8vw, 2rem);
-    color: var(--gold);
-    text-align: center;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.3rem;
-    text-shadow: 0 0 36px rgba(201,168,76,0.5);
+    font-family:'Cinzel',serif; font-size:clamp(1.2rem,2.8vw,2rem); color:var(--gold);
+    text-align:center; letter-spacing:0.15em; margin-bottom:0.3rem;
+    text-shadow:0 0 36px rgba(201,168,76,0.5);
   }
-  .results-divider { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0.6rem auto 1.1rem; }
+  .results-divider { width:180px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:0.6rem auto 1.1rem; }
   .results-section-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    width: 100%; max-width: 960px;
-    margin-bottom: 0.4rem;
-    padding-left: 2px;
+    font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--text-dim);
+    width:100%; max-width:960px; margin-bottom:0.4rem; padding-left:2px;
   }
-  .results-section-label.elected { color: var(--gold-dark); }
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-    gap: 0.9rem;
-    width: 100%; max-width: 960px;
-  }
+  .results-section-label.elected { color:var(--gold-dark); }
+  .results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(165px,1fr)); gap:0.9rem; width:100%; max-width:960px; }
   .result-card {
-    border-radius: 13px;
-    padding: 1.1rem 0.9rem;
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    animation: fadeInUp 0.45s both;
-    position: relative; overflow: hidden;
+    border-radius:13px; padding:1.1rem 0.9rem;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    animation:fadeInUp 0.45s both; position:relative; overflow:hidden;
   }
-  @keyframes fadeInUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
   .result-card.win-card {
-    background: linear-gradient(160deg, #1a2035, #161c2e);
-    border: 1.5px solid rgba(201,168,76,0.5);
-    box-shadow: 0 8px 28px rgba(201,168,76,0.18);
+    background:linear-gradient(160deg,#1a2035,#161c2e);
+    border:1.5px solid rgba(201,168,76,0.5);
+    box-shadow:0 8px 28px rgba(201,168,76,0.18);
   }
-  .result-card.lose-card {
-    background: #111318;
-    border: 1.5px solid rgba(255,255,255,0.05);
-    filter: grayscale(1) brightness(0.52);
-  }
+  .result-card.lose-card { background:#111318; border:1.5px solid rgba(255,255,255,0.05); filter:grayscale(1) brightness(0.52); }
   .result-card-avatar {
-    width: 76px; height: 76px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif; font-size: 1.7rem; font-weight: 700; color: #fff;
-    margin-bottom: 0.75rem; overflow: hidden;
-    border: 2px solid rgba(201,168,76,0.35);
+    width:76px; height:76px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:#fff;
+    margin-bottom:0.75rem; overflow:hidden; border:2px solid rgba(201,168,76,0.35);
   }
-  .result-card.lose-card .result-card-avatar { border-color: transparent; }
-  .result-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .result-card-name { font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.45rem; letter-spacing: 0.04em; line-height: 1.3; }
-  .result-card-votes { font-size: 2rem; font-weight: 700; color: var(--gold-light); line-height: 1; }
-  .result-card.lose-card .result-card-votes { color: #555; }
-  .result-card-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-top: 2px; }
-  .result-card-badge { position: absolute; top: 7px; right: 9px; font-size: 1rem; }
-  .results-actions { display: flex; gap: 0.9rem; margin-top: 1.4rem; flex-wrap: wrap; justify-content: center; }
+  .result-card.lose-card .result-card-avatar { border-color:transparent; }
+  .result-card-avatar img { width:100%; height:100%; object-fit:cover; }
+  .result-card-name { font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:var(--text); margin-bottom:0.45rem; letter-spacing:0.04em; line-height:1.3; }
+  .result-card-votes { font-size:2rem; font-weight:700; color:var(--gold-light); line-height:1; }
+  .result-card.lose-card .result-card-votes { color:#555; }
+  .result-card-label { font-size:0.58rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--text-dim); margin-top:2px; }
+  .result-card-badge { position:absolute; top:7px; right:9px; font-size:1rem; }
+  .results-actions { display:flex; gap:0.9rem; margin-top:1.4rem; flex-wrap:wrap; justify-content:center; }
 
-  .conn-row { display: flex; align-items: center; gap: 0.5rem; }
-  .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; display: inline-block; transition: background 0.3s; }
-  .conn-dot.live { background: #4caf50; animation: blink 2s infinite; }
+  .conn-row { display:flex; align-items:center; gap:0.5rem; }
+  .conn-dot { width:7px; height:7px; border-radius:50%; background:#555; display:inline-block; }
+  .conn-dot.live { background:#4caf50; animation:blink 2s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
 </style>
 </head>
 <body>
 
-<!-- ======================================================
-     LANDING / SETUP
-     ====================================================== -->
+<!-- ═══════════ LANDING ═══════════ -->
 <div id="landing">
   <div class="landing-hero">
     <div class="cross">✝</div>
     <h1>Elección de Diáconos</h1>
-    <p>Configura los candidatos, luego abre las dos ventanas para el escrutinio.</p>
+    <p>Configura los candidatos y sus fotos, luego abre las dos ventanas para el escrutinio.</p>
   </div>
 
-  <!-- Configuración general -->
   <div class="setup-card">
     <h3>⚙ Configuración General</h3>
-    <div class="church-input-row" style="margin-bottom:0.9rem;">
+    <div class="church-input-row">
       <label>Nombre de la iglesia:</label>
       <input class="setup-input" id="cfg-church" placeholder="Mi Iglesia Local" maxlength="60">
     </div>
-    <div class="church-input-row">
-      <label>Cédulas esperadas (aprox.):</label>
-      <input class="setup-input" id="cfg-total" type="number" placeholder="Ej: 120" min="1" max="9999" style="max-width:120px;">
-    </div>
   </div>
 
-  <!-- Editor de candidatos -->
   <div class="setup-card">
-    <h3>👤 Candidatos (9)</h3>
+    <h3>👤 Candidatos — Nombres y Fotos</h3>
     <div class="candidates-editor" id="candidates-editor"></div>
     <div class="setup-save-row">
       <button class="btn btn-gold" onclick="saveConfig()">💾 Guardar Configuración</button>
       <span class="save-msg" id="save-msg">✓ Guardado correctamente</span>
     </div>
-    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.8rem;">
-      Los datos se guardan en este navegador/dispositivo y se mantienen al cerrar la página.
-      <br>Para añadir fotos, edita el código y coloca la URL en el campo <code style="color:var(--gold-dark)">photo</code>.
+    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.9rem;">
+      Haz clic en el círculo de cada candidato para subir su foto. Los datos se guardan en este navegador y persisten al cerrar la página.
     </p>
   </div>
 
-  <!-- Botones de acceso -->
   <div class="setup-card" style="text-align:center;">
     <h3>🚀 Iniciar Escrutinio</h3>
     <div class="launch-row">
@@ -592,8 +428,8 @@
       </div>
     </div>
     <p style="font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">
-      Abre ambas ventanas en el mismo computador.
-      También puedes acceder directamente con <code style="color:var(--gold-dark)">?modo=control</code> o <code style="color:var(--gold-dark)">?modo=pantalla</code>.
+      Abre ambas en el mismo computador —
+      o usa <code style="color:var(--gold-dark)">?modo=control</code> / <code style="color:var(--gold-dark)">?modo=pantalla</code>
     </p>
   </div>
 
@@ -602,15 +438,13 @@
   </div>
 </div>
 
-<!-- ======================================================
-     CONTROL
-     ====================================================== -->
+<!-- ═══════════ CONTROL ═══════════ -->
 <div id="control">
   <div class="ctrl-header">
     <h2>✝ Panel de Control — Escrutinio</h2>
     <div class="ballot-counter">Cédulas: <span id="ballot-count">0</span></div>
     <div class="conn-row">
-      <span class="conn-dot live" id="ctrl-conn"></span>
+      <span class="conn-dot live"></span>
       <small style="color:var(--text-dim);font-size:0.7rem;">Sincronizando</small>
       <button class="btn btn-ghost btn-sm" onclick="showResults()">Ver Resultados</button>
       <button class="btn btn-danger btn-sm" onclick="resetAll(false)">↺ Reiniciar</button>
@@ -618,10 +452,10 @@
     </div>
   </div>
   <div class="ctrl-body">
-    <div class="ctrl-instruction" id="ctrl-instruction">
+    <div class="ctrl-instruction">
       Lee la cédula y marca los <strong>2 candidatos que NO fueron elegidos</strong>.
       Los demás recibirán un voto automáticamente.<br>
-      <span style="font-size:0.8rem;opacity:0.75;">Si la cédula tiene menos de 7 marcas, selecciona los que falten.</span>
+      <span style="font-size:0.8rem;opacity:0.75;">Si la cédula tiene menos de 7 marcas, selecciona los que correspondan.</span>
     </div>
     <div class="candidates-grid" id="ctrl-candidates"></div>
   </div>
@@ -629,12 +463,13 @@
     <div class="selection-status" id="sel-status">Selecciona los candidatos no elegidos en esta cédula</div>
     <button class="btn-submit" id="submit-btn" onclick="submitVote()">✔ Registrar Voto</button>
   </div>
-  <div class="vote-flash" id="vote-flash">¡Voto registrado!<br><span id="flash-detail" style="font-size:0.8rem;font-family:'Lato',sans-serif;opacity:0.8;"></span></div>
+  <div class="vote-flash" id="vote-flash">
+    ¡Voto registrado!<br>
+    <span id="flash-detail" style="font-size:0.8rem;font-family:'Lato',sans-serif;opacity:0.8;"></span>
+  </div>
 </div>
 
-<!-- ======================================================
-     DISPLAY (LED SCREEN)
-     ====================================================== -->
+<!-- ═══════════ DISPLAY ═══════════ -->
 <div id="display">
   <div class="disp-header">
     <div class="disp-title">ELECCIÓN DE DIÁCONOS</div>
@@ -645,9 +480,7 @@
   <div class="disp-footer">✝ Sistema de votación</div>
 </div>
 
-<!-- ======================================================
-     RESULTS OVERLAY
-     ====================================================== -->
+<!-- ═══════════ RESULTS ═══════════ -->
 <div id="results-overlay">
   <div class="results-title">🏅 RESULTADO FINAL</div>
   <div class="results-divider"></div>
@@ -662,116 +495,118 @@
 </div>
 
 <script>
-// ============================================================
-// CONFIGURACIÓN BASE (se sobreescribe con localStorage)
-// ============================================================
-const DEFAULT_CANDIDATES = [
-  { id:0, name:"Candidato 1",  color:"#3d6b8e", photo:null },
-  { id:1, name:"Candidato 2",  color:"#6b3d8e", photo:null },
-  { id:2, name:"Candidato 3",  color:"#8e6b3d", photo:null },
-  { id:3, name:"Candidato 4",  color:"#3d8e5a", photo:null },
-  { id:4, name:"Candidato 5",  color:"#8e3d3d", photo:null },
-  { id:5, name:"Candidato 6",  color:"#3d7a8e", photo:null },
-  { id:6, name:"Candidato 7",  color:"#8e843d", photo:null },
-  { id:7, name:"Candidato 8",  color:"#5a3d8e", photo:null },
-  { id:8, name:"Candidato 9",  color:"#3d8e77", photo:null },
-];
+// ── CONSTANTS ──────────────────────────────────
 const TOTAL_CANDIDATES = 9;
-const TOTAL_TO_ELECT   = 7;  // diáconos a elegir
-const MIN_NOT_SELECTED = 2;  // mínimo habitual
-const MAX_NOT_SELECTED = 4;  // máximo permitido (si cedula tiene 5 marcas)
+const TOTAL_TO_ELECT   = 7;
+const MAX_NOT_SELECTED = 4;
+const PHOTO_MAX_PX     = 300;
+const PHOTO_QUALITY    = 0.78;
+const COLORS = ["#3d6b8e","#6b3d8e","#8e6b3d","#3d8e5a","#8e3d3d","#3d7a8e","#8e843d","#5a3d8e","#3d8e77"];
 
-// ============================================================
-// STATE
-// ============================================================
-let candidates = JSON.parse(JSON.stringify(DEFAULT_CANDIDATES));
-let votes      = candidates.map(() => 0);
+// ── STATE ───────────────────────────────────────
+let candidates  = Array.from({length:9}, (_,i) => ({id:i, name:`Candidato ${i+1}`, color:COLORS[i], photo:null}));
+let votes       = Array(9).fill(0);
 let ballotCount = 0;
 let churchName  = 'Iglesia Local';
 let selected    = new Set();
 let currentMode = 'landing';
 let channel;
 
-// ============================================================
-// PERSISTENCE (localStorage)
-// ============================================================
+// ── PERSISTENCE ─────────────────────────────────
 function saveAll() {
-  localStorage.setItem('diac-candidates', JSON.stringify(candidates));
-  localStorage.setItem('diac-votes',      JSON.stringify(votes));
-  localStorage.setItem('diac-ballots',    String(ballotCount));
-  localStorage.setItem('diac-church',     churchName);
+  const meta = candidates.map(c => ({id:c.id, name:c.name, color:c.color, hasPhoto:!!c.photo}));
+  localStorage.setItem('diac-meta',    JSON.stringify(meta));
+  localStorage.setItem('diac-votes',   JSON.stringify(votes));
+  localStorage.setItem('diac-ballots', String(ballotCount));
+  localStorage.setItem('diac-church',  churchName);
+  candidates.forEach(c => {
+    if (c.photo) localStorage.setItem(`diac-photo-${c.id}`, c.photo);
+    else         localStorage.removeItem(`diac-photo-${c.id}`);
+  });
 }
 
 function loadAll() {
   try {
-    const c = localStorage.getItem('diac-candidates');
-    if (c) candidates = JSON.parse(c);
-    const v = localStorage.getItem('diac-votes');
-    if (v) votes = JSON.parse(v);
+    const meta = JSON.parse(localStorage.getItem('diac-meta'));
+    if (meta) candidates = meta.map(m => ({
+      id:m.id, name:m.name, color:m.color,
+      photo: m.hasPhoto ? (localStorage.getItem(`diac-photo-${m.id}`) || null) : null
+    }));
+    const v = JSON.parse(localStorage.getItem('diac-votes'));
+    if (v) votes = v;
     const b = localStorage.getItem('diac-ballots');
     if (b) ballotCount = parseInt(b) || 0;
     const ch = localStorage.getItem('diac-church');
     if (ch) churchName = ch;
-  } catch(e) {}
+  } catch(e){}
 }
 
-// ============================================================
-// BROADCAST (sync across tabs in same browser)
-// ============================================================
+// ── BROADCAST ───────────────────────────────────
 try {
-  channel = new BroadcastChannel('diacono-election-v2');
-  channel.onmessage = (e) => handleMsg(e.data);
-} catch(e) { channel = null; }
+  channel = new BroadcastChannel('diacono-election-v3');
+  channel.onmessage = e => handleMsg(e.data);
+} catch(e){ channel = null; }
 
 function handleMsg(data) {
   if (data.type === 'state') {
-    votes = data.votes;
-    ballotCount = data.ballotCount;
+    votes = data.votes; ballotCount = data.ballotCount;
     if (currentMode === 'display') updateDisplayUI(false);
     if (currentMode === 'control') updateControlTallies();
   }
   if (data.type === 'results') {
-    votes = data.votes;
-    ballotCount = data.ballotCount;
+    votes = data.votes; ballotCount = data.ballotCount;
     if (currentMode === 'display') {
-      updateDisplayUI(true); // apply winner/loser
+      updateDisplayUI(true);
       renderResultsOverlay();
       document.getElementById('results-overlay').style.display = 'flex';
     }
   }
   if (data.type === 'hide-results') {
     if (currentMode === 'display') {
-      updateDisplayUI(false); // remove winner/loser styling
+      updateDisplayUI(false);
       document.getElementById('results-overlay').style.display = 'none';
     }
   }
-  if (data.type === 'reset') {
-    doReset();
-  }
-  if (data.type === 'request-state') {
-    broadcast({ type: 'state', votes, ballotCount });
+  if (data.type === 'reset') doReset();
+  if (data.type === 'request-state') broadcast({type:'state', votes, ballotCount});
+  if (data.type === 'vote-animation') {
+    if (currentMode === 'display') data.votedIds.forEach(id => triggerVoteAnimation(id));
   }
 }
+function broadcast(data) { if(channel) channel.postMessage(data); }
 
-function broadcast(data) {
-  if (channel) channel.postMessage(data);
-}
-
-// ============================================================
-// HELPERS
-// ============================================================
+// ── HELPERS ─────────────────────────────────────
 function getInitials(name) {
-  return name.split(' ').filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
+  return name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?';
 }
 function avatarInner(c) {
-  if (c.photo) return `<img src="${c.photo}" alt="${c.name}" onerror="this.style.display='none'">`;
+  if (c.photo) return `<img src="${c.photo}" alt="${c.name}">`;
   return getInitials(c.name);
 }
 
-// ============================================================
-// LANDING / SETUP
-// ============================================================
+function resizeImage(file, cb) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const sz   = Math.min(side, PHOTO_MAX_PX);
+      const canvas = document.createElement('canvas');
+      canvas.width = sz; canvas.height = sz;
+      const ctx = canvas.getContext('2d');
+      const sx = (img.width  - side) / 2;
+      const sy = (img.height - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, sz, sz);
+      cb(canvas.toDataURL('image/jpeg', PHOTO_QUALITY));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── LANDING EDITOR ──────────────────────────────
 function buildLandingEditor() {
+  document.getElementById('cfg-church').value = churchName;
   const grid = document.getElementById('candidates-editor');
   grid.innerHTML = '';
   candidates.forEach((c, i) => {
@@ -779,11 +614,47 @@ function buildLandingEditor() {
     div.className = 'candidate-edit-row';
     div.innerHTML = `
       <span class="cnum">${i+1}</span>
-      <input type="text" id="edit-name-${i}" value="${c.name}" placeholder="Nombre del candidato" maxlength="40">
+      <div class="photo-upload-wrap" onclick="document.getElementById('file-inp-${i}').click()" title="Clic para subir foto">
+        <div class="photo-preview${c.photo ? ' has-photo' : ''}" id="prev-${i}" style="background:${c.color};">
+          ${c.photo ? `<img src="${c.photo}" alt="">` : getInitials(c.name)}
+        </div>
+        <div class="photo-overlay">📷</div>
+        <input class="photo-file-input" type="file" id="file-inp-${i}" accept="image/*"
+               onchange="handlePhotoUpload(${i},this)">
+      </div>
+      <div class="candidate-edit-fields">
+        <input type="text" id="edit-name-${i}" value="${c.name}"
+               placeholder="Nombre del candidato" maxlength="40">
+        <button class="photo-clear-btn${c.photo ? ' visible' : ''}"
+                id="clear-${i}" onclick="clearPhoto(${i})">✕ Quitar foto</button>
+      </div>
     `;
     grid.appendChild(div);
   });
-  document.getElementById('cfg-church').value = churchName;
+}
+
+function handlePhotoUpload(idx, input) {
+  const file = input.files[0];
+  if (!file) return;
+  resizeImage(file, base64 => {
+    candidates[idx].photo = base64;
+    const prev = document.getElementById(`prev-${idx}`);
+    prev.innerHTML = `<img src="${base64}" alt="">`;
+    prev.classList.add('has-photo');
+    document.getElementById(`clear-${idx}`).classList.add('visible');
+    saveAll();
+  });
+  input.value = '';
+}
+
+function clearPhoto(idx) {
+  candidates[idx].photo = null;
+  const prev = document.getElementById(`prev-${idx}`);
+  const name = (document.getElementById(`edit-name-${idx}`) || {}).value || candidates[idx].name;
+  prev.innerHTML = getInitials(name);
+  prev.classList.remove('has-photo');
+  document.getElementById(`clear-${idx}`).classList.remove('visible');
+  saveAll();
 }
 
 function saveConfig() {
@@ -794,7 +665,13 @@ function saveConfig() {
   const ch = document.getElementById('cfg-church').value.trim();
   if (ch) churchName = ch;
   saveAll();
-  // Flash save message
+  // Refresh initials in previews for name-only candidates
+  candidates.forEach((c, i) => {
+    if (!c.photo) {
+      const prev = document.getElementById(`prev-${i}`);
+      if (prev) prev.textContent = getInitials(c.name);
+    }
+  });
   const msg = document.getElementById('save-msg');
   msg.classList.add('show');
   setTimeout(() => msg.classList.remove('show'), 2200);
@@ -809,35 +686,27 @@ function backToLanding() {
   buildLandingEditor();
 }
 
-// ============================================================
-// OPEN MODE
-// ============================================================
+// ── OPEN MODE ───────────────────────────────────
 function openMode(mode) {
-  saveConfig(); // persist any edits before switching
+  saveConfig();
   currentMode = mode;
   document.getElementById('landing').style.display = 'none';
   document.getElementById('control').style.display = 'none';
   document.getElementById('display').style.display = 'none';
-
   if (mode === 'control') {
     document.getElementById('control').style.display = 'flex';
-    buildControlGrid();
-    updateControlTallies();
-    document.getElementById('ballot-count').textContent = ballotCount;
-    broadcast({ type: 'request-state' });
+    buildControlGrid(); updateControlTallies();
+    broadcast({type:'request-state'});
   }
   if (mode === 'display') {
     document.getElementById('display').style.display = 'flex';
     document.getElementById('disp-church-sub').textContent = churchName;
-    buildDisplayGrid();
-    updateDisplayUI(false);
-    broadcast({ type: 'request-state' });
+    buildDisplayGrid(); updateDisplayUI(false);
+    broadcast({type:'request-state'});
   }
 }
 
-// ============================================================
-// CONTROL PANEL
-// ============================================================
+// ── CONTROL PANEL ───────────────────────────────
 function buildControlGrid() {
   const grid = document.getElementById('ctrl-candidates');
   grid.innerHTML = '';
@@ -859,13 +728,8 @@ function buildControlGrid() {
 }
 
 function toggleSelect(id) {
-  if (selected.has(id)) {
-    selected.delete(id);
-  } else {
-    // Allow up to MAX_NOT_SELECTED (e.g. if ballot only has 5 marks)
-    if (selected.size >= MAX_NOT_SELECTED) return;
-    selected.add(id);
-  }
+  if (selected.has(id)) selected.delete(id);
+  else { if (selected.size >= MAX_NOT_SELECTED) return; selected.add(id); }
   updateSelectionUI();
 }
 
@@ -874,64 +738,40 @@ function updateSelectionUI() {
     const el  = document.getElementById(`ctrl-c-${c.id}`);
     const box = document.getElementById(`ctrl-box-${c.id}`);
     if (!el) return;
-    if (selected.has(c.id)) {
-      el.classList.add('not-selected');
-      box.textContent = '✕';
-    } else {
-      el.classList.remove('not-selected');
-      box.textContent = '';
-    }
+    if (selected.has(c.id)) { el.classList.add('not-selected');    box.textContent = '✕'; }
+    else                     { el.classList.remove('not-selected'); box.textContent = ''; }
   });
-
   const n = selected.size;
   const status = document.getElementById('sel-status');
   const btn    = document.getElementById('submit-btn');
-  const willVote = TOTAL_CANDIDATES - n;
-
-  if (n >= MIN_NOT_SELECTED && n <= MAX_NOT_SELECTED) {
-    status.textContent = `✓ ${willVote} candidatos recibirán un voto`;
+  if (n >= 1 && n <= MAX_NOT_SELECTED) {
+    status.textContent = `✓ ${TOTAL_CANDIDATES - n} candidatos recibirán un voto`;
     status.className = 'selection-status ok';
     btn.classList.add('active');
   } else if (n === 0) {
-    status.textContent = `Selecciona los candidatos no elegidos en esta cédula`;
+    status.textContent = 'Selecciona los candidatos no elegidos en esta cédula';
     status.className = 'selection-status';
     btn.classList.remove('active');
-  } else if (n > MAX_NOT_SELECTED) {
+  } else {
     status.textContent = `Máximo ${MAX_NOT_SELECTED} no elegidos por cédula`;
     status.className = 'selection-status bad';
     btn.classList.remove('active');
-  } else {
-    // n === 1 edge case — allow it too (someone voted for 8 out of 9)
-    if (n === 1) {
-      status.textContent = `✓ ${willVote} candidatos recibirán un voto`;
-      status.className = 'selection-status ok';
-      btn.classList.add('active');
-    } else {
-      status.textContent = `Selecciona al menos ${MIN_NOT_SELECTED} no elegidos`;
-      status.className = 'selection-status bad';
-      btn.classList.remove('active');
-    }
   }
 }
 
 function submitVote() {
   if (selected.size < 1 || selected.size > MAX_NOT_SELECTED) return;
-
-  const notVoted = [...selected].map(id => candidates.find(c => c.id === id).name).join(', ');
-  const counted  = TOTAL_CANDIDATES - selected.size;
-
-  candidates.forEach(c => {
-    if (!selected.has(c.id)) votes[c.id]++;
-  });
+  const votedIds = [];
+  candidates.forEach(c => { if (!selected.has(c.id)) { votes[c.id]++; votedIds.push(c.id); } });
   ballotCount++;
+  const counted = TOTAL_CANDIDATES - selected.size;
   selected.clear();
-  updateSelectionUI();
-  updateControlTallies();
-  document.getElementById('ballot-count').textContent = ballotCount;
+  updateSelectionUI(); updateControlTallies();
   saveAll();
-  broadcast({ type: 'state', votes, ballotCount });
-
-  // Flash
+  broadcast({type:'state', votes, ballotCount});
+  broadcast({type:'vote-animation', votedIds});
+  // Also animate locally if control and display are same window (edge case)
+  if (currentMode === 'display') votedIds.forEach(id => triggerVoteAnimation(id));
   document.getElementById('flash-detail').textContent = `+1 para ${counted} candidatos`;
   const flash = document.getElementById('vote-flash');
   flash.classList.add('show');
@@ -947,9 +787,7 @@ function updateControlTallies() {
   if (el) el.textContent = ballotCount;
 }
 
-// ============================================================
-// DISPLAY (LED Screen)
-// ============================================================
+// ── DISPLAY ─────────────────────────────────────
 function buildDisplayGrid() {
   const grid = document.getElementById('disp-candidates');
   grid.innerHTML = '';
@@ -969,39 +807,50 @@ function buildDisplayGrid() {
   });
 }
 
-// showFinal = true  → apply winner/loser styling (only on results screen)
-// showFinal = false → all cards look equal (during counting)
+function triggerVoteAnimation(id) {
+  const card = document.getElementById(`disp-c-${id}`);
+  const vEl  = document.getElementById(`disp-v-${id}`);
+  if (!card || !vEl) return;
+
+  // Floating +1
+  const badge = document.createElement('span');
+  badge.className = 'plus-one';
+  badge.textContent = '+1';
+  card.appendChild(badge);
+  setTimeout(() => badge.remove(), 1300);
+
+  // Number pop
+  vEl.classList.remove('num-pop');
+  void vEl.offsetWidth;
+  vEl.classList.add('num-pop');
+  setTimeout(() => vEl.classList.remove('num-pop'), 550);
+
+  // Card glow pulse
+  const isWinner = card.classList.contains('result-winner');
+  card.classList.remove('vote-pulse');
+  void card.offsetWidth;
+  card.classList.add('vote-pulse');
+  setTimeout(() => card.classList.remove('vote-pulse'), 1300);
+}
+
 function updateDisplayUI(showFinal) {
   document.getElementById('disp-ballot-count').textContent = ballotCount;
-
-  const sorted = votes.map((v, i) => ({ v, i })).sort((a, b) => b.v - a.v);
-  const rankOf = {};
-  sorted.forEach((item, rank) => { rankOf[item.i] = rank; });
-
+  const sorted = votes.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
+  const rankOf = {}; sorted.forEach((item,rank) => { rankOf[item.i] = rank; });
   candidates.forEach(c => {
-    const vEl   = document.getElementById(`disp-v-${c.id}`);
-    const card  = document.getElementById(`disp-c-${c.id}`);
+    const vEl    = document.getElementById(`disp-v-${c.id}`);
+    const card   = document.getElementById(`disp-c-${c.id}`);
     const rankEl = document.getElementById(`disp-rank-${c.id}`);
-    const crownEl = document.getElementById(`disp-crown-${c.id}`);
+    const crownEl= document.getElementById(`disp-crown-${c.id}`);
     if (!vEl || !card) return;
-
-    const oldVal = parseInt(vEl.textContent) || 0;
-    const newVal = votes[c.id];
-    if (newVal !== oldVal) {
-      vEl.textContent = newVal;
-      card.classList.add('pulse');
-      setTimeout(() => card.classList.remove('pulse'), 480);
-    }
-
+    vEl.textContent = votes[c.id];
     const rank = rankOf[c.id];
-    rankEl.textContent = `#${rank + 1}`;
-
-    // Only apply styling if in final/results mode
-    card.classList.remove('result-winner', 'result-loser');
+    rankEl.textContent = `#${rank+1}`;
+    card.classList.remove('result-winner','result-loser');
     if (showFinal && ballotCount > 0) {
       if (rank < TOTAL_TO_ELECT) {
         card.classList.add('result-winner');
-        crownEl.textContent = rank === 0 ? '★' : '✦';
+        crownEl.textContent = rank===0?'★':'✦';
       } else {
         card.classList.add('result-loser');
       }
@@ -1009,90 +858,64 @@ function updateDisplayUI(showFinal) {
   });
 }
 
-// ============================================================
-// RESULTS
-// ============================================================
+// ── RESULTS ─────────────────────────────────────
 function showResults() {
   renderResultsOverlay();
   document.getElementById('results-overlay').style.display = 'flex';
-  broadcast({ type: 'results', votes, ballotCount });
-  // Also update display styling to show winner/loser
+  broadcast({type:'results', votes, ballotCount});
   if (currentMode === 'display') updateDisplayUI(true);
 }
 
 function renderResultsOverlay() {
-  const sorted = candidates
-    .map(c => ({ ...c, votes: votes[c.id] }))
-    .sort((a, b) => b.votes - a.votes);
-
-  const winners = sorted.slice(0, TOTAL_TO_ELECT);
-  const losers  = sorted.slice(TOTAL_TO_ELECT);
-
-  document.getElementById('results-winners').innerHTML = winners.map((c, i) => `
-    <div class="result-card win-card" style="animation-delay:${i * 0.07}s">
-      <span class="result-card-badge">${['🥇','🥈','🥉'][i] || '✦'}</span>
-      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="result-card-name">${c.name}</div>
-      <div class="result-card-votes">${c.votes}</div>
-      <div class="result-card-label">votos</div>
-    </div>
-  `).join('');
-
-  document.getElementById('results-losers').innerHTML = losers.map((c, i) => `
-    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT + i) * 0.07}s">
-      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="result-card-name">${c.name}</div>
-      <div class="result-card-votes">${c.votes}</div>
-      <div class="result-card-label">votos</div>
-    </div>
-  `).join('');
+  const sorted = candidates.map(c=>({...c, votes:votes[c.id]})).sort((a,b)=>b.votes-a.votes);
+  document.getElementById('results-winners').innerHTML =
+    sorted.slice(0, TOTAL_TO_ELECT).map((c,i) => `
+      <div class="result-card win-card" style="animation-delay:${i*0.07}s">
+        <span class="result-card-badge">${['🥇','🥈','🥉'][i]||'✦'}</span>
+        <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+        <div class="result-card-name">${c.name}</div>
+        <div class="result-card-votes">${c.votes}</div>
+        <div class="result-card-label">votos</div>
+      </div>`).join('');
+  document.getElementById('results-losers').innerHTML =
+    sorted.slice(TOTAL_TO_ELECT).map((c,i) => `
+      <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*0.07}s">
+        <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+        <div class="result-card-name">${c.name}</div>
+        <div class="result-card-votes">${c.votes}</div>
+        <div class="result-card-label">votos</div>
+      </div>`).join('');
 }
 
 function hideResults() {
   document.getElementById('results-overlay').style.display = 'none';
-  updateDisplayUI(false); // remove winner/loser from display
-  broadcast({ type: 'hide-results' });
+  updateDisplayUI(false);
+  broadcast({type:'hide-results'});
 }
 
-// ============================================================
-// RESET
-// ============================================================
+// ── RESET ────────────────────────────────────────
 function resetAll(fromLanding) {
   const msg = fromLanding
-    ? '¿Reiniciar todos los votos? Los nombres de candidatos se conservarán.'
+    ? '¿Reiniciar todos los votos? Los nombres y fotos se conservarán.'
     : '¿Reiniciar todos los votos?';
   if (!confirm(msg)) return;
-  doReset();
-  broadcast({ type: 'reset' });
+  doReset(); broadcast({type:'reset'});
 }
-
 function doReset() {
-  votes = candidates.map(() => 0);
-  ballotCount = 0;
-  selected.clear();
-  saveAll();
-  if (currentMode === 'control') {
-    updateSelectionUI();
-    updateControlTallies();
-  }
-  if (currentMode === 'display') {
-    updateDisplayUI(false);
-  }
+  votes = candidates.map(()=>0); ballotCount = 0; selected.clear(); saveAll();
+  if (currentMode==='control') { updateSelectionUI(); updateControlTallies(); }
+  if (currentMode==='display') updateDisplayUI(false);
   document.getElementById('results-overlay').style.display = 'none';
 }
 
-// ============================================================
-// INIT
-// ============================================================
+// ── INIT ─────────────────────────────────────────
 loadAll();
 buildLandingEditor();
-
-// URL param shortcuts
-(function () {
+(function(){
   const p = new URLSearchParams(window.location.search);
   const m = p.get('modo') || p.get('mode');
-  if (m === 'control')                   openMode('control');
-  if (m === 'pantalla' || m === 'display') openMode('display');
+  if (m==='control')                   openMode('control');
+  if (m==='pantalla'||m==='display')   openMode('display');
 })();
 </script>
 </body>
