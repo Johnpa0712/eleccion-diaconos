@@ -6,401 +6,351 @@
 <title>Elección de Diáconos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK (Compat v9) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <style>
-  :root {
-    --gold: #c9a84c;
-    --gold-light: #e8c96e;
-    --gold-dark: #9a7a2e;
-    --bg-dark: #0d0f14;
-    --bg-card: #161a24;
-    --bg-card2: #1e2435;
-    --text: #f0ece0;
-    --text-dim: #8a8070;
-    --win-glow: rgba(201,168,76,0.35);
-    --lose-filter: grayscale(1) brightness(0.42);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Lato', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
+:root {
+  --gold: #c9a84c; --gold-light: #e8c96e; --gold-dark: #9a7a2e;
+  --bg-dark: #0d0f14; --bg-card: #161a24; --bg-card2: #1e2435;
+  --text: #f0ece0; --text-dim: #8a8070;
+  --win-glow: rgba(201,168,76,0.35);
+  --lose-filter: grayscale(1) brightness(0.42);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Lato',sans-serif; background:var(--bg-dark); color:var(--text); min-height:100vh; }
 
-  /* ===== SHARED ===== */
-  .btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem; letter-spacing: 0.08em;
-    padding: 0.85rem 2rem; border: none; border-radius: 6px;
-    cursor: pointer; transition: all 0.2s; display: inline-block; text-align: center;
-  }
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
-    color: #1a1000; font-weight: 700;
-    box-shadow: 0 4px 20px rgba(201,168,76,0.35);
-  }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.55); }
-  .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold-dark); }
-  .btn-outline:hover { background: rgba(201,168,76,0.08); }
-  .btn-sm { font-size: 0.75rem; padding: 0.45rem 1rem; letter-spacing: 0.06em; }
-  .btn-danger { background: rgba(180,60,60,0.15); color: #e08080; border: 1px solid rgba(180,60,60,0.35); }
-  .btn-danger:hover { background: rgba(180,60,60,0.3); }
-  .btn-ghost { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.08); }
-  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+/* ── SHARED BUTTONS ── */
+.btn { font-family:'Cinzel',serif; font-size:.9rem; letter-spacing:.08em; padding:.85rem 2rem; border:none; border-radius:6px; cursor:pointer; transition:all .2s; display:inline-block; text-align:center; }
+.btn-gold { background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light)); color:#1a1000; font-weight:700; box-shadow:0 4px 20px rgba(201,168,76,.35); }
+.btn-gold:hover { transform:translateY(-2px); box-shadow:0 6px 28px rgba(201,168,76,.55); }
+.btn-outline { background:transparent; color:var(--gold); border:1px solid var(--gold-dark); }
+.btn-outline:hover { background:rgba(201,168,76,.08); }
+.btn-sm { font-size:.75rem; padding:.45rem 1rem; letter-spacing:.06em; }
+.btn-danger { background:rgba(180,60,60,.15); color:#e08080; border:1px solid rgba(180,60,60,.35); }
+.btn-danger:hover { background:rgba(180,60,60,.3); }
+.btn-ghost { background:rgba(255,255,255,.05); color:var(--text-dim); border:1px solid rgba(255,255,255,.08); }
+.btn-ghost:hover { background:rgba(255,255,255,.1); color:var(--text); }
 
-  /* ===== LANDING ===== */
-  #landing {
-    display: flex; flex-direction: column; align-items: center;
-    min-height: 100vh; padding: 2.5rem 1.5rem 3rem;
-    background: radial-gradient(ellipse at 50% 20%, #1a2040 0%, var(--bg-dark) 65%);
-  }
-  .landing-hero { text-align: center; margin-bottom: 2.5rem; }
-  .landing-hero .cross { font-size: 2.8rem; filter: drop-shadow(0 0 18px rgba(201,168,76,0.5)); margin-bottom: 0.8rem; }
-  .landing-hero h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.4rem, 4vw, 2.4rem); color: var(--gold);
-    letter-spacing: 0.1em; text-shadow: 0 0 35px rgba(201,168,76,0.4); margin-bottom: 0.5rem;
-  }
-  .landing-hero p { color: var(--text-dim); font-size: 0.9rem; }
-  .setup-card {
-    background: var(--bg-card); border: 1px solid rgba(201,168,76,0.18);
-    border-radius: 14px; padding: 1.8rem; width: 100%; max-width: 820px; margin-bottom: 1.5rem;
-  }
-  .setup-card h3 {
-    font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--gold);
-    letter-spacing: 0.12em; margin-bottom: 1.2rem;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .setup-card h3::after { content:''; flex:1; height:1px; background:rgba(201,168,76,0.18); }
-  .church-input-row { display:flex; gap:0.8rem; align-items:center; margin-bottom:0.9rem; flex-wrap:wrap; }
-  .church-input-row label { font-size:0.82rem; color:var(--text-dim); white-space:nowrap; }
-  .setup-input {
-    flex:1; min-width:180px;
-    background:var(--bg-card2); border:1px solid rgba(255,255,255,0.1);
-    border-radius:6px; padding:0.55rem 0.9rem;
-    color:var(--text); font-family:'Lato',sans-serif; font-size:0.88rem;
-    outline:none; transition:border-color 0.2s;
-  }
-  .setup-input:focus { border-color:var(--gold-dark); }
+/* ══════════════════════════════════════
+   LANDING
+══════════════════════════════════════ */
+#landing {
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh; padding:2.5rem 1.5rem 3rem;
+  background:radial-gradient(ellipse at 50% 20%,#1a2040 0%,var(--bg-dark) 65%);
+}
+.landing-hero { text-align:center; margin-bottom:2rem; }
+.landing-hero .cross { font-size:2.8rem; filter:drop-shadow(0 0 18px rgba(201,168,76,.5)); margin-bottom:.8rem; }
+.landing-hero h1 { font-family:'Cinzel',serif; font-size:clamp(1.4rem,4vw,2.4rem); color:var(--gold); letter-spacing:.1em; text-shadow:0 0 35px rgba(201,168,76,.4); margin-bottom:.5rem; }
+.landing-hero p { color:var(--text-dim); font-size:.9rem; }
 
-  /* Candidate editor */
-  .candidates-editor {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 0.75rem; margin-bottom: 1.2rem;
-  }
-  .candidate-edit-row {
-    display: flex; align-items: center; gap: 0.7rem;
-    background: var(--bg-card2); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 10px; padding: 0.65rem 0.85rem; transition: border-color 0.2s;
-  }
-  .candidate-edit-row:hover { border-color: rgba(201,168,76,0.2); }
-  .cnum { font-family:'Cinzel',serif; font-size:0.72rem; color:var(--gold-dark); font-weight:700; min-width:16px; }
+.setup-card { background:var(--bg-card); border:1px solid rgba(201,168,76,.18); border-radius:14px; padding:1.8rem; width:100%; max-width:840px; margin-bottom:1.4rem; }
+.setup-card h3 { font-family:'Cinzel',serif; font-size:.9rem; color:var(--gold); letter-spacing:.12em; margin-bottom:1.2rem; display:flex; align-items:center; gap:.5rem; }
+.setup-card h3::after { content:''; flex:1; height:1px; background:rgba(201,168,76,.18); }
 
-  /* Photo upload */
-  .photo-upload-wrap {
-    position: relative; flex-shrink: 0;
-    width: 48px; height: 48px; border-radius: 50%;
-    cursor: pointer; overflow: hidden;
-  }
-  .photo-preview {
-    width: 48px; height: 48px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; color: #fff;
-    overflow: hidden; border: 2px solid rgba(255,255,255,0.12); transition: border-color 0.2s;
-  }
-  .photo-preview img { width:100%; height:100%; object-fit:cover; display:block; }
-  .photo-preview.has-photo { border-color: rgba(201,168,76,0.55); }
-  .photo-overlay {
-    position: absolute; inset: 0; border-radius: 50%;
-    background: rgba(0,0,0,0.58);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.18s; font-size: 1.15rem;
-  }
-  .photo-upload-wrap:hover .photo-overlay { opacity: 1; }
-  .photo-file-input { display: none; }
+.field-row { display:flex; gap:.8rem; align-items:center; margin-bottom:.85rem; flex-wrap:wrap; }
+.field-row label { font-size:.82rem; color:var(--text-dim); white-space:nowrap; min-width:140px; }
+.setup-input { flex:1; min-width:180px; background:var(--bg-card2); border:1px solid rgba(255,255,255,.1); border-radius:6px; padding:.55rem .9rem; color:var(--text); font-family:'Lato',sans-serif; font-size:.88rem; outline:none; transition:border-color .2s; }
+.setup-input:focus { border-color:var(--gold-dark); }
 
-  .candidate-edit-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:0.3rem; }
-  .candidate-edit-fields input {
-    background: transparent; border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    color: var(--text); font-family:'Lato',sans-serif; font-size:0.85rem;
-    padding: 0.18rem 0.1rem; outline: none; transition: border-color 0.2s; width:100%;
-  }
-  .candidate-edit-fields input:focus { border-bottom-color: var(--gold); }
-  .candidate-edit-fields input::placeholder { color: var(--text-dim); }
-  .photo-clear-btn {
-    font-size: 0.62rem; color: var(--text-dim); background: none; border: none;
-    cursor: pointer; padding: 0; transition: color 0.15s; display: none; text-align: left;
-  }
-  .photo-clear-btn.visible { display: block; }
-  .photo-clear-btn:hover { color: #e08080; }
+/* Firebase status pill */
+.fb-status { display:inline-flex; align-items:center; gap:.45rem; font-size:.75rem; padding:.3rem .8rem; border-radius:20px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+.fb-dot { width:8px; height:8px; border-radius:50%; background:#555; flex-shrink:0; transition:background .3s; }
+.fb-dot.ok   { background:#4caf50; animation:blink 2s infinite; }
+.fb-dot.err  { background:#e05050; }
+.fb-dot.wait { background:#c9a84c; animation:blink 1s infinite; }
 
-  .setup-save-row { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
-  .save-msg { font-size:0.8rem; color:#6abf6a; opacity:0; transition:opacity 0.3s; }
-  .save-msg.show { opacity:1; }
+/* Candidate editor */
+.candidates-editor { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.75rem; margin-bottom:1.2rem; }
+.candidate-edit-row { display:flex; align-items:center; gap:.7rem; background:var(--bg-card2); border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:.65rem .85rem; transition:border-color .2s; }
+.candidate-edit-row:hover { border-color:rgba(201,168,76,.2); }
+.cnum { font-family:'Cinzel',serif; font-size:.72rem; color:var(--gold-dark); font-weight:700; min-width:16px; }
 
-  .launch-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:0.5rem; }
-  .launch-card {
-    background:var(--bg-card); border:1px solid rgba(201,168,76,0.2);
-    border-radius:12px; padding:1.5rem 2rem;
-    text-align:center; cursor:pointer; transition:all 0.2s; max-width:220px;
-  }
-  .launch-card:hover { border-color:var(--gold); background:var(--bg-card2); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
-  .launch-card .lc-icon { font-size:2rem; margin-bottom:0.7rem; }
-  .launch-card .lc-title { font-family:'Cinzel',serif; font-size:0.88rem; color:var(--gold); font-weight:700; letter-spacing:0.08em; margin-bottom:0.4rem; }
-  .launch-card .lc-desc { font-size:0.75rem; color:var(--text-dim); line-height:1.5; }
+.photo-upload-wrap { position:relative; flex-shrink:0; width:48px; height:48px; border-radius:50%; cursor:pointer; overflow:hidden; }
+.photo-preview { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:1rem; font-weight:700; color:#fff; overflow:hidden; border:2px solid rgba(255,255,255,.12); transition:border-color .2s; }
+.photo-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+.photo-preview.has-photo { border-color:rgba(201,168,76,.55); }
+.photo-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.58); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .18s; font-size:1.15rem; }
+.photo-upload-wrap:hover .photo-overlay { opacity:1; }
+.photo-file-input { display:none; }
+.candidate-edit-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:.3rem; }
+.candidate-edit-fields input { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.1); color:var(--text); font-family:'Lato',sans-serif; font-size:.85rem; padding:.18rem .1rem; outline:none; transition:border-color .2s; width:100%; }
+.candidate-edit-fields input:focus { border-bottom-color:var(--gold); }
+.candidate-edit-fields input::placeholder { color:var(--text-dim); }
+.photo-clear-btn { font-size:.62rem; color:var(--text-dim); background:none; border:none; cursor:pointer; padding:0; transition:color .15s; display:none; text-align:left; }
+.photo-clear-btn.visible { display:block; }
+.photo-clear-btn:hover { color:#e08080; }
 
-  /* ===== CONTROL ===== */
-  #control { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#10131c,#0d0f14); }
-  .ctrl-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0.9rem 1.4rem; border-bottom:1px solid rgba(201,168,76,0.15);
-    background:rgba(0,0,0,0.35); flex-wrap:wrap; gap:0.7rem;
-  }
-  .ctrl-header h2 { font-family:'Cinzel',serif; font-size:0.92rem; color:var(--gold); letter-spacing:0.1em; }
-  .ballot-counter { font-size:0.82rem; color:var(--text-dim); }
-  .ballot-counter span { color:var(--gold-light); font-weight:700; }
-  .ctrl-body { flex:1; padding:1.2rem 1.4rem; max-width:920px; margin:0 auto; width:100%; }
-  .ctrl-instruction {
-    background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.18);
-    border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1.2rem;
-    font-size:0.88rem; line-height:1.55; color:#c8b87a;
-  }
-  .ctrl-instruction strong { color:var(--gold-light); }
-  .candidates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:0.75rem; margin-bottom:1.2rem; }
-  .candidate-check {
-    display:flex; align-items:center; gap:0.75rem;
-    background:var(--bg-card); border:2px solid transparent;
-    border-radius:10px; padding:0.85rem 0.95rem;
-    cursor:pointer; transition:all 0.16s; user-select:none;
-  }
-  .candidate-check:hover { border-color:rgba(201,168,76,0.25); background:var(--bg-card2); }
-  .candidate-check.not-selected { border-color:#b03030; background:rgba(160,35,35,0.18); }
-  .candidate-check.not-selected .ccheck-name { color:#e07070; }
-  .ccheck-avatar {
-    width:42px; height:42px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700; color:#fff;
-    flex-shrink:0; overflow:hidden;
-  }
-  .ccheck-avatar img { width:100%; height:100%; object-fit:cover; }
-  .ccheck-info { flex:1; min-width:0; }
-  .ccheck-name { font-family:'Cinzel',serif; font-size:0.8rem; font-weight:600; color:var(--text); line-height:1.3; letter-spacing:0.03em; }
-  .ccheck-votes { font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
-  .ccheck-votes span { color:var(--gold-light); font-weight:700; }
-  .ccheck-box {
-    width:22px; height:22px; border:2px solid #444; border-radius:4px;
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; font-size:0.95rem; transition:all 0.15s; color:#fff;
-  }
-  .candidate-check.not-selected .ccheck-box { background:#b03030; border-color:#b03030; }
-  .ctrl-footer {
-    display:flex; align-items:center; gap:1rem;
-    padding:1rem 1.4rem; border-top:1px solid rgba(255,255,255,0.05);
-    background:rgba(0,0,0,0.3); flex-wrap:wrap; justify-content:space-between;
-  }
-  .selection-status { font-size:0.88rem; color:var(--text-dim); }
-  .selection-status.ok { color:#6abf6a; }
-  .selection-status.bad { color:#e08080; }
-  .btn-submit {
-    font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.1em;
-    padding:0.8rem 2.2rem; border:none; border-radius:6px; cursor:pointer;
-    background:linear-gradient(135deg,#2a6e2a,#3a9a3a); color:#fff; font-weight:700;
-    box-shadow:0 4px 16px rgba(40,150,40,0.25); transition:all 0.2s;
-    opacity:0.35; pointer-events:none;
-  }
-  .btn-submit.active { opacity:1; pointer-events:all; }
-  .btn-submit.active:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(40,150,40,0.45); }
-  .vote-flash {
-    position:fixed; top:50%; left:50%;
-    transform:translate(-50%,-50%) scale(0.85);
-    background:rgba(42,120,42,0.96); color:#fff;
-    font-family:'Cinzel',serif; font-size:1.5rem;
-    padding:1.1rem 2.8rem; border-radius:12px;
-    opacity:0; pointer-events:none; z-index:999;
-    transition:all 0.14s; text-align:center;
-  }
-  .vote-flash.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+.setup-save-row { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.save-msg { font-size:.8rem; color:#6abf6a; opacity:0; transition:opacity .3s; }
+.save-msg.show { opacity:1; }
+.launch-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:.5rem; }
+.launch-card { background:var(--bg-card); border:1px solid rgba(201,168,76,.2); border-radius:12px; padding:1.5rem 2rem; text-align:center; cursor:pointer; transition:all .2s; max-width:220px; }
+.launch-card:hover { border-color:var(--gold); background:var(--bg-card2); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.launch-card .lc-icon { font-size:2rem; margin-bottom:.7rem; }
+.launch-card .lc-title { font-family:'Cinzel',serif; font-size:.88rem; color:var(--gold); font-weight:700; letter-spacing:.08em; margin-bottom:.4rem; }
+.launch-card .lc-desc { font-size:.75rem; color:var(--text-dim); line-height:1.5; }
 
-  /* ===== DISPLAY (LED) ===== */
-  #display { display:none; flex-direction:column; min-height:100vh; background:var(--bg-dark); }
-  .disp-header { text-align:center; padding:1.4rem 1rem 0.8rem; }
-  .disp-header::after {
-    content:''; display:block; width:100px; height:1.5px;
-    background:linear-gradient(90deg,transparent,var(--gold),transparent);
-    margin:0.7rem auto 0;
-  }
-  .disp-title {
-    font-family:'Cinzel',serif; font-size:clamp(1.1rem,2.8vw,1.9rem); color:var(--gold);
-    letter-spacing:0.15em; text-shadow:0 0 28px rgba(201,168,76,0.45);
-  }
-  .disp-subtitle { font-size:0.72rem; color:var(--text-dim); letter-spacing:0.2em; text-transform:uppercase; margin-top:0.25rem; }
-  .total-ballots-disp { text-align:center; padding:0.3rem; font-size:clamp(0.62rem,1.1vw,0.78rem); color:var(--text-dim); letter-spacing:0.1em; }
-  .total-ballots-disp span { color:var(--gold); font-weight:700; }
-  .disp-grid {
-    flex:1; display:grid;
-    grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
-    gap:0.6rem; padding:0.5rem 0.8rem 0.8rem; min-height:0;
-  }
-  .disp-card {
-    background:var(--bg-card); border-radius:10px;
-    border:1.5px solid rgba(255,255,255,0.06);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:0.5rem 0.3rem; position:relative; overflow:visible;
-    transition:border-color 0.5s, box-shadow 0.5s, filter 0.6s;
-  }
-  .disp-card.result-winner {
-    border-color:rgba(201,168,76,0.55);
-    background:linear-gradient(160deg,#1a1e2e,#1e2030);
-    box-shadow:0 0 28px var(--win-glow);
-  }
-  .disp-card.result-loser { filter:var(--lose-filter); }
+/* Textarea for firebase config */
+.config-textarea {
+  width:100%; min-height:90px; background:var(--bg-card2); border:1px solid rgba(255,255,255,.1);
+  border-radius:6px; padding:.65rem .9rem; color:#a8d4a8; font-family:monospace; font-size:.78rem;
+  outline:none; resize:vertical; transition:border-color .2s; line-height:1.5;
+}
+.config-textarea:focus { border-color:var(--gold-dark); }
+.config-help { font-size:.76rem; color:var(--text-dim); line-height:1.6; margin-top:.7rem; }
+.config-help a { color:var(--gold-dark); }
+.config-help code { background:rgba(255,255,255,.06); padding:.1rem .3rem; border-radius:3px; font-size:.74rem; }
 
-  /* ── VOTE ANIMATION ── */
-  .disp-card.vote-pulse {
-    animation: votePulse 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
-  }
-  @keyframes votePulse {
-    0%   { transform:scale(1);    border-color:rgba(255,255,255,0.06); box-shadow:none; }
-    12%  { transform:scale(1.07); border-color:rgba(201,168,76,1);    box-shadow:0 0 0 3px rgba(201,168,76,0.55), 0 0 45px rgba(201,168,76,0.6); }
-    30%  { transform:scale(1.045);box-shadow:0 0 0 7px rgba(201,168,76,0.22), 0 0 60px rgba(201,168,76,0.4); }
-    60%  { transform:scale(1.02); border-color:rgba(201,168,76,0.45); box-shadow:0 0 0 3px rgba(201,168,76,0.1), 0 0 30px rgba(201,168,76,0.2); }
-    100% { transform:scale(1);    border-color:rgba(255,255,255,0.06); box-shadow:none; }
-  }
-  .disp-card.result-winner.vote-pulse {
-    animation: votePulseWinner 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
-  }
-  @keyframes votePulseWinner {
-    0%   { transform:scale(1);    box-shadow:0 0 28px var(--win-glow); }
-    12%  { transform:scale(1.07); box-shadow:0 0 0 4px rgba(201,168,76,0.6), 0 0 65px rgba(201,168,76,0.75); }
-    30%  { transform:scale(1.045);box-shadow:0 0 0 8px rgba(201,168,76,0.25), 0 0 75px rgba(201,168,76,0.5); }
-    60%  { transform:scale(1.02); box-shadow:0 0 0 3px rgba(201,168,76,0.12), 0 0 40px rgba(201,168,76,0.35); }
-    100% { transform:scale(1);    box-shadow:0 0 28px var(--win-glow); }
-  }
+/* ══════════════════════════════════════
+   CONTROL
+══════════════════════════════════════ */
+#control { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#10131c,#0d0f14); }
+.ctrl-header { display:flex; align-items:center; justify-content:space-between; padding:.9rem 1.4rem; border-bottom:1px solid rgba(201,168,76,.15); background:rgba(0,0,0,.35); flex-wrap:wrap; gap:.7rem; }
+.ctrl-header h2 { font-family:'Cinzel',serif; font-size:.92rem; color:var(--gold); letter-spacing:.1em; }
+.ballot-counter { font-size:.82rem; color:var(--text-dim); }
+.ballot-counter span { color:var(--gold-light); font-weight:700; }
+.ctrl-body { flex:1; padding:1.2rem 1.4rem; max-width:920px; margin:0 auto; width:100%; }
+.ctrl-instruction { background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.18); border-radius:8px; padding:.85rem 1.1rem; margin-bottom:1.2rem; font-size:.88rem; line-height:1.55; color:#c8b87a; }
+.ctrl-instruction strong { color:var(--gold-light); }
+.candidates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.75rem; margin-bottom:1.2rem; }
+.candidate-check { display:flex; align-items:center; gap:.75rem; background:var(--bg-card); border:2px solid transparent; border-radius:10px; padding:.85rem .95rem; cursor:pointer; transition:all .16s; user-select:none; }
+.candidate-check:hover { border-color:rgba(201,168,76,.25); background:var(--bg-card2); }
+.candidate-check.not-selected { border-color:#b03030; background:rgba(160,35,35,.18); }
+.candidate-check.not-selected .ccheck-name { color:#e07070; }
+.ccheck-avatar { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:.95rem; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
+.ccheck-avatar img { width:100%; height:100%; object-fit:cover; }
+.ccheck-info { flex:1; min-width:0; }
+.ccheck-name { font-family:'Cinzel',serif; font-size:.8rem; font-weight:600; color:var(--text); line-height:1.3; letter-spacing:.03em; }
+.ccheck-votes { font-size:.72rem; color:var(--text-dim); margin-top:2px; }
+.ccheck-votes span { color:var(--gold-light); font-weight:700; }
+.ccheck-box { width:22px; height:22px; border:2px solid #444; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.95rem; transition:all .15s; color:#fff; }
+.candidate-check.not-selected .ccheck-box { background:#b03030; border-color:#b03030; }
+.ctrl-footer { display:flex; align-items:center; gap:1rem; padding:1rem 1.4rem; border-top:1px solid rgba(255,255,255,.05); background:rgba(0,0,0,.3); flex-wrap:wrap; justify-content:space-between; }
+.selection-status { font-size:.88rem; color:var(--text-dim); }
+.selection-status.ok { color:#6abf6a; }
+.selection-status.bad { color:#e08080; }
+.btn-submit { font-family:'Cinzel',serif; font-size:.95rem; letter-spacing:.1em; padding:.8rem 2.2rem; border:none; border-radius:6px; cursor:pointer; background:linear-gradient(135deg,#2a6e2a,#3a9a3a); color:#fff; font-weight:700; box-shadow:0 4px 16px rgba(40,150,40,.25); transition:all .2s; opacity:.35; pointer-events:none; }
+.btn-submit.active { opacity:1; pointer-events:all; }
+.btn-submit.active:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(40,150,40,.45); }
+.vote-flash { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.85); background:rgba(42,120,42,.96); color:#fff; font-family:'Cinzel',serif; font-size:1.5rem; padding:1.1rem 2.8rem; border-radius:12px; opacity:0; pointer-events:none; z-index:999; transition:all .14s; text-align:center; }
+.vote-flash.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+.conn-row { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
 
-  /* Floating +1 */
-  .plus-one {
-    position: absolute; top: 8%; right: 10%;
-    font-family: 'Cinzel', serif;
-    font-size: clamp(0.8rem, 1.7vw, 1.2rem);
-    font-weight: 700; color: var(--gold-light);
-    text-shadow: 0 0 14px rgba(201,168,76,0.95);
-    pointer-events: none; z-index: 20;
-    animation: floatUp 1.2s ease-out forwards;
-  }
-  @keyframes floatUp {
-    0%   { opacity:0;   transform:translateY(4px) scale(1.3); }
-    12%  { opacity:1;   transform:translateY(0)   scale(1); }
-    75%  { opacity:0.7; transform:translateY(-26px); }
-    100% { opacity:0;   transform:translateY(-44px); }
-  }
+/* ══════════════════════════════════════
+   DISPLAY (LED SCREEN)  — redesigned
+══════════════════════════════════════ */
+#display { display:none; flex-direction:column; min-height:100vh; background:var(--bg-dark); overflow:hidden; }
 
-  /* Number pop */
-  .disp-votes.num-pop { animation: numPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-  @keyframes numPop {
-    0%   { transform:scale(1); }
-    42%  { transform:scale(1.4); color:var(--gold-light); }
-    100% { transform:scale(1); }
-  }
+.disp-header { text-align:center; padding:1.1rem 1rem .5rem; }
+.disp-header::after { content:''; display:block; width:90px; height:1.5px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:.5rem auto 0; }
+.disp-title { font-family:'Cinzel',serif; font-size:clamp(1rem,2.4vw,1.8rem); color:var(--gold); letter-spacing:.18em; text-shadow:0 0 28px rgba(201,168,76,.45); }
+.disp-subtitle { font-size:.68rem; color:var(--text-dim); letter-spacing:.22em; text-transform:uppercase; margin-top:.18rem; }
+.total-ballots-disp { text-align:center; font-size:clamp(.6rem,1vw,.76rem); color:var(--text-dim); letter-spacing:.1em; padding:.2rem; }
+.total-ballots-disp span { color:var(--gold); font-weight:700; }
 
-  .disp-avatar {
-    width:clamp(46px,7.5vw,84px); height:clamp(46px,7.5vw,84px);
-    border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-family:'Cinzel',serif; font-size:clamp(1rem,2.2vw,1.85rem); font-weight:700; color:#fff;
-    margin-bottom:0.45rem; border:2px solid rgba(255,255,255,0.1);
-    flex-shrink:0; overflow:hidden; transition:border-color 0.4s;
-  }
-  .disp-card.result-winner .disp-avatar { border-color:rgba(201,168,76,0.6); }
-  .disp-avatar img { width:100%; height:100%; object-fit:cover; }
-  .disp-name {
-    font-family:'Cinzel',serif; font-size:clamp(0.56rem,1.2vw,0.9rem); font-weight:700;
-    color:var(--text); text-align:center; letter-spacing:0.03em; line-height:1.22; margin-bottom:0.28rem;
-  }
-  .disp-votes {
-    font-size:clamp(1.3rem,3.2vw,2.6rem); font-weight:700; color:var(--text-dim);
-    font-variant-numeric:tabular-nums; line-height:1; transition:color 0.4s; display:inline-block;
-  }
-  .disp-card.result-winner .disp-votes { color:var(--gold-light); }
-  .disp-votes-label { font-size:clamp(0.48rem,0.9vw,0.62rem); color:var(--text-dim); letter-spacing:0.12em; text-transform:uppercase; margin-top:2px; }
-  .disp-rank {
-    position:absolute; top:5px; left:7px;
-    font-family:'Cinzel',serif; font-size:0.6rem; color:var(--gold-dark); font-weight:700;
-    opacity:0; transition:opacity 0.4s;
-  }
-  .disp-card.result-winner .disp-rank { opacity:1; }
-  .disp-crown { position:absolute; top:4px; right:7px; font-size:0.85rem; opacity:0; transition:opacity 0.4s; }
-  .disp-card.result-winner .disp-crown { opacity:1; }
-  .disp-footer { text-align:center; padding:0.5rem; font-size:0.65rem; color:rgba(255,255,255,0.1); letter-spacing:0.15em; text-transform:uppercase; }
+/* 3×3 grid — fills the screen */
+.disp-grid {
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  gap:.5rem;
+  padding:.4rem .7rem .7rem;
+  min-height:0;
+}
 
-  /* ===== RESULTS ===== */
-  #results-overlay {
-    display:none; position:fixed; inset:0;
-    background:radial-gradient(ellipse at 50% 35%,#0e1525 0%,#050709 100%);
-    z-index:100; flex-direction:column; align-items:center;
-    padding:1.5rem 1rem; overflow-y:auto;
-  }
-  .results-title {
-    font-family:'Cinzel',serif; font-size:clamp(1.2rem,2.8vw,2rem); color:var(--gold);
-    text-align:center; letter-spacing:0.15em; margin-bottom:0.3rem;
-    text-shadow:0 0 36px rgba(201,168,76,0.5);
-  }
-  .results-divider { width:180px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:0.6rem auto 1.1rem; }
-  .results-section-label {
-    font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.22em;
-    text-transform:uppercase; color:var(--text-dim);
-    width:100%; max-width:960px; margin-bottom:0.4rem; padding-left:2px;
-  }
-  .results-section-label.elected { color:var(--gold-dark); }
-  .results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(165px,1fr)); gap:0.9rem; width:100%; max-width:960px; }
-  .result-card {
-    border-radius:13px; padding:1.1rem 0.9rem;
-    display:flex; flex-direction:column; align-items:center; text-align:center;
-    animation:fadeInUp 0.45s both; position:relative; overflow:hidden;
-  }
-  @keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-  .result-card.win-card {
-    background:linear-gradient(160deg,#1a2035,#161c2e);
-    border:1.5px solid rgba(201,168,76,0.5);
-    box-shadow:0 8px 28px rgba(201,168,76,0.18);
-  }
-  .result-card.lose-card { background:#111318; border:1.5px solid rgba(255,255,255,0.05); filter:grayscale(1) brightness(0.52); }
-  .result-card-avatar {
-    width:76px; height:76px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:#fff;
-    margin-bottom:0.75rem; overflow:hidden; border:2px solid rgba(201,168,76,0.35);
-  }
-  .result-card.lose-card .result-card-avatar { border-color:transparent; }
-  .result-card-avatar img { width:100%; height:100%; object-fit:cover; }
-  .result-card-name { font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:var(--text); margin-bottom:0.45rem; letter-spacing:0.04em; line-height:1.3; }
-  .result-card-votes { font-size:2rem; font-weight:700; color:var(--gold-light); line-height:1; }
-  .result-card.lose-card .result-card-votes { color:#555; }
-  .result-card-label { font-size:0.58rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--text-dim); margin-top:2px; }
-  .result-card-badge { position:absolute; top:7px; right:9px; font-size:1rem; }
-  .results-actions { display:flex; gap:0.9rem; margin-top:1.4rem; flex-wrap:wrap; justify-content:center; }
+/* Each card: photo on top ~60%, name + votes below */
+.disp-card {
+  background:var(--bg-card);
+  border-radius:12px;
+  border:1.5px solid rgba(255,255,255,.06);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  padding:0 .4rem .55rem;
+  position:relative;
+  overflow:visible;
+  transition:border-color .5s, box-shadow .5s, filter .6s;
+}
 
-  .conn-row { display:flex; align-items:center; gap:0.5rem; }
-  .conn-dot { width:7px; height:7px; border-radius:50%; background:#555; display:inline-block; }
-  .conn-dot.live { background:#4caf50; animation:blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  ::-webkit-scrollbar { width:5px; }
-  ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
+/* Big circular photo fills top of card */
+.disp-avatar-wrap {
+  position:absolute;
+  top:0; left:50%;
+  transform:translate(-50%, -10%);
+  width:clamp(70px,15vw,180px);
+  height:clamp(70px,15vw,180px);
+  flex-shrink:0;
+}
+.disp-avatar {
+  width:100%; height:100%;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif;
+  font-size:clamp(1.2rem,3vw,2.8rem);
+  font-weight:700; color:#fff;
+  overflow:hidden;
+  border:3px solid rgba(255,255,255,.12);
+  background:var(--bg-card2);
+  transition:border-color .4s, box-shadow .4s;
+  box-shadow:0 6px 20px rgba(0,0,0,.5);
+}
+.disp-card.result-winner .disp-avatar { border-color:rgba(201,168,76,.7); box-shadow:0 0 24px rgba(201,168,76,.4), 0 6px 20px rgba(0,0,0,.5); }
+.disp-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Bottom info area */
+.disp-info {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  /* push down to leave room for the floating avatar */
+  margin-top:calc(clamp(70px,15vw,180px) * .55);
+  width:100%;
+}
+.disp-name {
+  font-family:'Cinzel',serif;
+  font-size:clamp(.56rem,1.15vw,.92rem);
+  font-weight:700;
+  color:var(--text);
+  text-align:center;
+  letter-spacing:.03em;
+  line-height:1.2;
+  margin-bottom:.22rem;
+  padding:0 .2rem;
+}
+.disp-votes {
+  font-size:clamp(1.5rem,3.8vw,3.2rem);
+  font-weight:700;
+  color:var(--text-dim);
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  transition:color .4s;
+  display:inline-block;
+}
+.disp-card.result-winner .disp-votes { color:var(--gold-light); }
+.disp-votes-label { font-size:clamp(.44rem,.85vw,.62rem); color:var(--text-dim); letter-spacing:.14em; text-transform:uppercase; margin-top:1px; }
+
+/* Winner/loser */
+.disp-card.result-winner { border-color:rgba(201,168,76,.5); background:linear-gradient(180deg,#16192a,#1a1e2e); box-shadow:0 0 26px var(--win-glow); }
+.disp-card.result-loser  { filter:var(--lose-filter); }
+
+/* Rank & crown badges */
+.disp-rank  { position:absolute; bottom:6px; left:9px; font-family:'Cinzel',serif; font-size:.62rem; color:var(--gold-dark); font-weight:700; opacity:0; transition:opacity .4s; }
+.disp-crown { position:absolute; top:6px; right:9px; font-size:.95rem; opacity:0; transition:opacity .4s; }
+.disp-card.result-winner .disp-rank  { opacity:1; }
+.disp-card.result-winner .disp-crown { opacity:1; }
+
+/* ── Vote animation ── */
+.disp-card.vote-pulse { animation:votePulse 1.3s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes votePulse {
+  0%   { transform:scale(1);    border-color:rgba(255,255,255,.06); box-shadow:none; }
+  12%  { transform:scale(1.06); border-color:rgba(201,168,76,1);   box-shadow:0 0 0 3px rgba(201,168,76,.5), 0 0 48px rgba(201,168,76,.6); }
+  32%  { transform:scale(1.04); box-shadow:0 0 0 7px rgba(201,168,76,.2),0 0 64px rgba(201,168,76,.4); }
+  65%  { transform:scale(1.02); border-color:rgba(201,168,76,.4); box-shadow:0 0 0 3px rgba(201,168,76,.08),0 0 30px rgba(201,168,76,.2); }
+  100% { transform:scale(1);    border-color:rgba(255,255,255,.06); box-shadow:none; }
+}
+.disp-card.result-winner.vote-pulse { animation:votePulseW 1.3s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes votePulseW {
+  0%   { transform:scale(1);    box-shadow:0 0 26px var(--win-glow); }
+  12%  { transform:scale(1.06); box-shadow:0 0 0 4px rgba(201,168,76,.65),0 0 68px rgba(201,168,76,.8); }
+  32%  { transform:scale(1.04); box-shadow:0 0 0 8px rgba(201,168,76,.25),0 0 78px rgba(201,168,76,.55); }
+  65%  { transform:scale(1.02); box-shadow:0 0 0 3px rgba(201,168,76,.1),0 0 40px rgba(201,168,76,.35); }
+  100% { transform:scale(1);    box-shadow:0 0 26px var(--win-glow); }
+}
+.plus-one { position:absolute; top:8%; right:10%; font-family:'Cinzel',serif; font-size:clamp(.85rem,1.8vw,1.3rem); font-weight:700; color:var(--gold-light); text-shadow:0 0 14px rgba(201,168,76,.95); pointer-events:none; z-index:20; animation:floatUp 1.3s ease-out forwards; }
+@keyframes floatUp { 0%{opacity:0;transform:translateY(4px) scale(1.3)} 12%{opacity:1;transform:translateY(0) scale(1)} 75%{opacity:.7;transform:translateY(-28px)} 100%{opacity:0;transform:translateY(-48px)} }
+.disp-votes.num-pop { animation:numPop .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes numPop { 0%{transform:scale(1)} 42%{transform:scale(1.42);color:var(--gold-light)} 100%{transform:scale(1)} }
+
+.disp-footer { text-align:center; padding:.4rem; font-size:.62rem; color:rgba(255,255,255,.09); letter-spacing:.15em; text-transform:uppercase; }
+
+/* ══════════════════════════════════════
+   RESULTS OVERLAY
+══════════════════════════════════════ */
+#results-overlay { display:none; position:fixed; inset:0; background:radial-gradient(ellipse at 50% 35%,#0e1525 0%,#050709 100%); z-index:100; flex-direction:column; align-items:center; padding:1.5rem 1rem; overflow-y:auto; }
+.results-title { font-family:'Cinzel',serif; font-size:clamp(1.2rem,2.8vw,2rem); color:var(--gold); text-align:center; letter-spacing:.15em; margin-bottom:.3rem; text-shadow:0 0 36px rgba(201,168,76,.5); }
+.results-divider { width:180px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:.6rem auto 1.1rem; }
+.results-section-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim); width:100%; max-width:960px; margin-bottom:.4rem; padding-left:2px; }
+.results-section-label.elected { color:var(--gold-dark); }
+.results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:.9rem; width:100%; max-width:960px; }
+.result-card { border-radius:13px; padding:1.1rem .9rem; display:flex; flex-direction:column; align-items:center; text-align:center; animation:fadeInUp .45s both; position:relative; overflow:hidden; }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.result-card.win-card { background:linear-gradient(160deg,#1a2035,#161c2e); border:1.5px solid rgba(201,168,76,.5); box-shadow:0 8px 28px rgba(201,168,76,.18); }
+.result-card.lose-card { background:#111318; border:1.5px solid rgba(255,255,255,.05); filter:grayscale(1) brightness(.52); }
+.result-card-avatar { width:76px; height:76px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:#fff; margin-bottom:.75rem; overflow:hidden; border:2px solid rgba(201,168,76,.35); }
+.result-card.lose-card .result-card-avatar { border-color:transparent; }
+.result-card-avatar img { width:100%; height:100%; object-fit:cover; }
+.result-card-name { font-family:'Cinzel',serif; font-size:.82rem; font-weight:700; color:var(--text); margin-bottom:.45rem; letter-spacing:.04em; line-height:1.3; }
+.result-card-votes { font-size:2rem; font-weight:700; color:var(--gold-light); line-height:1; }
+.result-card.lose-card .result-card-votes { color:#555; }
+.result-card-label { font-size:.58rem; text-transform:uppercase; letter-spacing:.15em; color:var(--text-dim); margin-top:2px; }
+.result-card-badge { position:absolute; top:7px; right:9px; font-size:1rem; }
+.results-actions { display:flex; gap:.9rem; margin-top:1.4rem; flex-wrap:wrap; justify-content:center; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ LANDING ═══════════ -->
+<!-- ══════════════ LANDING ══════════════ -->
 <div id="landing">
   <div class="landing-hero">
     <div class="cross">✝</div>
     <h1>Elección de Diáconos</h1>
-    <p>Configura los candidatos y sus fotos, luego abre las dos ventanas para el escrutinio.</p>
+    <p>Configura candidatos, conecta con Firebase y abre las dos ventanas en computadoras distintas.</p>
   </div>
 
+  <!-- General config -->
   <div class="setup-card">
     <h3>⚙ Configuración General</h3>
-    <div class="church-input-row">
+    <div class="field-row">
       <label>Nombre de la iglesia:</label>
       <input class="setup-input" id="cfg-church" placeholder="Mi Iglesia Local" maxlength="60">
     </div>
+    <div class="field-row">
+      <label>Código de sala:</label>
+      <input class="setup-input" id="cfg-room" placeholder="ej: eleccion2025" maxlength="30" style="max-width:200px;">
+      <span style="font-size:.76rem;color:var(--text-dim);">Ambas computadoras deben usar el mismo código.</span>
+    </div>
   </div>
 
+  <!-- Firebase connection -->
+  <div class="setup-card">
+    <h3>🔗 Conexión entre Computadoras (Firebase)</h3>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem;line-height:1.6;">
+      Para sincronizar entre dos computadoras distintas necesitas una cuenta gratuita de Firebase.
+      Sigue los pasos del cuadro de abajo, luego pega el objeto de configuración aquí:
+    </p>
+    <textarea class="config-textarea" id="cfg-firebase" placeholder='{
+  "apiKey": "AIza...",
+  "authDomain": "mi-proyecto.firebaseapp.com",
+  "databaseURL": "https://mi-proyecto-default-rtdb.firebaseio.com",
+  "projectId": "mi-proyecto"
+}'></textarea>
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:.9rem;flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" onclick="testFirebase()">Probar conexión</button>
+      <span class="fb-status" id="fb-status-pill">
+        <span class="fb-dot" id="fb-dot"></span>
+        <span id="fb-status-txt">Sin configurar</span>
+      </span>
+    </div>
+    <div class="config-help">
+      <strong style="color:var(--gold-dark);">Pasos para crear tu Firebase gratis:</strong><br>
+      1. Ve a <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> e inicia sesión con tu cuenta Google.<br>
+      2. Clic en <strong>Agregar proyecto</strong> → ponle un nombre → desactiva Google Analytics → <strong>Crear proyecto</strong>.<br>
+      3. En el menú izquierdo ve a <strong>Realtime Database</strong> → <strong>Crear base de datos</strong> → elige la región más cercana → modo <strong>Test</strong>.<br>
+      4. En <strong>Descripción general del proyecto</strong> (ícono ⚙) → <strong>Configuración del proyecto</strong> → sección "Tus apps" → clic en <code>&lt;/&gt;</code> → registra la app → copia el objeto <code>firebaseConfig</code> y pégalo arriba.
+    </div>
+  </div>
+
+  <!-- Candidates -->
   <div class="setup-card">
     <h3>👤 Candidatos — Nombres y Fotos</h3>
     <div class="candidates-editor" id="candidates-editor"></div>
@@ -408,44 +358,45 @@
       <button class="btn btn-gold" onclick="saveConfig()">💾 Guardar Configuración</button>
       <span class="save-msg" id="save-msg">✓ Guardado correctamente</span>
     </div>
-    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.9rem;">
-      Haz clic en el círculo de cada candidato para subir su foto. Los datos se guardan en este navegador y persisten al cerrar la página.
+    <p style="font-size:.75rem;color:var(--text-dim);margin-top:.9rem;">
+      Haz clic en el círculo para subir la foto de cada candidato. Se guarda en este navegador.<br>
+      <strong style="color:var(--text-dim);">Nota:</strong> las fotos deben subirse en <em>cada computadora</em> por separado (son locales). Los votos sí se sincronizan automáticamente entre computadoras vía Firebase.
     </p>
   </div>
 
+  <!-- Launch -->
   <div class="setup-card" style="text-align:center;">
     <h3>🚀 Iniciar Escrutinio</h3>
     <div class="launch-row">
       <div class="launch-card" onclick="openMode('control')">
         <div class="lc-icon">🎛️</div>
         <div class="lc-title">Panel de Control</div>
-        <div class="lc-desc">Para el comunicador. Procesa cada cédula.</div>
+        <div class="lc-desc">Laptop del comunicador. Registra cada cédula.</div>
       </div>
       <div class="launch-card" onclick="openMode('display')">
         <div class="lc-icon">📺</div>
         <div class="lc-title">Pantalla LED</div>
-        <div class="lc-desc">Para la pantalla grande. Muestra votos en vivo.</div>
+        <div class="lc-desc">Computadora conectada al proyector o TV.</div>
       </div>
     </div>
-    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">
-      Abre ambas en el mismo computador —
-      o usa <code style="color:var(--gold-dark)">?modo=control</code> / <code style="color:var(--gold-dark)">?modo=pantalla</code>
+    <p style="font-size:.75rem;color:var(--text-dim);margin-top:1rem;">
+      También puedes abrir directamente con <code style="color:var(--gold-dark);">?modo=control</code> o <code style="color:var(--gold-dark);">?modo=pantalla</code>
     </p>
   </div>
 
-  <div style="margin-top:0.5rem;">
-    <button class="btn btn-danger btn-sm" onclick="resetAll(true)">↺ Reiniciar todos los votos</button>
-  </div>
+  <button class="btn btn-danger btn-sm" onclick="resetAll(true)">↺ Reiniciar todos los votos</button>
 </div>
 
-<!-- ═══════════ CONTROL ═══════════ -->
+<!-- ══════════════ CONTROL ══════════════ -->
 <div id="control">
   <div class="ctrl-header">
     <h2>✝ Panel de Control — Escrutinio</h2>
     <div class="ballot-counter">Cédulas: <span id="ballot-count">0</span></div>
     <div class="conn-row">
-      <span class="conn-dot live"></span>
-      <small style="color:var(--text-dim);font-size:0.7rem;">Sincronizando</small>
+      <span class="fb-status" id="ctrl-fb-pill">
+        <span class="fb-dot" id="ctrl-fb-dot"></span>
+        <span id="ctrl-fb-txt">Conectando…</span>
+      </span>
       <button class="btn btn-ghost btn-sm" onclick="showResults()">Ver Resultados</button>
       <button class="btn btn-danger btn-sm" onclick="resetAll(false)">↺ Reiniciar</button>
       <button class="btn btn-ghost btn-sm" onclick="backToLanding()">← Inicio</button>
@@ -455,7 +406,7 @@
     <div class="ctrl-instruction">
       Lee la cédula y marca los <strong>2 candidatos que NO fueron elegidos</strong>.
       Los demás recibirán un voto automáticamente.<br>
-      <span style="font-size:0.8rem;opacity:0.75;">Si la cédula tiene menos de 7 marcas, selecciona los que correspondan.</span>
+      <span style="font-size:.8rem;opacity:.75;">Si la cédula tiene menos de 7 marcas, selecciona los que correspondan.</span>
     </div>
     <div class="candidates-grid" id="ctrl-candidates"></div>
   </div>
@@ -465,11 +416,11 @@
   </div>
   <div class="vote-flash" id="vote-flash">
     ¡Voto registrado!<br>
-    <span id="flash-detail" style="font-size:0.8rem;font-family:'Lato',sans-serif;opacity:0.8;"></span>
+    <span id="flash-detail" style="font-size:.8rem;font-family:'Lato',sans-serif;opacity:.8;"></span>
   </div>
 </div>
 
-<!-- ═══════════ DISPLAY ═══════════ -->
+<!-- ══════════════ DISPLAY ══════════════ -->
 <div id="display">
   <div class="disp-header">
     <div class="disp-title">ELECCIÓN DE DIÁCONOS</div>
@@ -480,7 +431,7 @@
   <div class="disp-footer">✝ Sistema de votación</div>
 </div>
 
-<!-- ═══════════ RESULTS ═══════════ -->
+<!-- ══════════════ RESULTS ══════════════ -->
 <div id="results-overlay">
   <div class="results-title">🏅 RESULTADO FINAL</div>
   <div class="results-divider"></div>
@@ -495,7 +446,9 @@
 </div>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────
+// ─────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────
 const TOTAL_CANDIDATES = 9;
 const TOTAL_TO_ELECT   = 7;
 const MAX_NOT_SELECTED = 4;
@@ -503,419 +456,441 @@ const PHOTO_MAX_PX     = 300;
 const PHOTO_QUALITY    = 0.78;
 const COLORS = ["#3d6b8e","#6b3d8e","#8e6b3d","#3d8e5a","#8e3d3d","#3d7a8e","#8e843d","#5a3d8e","#3d8e77"];
 
-// ── STATE ───────────────────────────────────────
-let candidates  = Array.from({length:9}, (_,i) => ({id:i, name:`Candidato ${i+1}`, color:COLORS[i], photo:null}));
+// ─────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────
+let candidates  = Array.from({length:9},(_,i)=>({id:i,name:`Candidato ${i+1}`,color:COLORS[i],photo:null}));
 let votes       = Array(9).fill(0);
 let ballotCount = 0;
 let churchName  = 'Iglesia Local';
+let roomCode    = 'eleccion2025';
 let selected    = new Set();
 let currentMode = 'landing';
-let channel;
+let showFinalMode = false;
 
-// ── PERSISTENCE ─────────────────────────────────
-function saveAll() {
-  const meta = candidates.map(c => ({id:c.id, name:c.name, color:c.color, hasPhoto:!!c.photo}));
+// Firebase
+let fbApp = null, fbDb = null, fbRef = null;
+let lastPushedAt = 0;   // debounce local echoes
+
+// BroadcastChannel (same-browser fallback)
+let channel;
+try { channel = new BroadcastChannel('diacono-v4'); channel.onmessage = e => handleBCMsg(e.data); }
+catch(e){ channel = null; }
+
+// ─────────────────────────────────────────────────
+// LOCAL STORAGE
+// ─────────────────────────────────────────────────
+function saveLocal() {
+  const meta = candidates.map(c=>({id:c.id,name:c.name,color:c.color,hasPhoto:!!c.photo}));
   localStorage.setItem('diac-meta',    JSON.stringify(meta));
   localStorage.setItem('diac-votes',   JSON.stringify(votes));
   localStorage.setItem('diac-ballots', String(ballotCount));
   localStorage.setItem('diac-church',  churchName);
-  candidates.forEach(c => {
-    if (c.photo) localStorage.setItem(`diac-photo-${c.id}`, c.photo);
-    else         localStorage.removeItem(`diac-photo-${c.id}`);
+  localStorage.setItem('diac-room',    roomCode);
+  localStorage.setItem('diac-fbcfg',   document.getElementById('cfg-firebase')?.value || '');
+  candidates.forEach(c=>{
+    if(c.photo) localStorage.setItem(`diac-photo-${c.id}`,c.photo);
+    else        localStorage.removeItem(`diac-photo-${c.id}`);
   });
 }
 
-function loadAll() {
+function loadLocal() {
   try {
-    const meta = JSON.parse(localStorage.getItem('diac-meta'));
-    if (meta) candidates = meta.map(m => ({
-      id:m.id, name:m.name, color:m.color,
-      photo: m.hasPhoto ? (localStorage.getItem(`diac-photo-${m.id}`) || null) : null
-    }));
-    const v = JSON.parse(localStorage.getItem('diac-votes'));
-    if (v) votes = v;
-    const b = localStorage.getItem('diac-ballots');
-    if (b) ballotCount = parseInt(b) || 0;
-    const ch = localStorage.getItem('diac-church');
-    if (ch) churchName = ch;
+    const meta=JSON.parse(localStorage.getItem('diac-meta'));
+    if(meta) candidates=meta.map(m=>({id:m.id,name:m.name,color:m.color,
+      photo:m.hasPhoto?(localStorage.getItem(`diac-photo-${m.id}`)||null):null}));
+    const v=JSON.parse(localStorage.getItem('diac-votes'));
+    if(v) votes=v;
+    const b=localStorage.getItem('diac-ballots');
+    if(b) ballotCount=parseInt(b)||0;
+    const ch=localStorage.getItem('diac-church'); if(ch) churchName=ch;
+    const rm=localStorage.getItem('diac-room');   if(rm) roomCode=rm;
+    const fb=localStorage.getItem('diac-fbcfg');
+    if(fb && document.getElementById('cfg-firebase')) document.getElementById('cfg-firebase').value=fb;
   } catch(e){}
 }
 
-// ── BROADCAST ───────────────────────────────────
-try {
-  channel = new BroadcastChannel('diacono-election-v3');
-  channel.onmessage = e => handleMsg(e.data);
-} catch(e){ channel = null; }
-
-function handleMsg(data) {
-  if (data.type === 'state') {
-    votes = data.votes; ballotCount = data.ballotCount;
-    if (currentMode === 'display') updateDisplayUI(false);
-    if (currentMode === 'control') updateControlTallies();
+// ─────────────────────────────────────────────────
+// FIREBASE
+// ─────────────────────────────────────────────────
+function parseFirebaseConfig(raw) {
+  try {
+    // Accept either raw JSON object or JS object literal
+    const clean = raw.trim()
+      .replace(/^[^{]*/, '')   // strip anything before {
+      .replace(/[^}]*$/, '')   // strip anything after }
+      .replace(/(\w+)\s*:/g, '"$1":')  // quote unquoted keys
+      .replace(/,\s*}/, '}');  // trailing comma
+    return JSON.parse(clean);
+  } catch(e){
+    try { return JSON.parse(raw.trim()); } catch(e2){ return null; }
   }
-  if (data.type === 'results') {
-    votes = data.votes; ballotCount = data.ballotCount;
-    if (currentMode === 'display') {
+}
+
+function initFirebase(cfg) {
+  try {
+    // If already init with same project, reuse
+    if(fbApp && fbApp.options.projectId === cfg.projectId) return true;
+    // Clean up old
+    if(fbApp) { try { fbApp.delete(); } catch(e){} }
+    fbApp = firebase.initializeApp(cfg, 'election-'+Date.now());
+    fbDb  = firebase.database(fbApp);
+    return true;
+  } catch(e){ console.error('Firebase init error', e); return false; }
+}
+
+function connectFirebase() {
+  const raw = document.getElementById('cfg-firebase')?.value || '';
+  if(!raw.trim()) { setFbStatus('none'); return; }
+  const cfg = parseFirebaseConfig(raw);
+  if(!cfg || !cfg.databaseURL) { setFbStatus('err','Config inválida o falta databaseURL'); return; }
+  setFbStatus('wait','Conectando…');
+  if(!initFirebase(cfg)) { setFbStatus('err','Error al inicializar'); return; }
+  fbRef = fbDb.ref(`/${roomCode}/state`);
+  fbRef.on('value', snap => {
+    const data = snap.val();
+    if(!data) return;
+    // Ignore echoes from our own push (within 2s)
+    if(Date.now() - lastPushedAt < 2000) return;
+    if(data.votes)   votes       = data.votes;
+    if(data.ballots !== undefined) ballotCount = data.ballots;
+    applyRemoteState(data);
+  }, err => {
+    setFbStatus('err', 'Sin permisos o DB no creada');
+  });
+  // Confirm connection
+  fbDb.ref('.info/connected').on('value', snap => {
+    if(snap.val()) setFbStatus('ok','Conectado en vivo');
+    else           setFbStatus('wait','Reconectando…');
+  });
+}
+
+function applyRemoteState(data) {
+  if(data.votes)   votes       = data.votes;
+  if(data.ballots !== undefined) ballotCount = data.ballots;
+  saveLocal();
+  if(currentMode==='display') {
+    if(data.cmd==='results') {
       updateDisplayUI(true);
-      renderResultsOverlay();
-      document.getElementById('results-overlay').style.display = 'flex';
-    }
-  }
-  if (data.type === 'hide-results') {
-    if (currentMode === 'display') {
+      if(data.cmd==='results') { renderResultsOverlay(); document.getElementById('results-overlay').style.display='flex'; }
+    } else if(data.cmd==='hide-results') {
       updateDisplayUI(false);
-      document.getElementById('results-overlay').style.display = 'none';
+      document.getElementById('results-overlay').style.display='none';
+    } else {
+      updateDisplayUI(showFinalMode);
+      if(data.animateIds) data.animateIds.forEach(id=>triggerVoteAnimation(id));
     }
   }
-  if (data.type === 'reset') doReset();
-  if (data.type === 'request-state') broadcast({type:'state', votes, ballotCount});
-  if (data.type === 'vote-animation') {
-    if (currentMode === 'display') data.votedIds.forEach(id => triggerVoteAnimation(id));
-  }
+  if(currentMode==='control') { updateControlTallies(); }
 }
-function broadcast(data) { if(channel) channel.postMessage(data); }
 
-// ── HELPERS ─────────────────────────────────────
-function getInitials(name) {
-  return name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?';
+function pushToFirebase(extra={}) {
+  if(!fbRef) return false;
+  lastPushedAt = Date.now();
+  fbRef.set({ votes, ballots:ballotCount, ts:lastPushedAt, ...extra })
+    .catch(e=>console.warn('Firebase write error',e));
+  return true;
 }
-function avatarInner(c) {
-  if (c.photo) return `<img src="${c.photo}" alt="${c.name}">`;
+
+function testFirebase() {
+  const raw = document.getElementById('cfg-firebase').value;
+  const cfg = parseFirebaseConfig(raw);
+  if(!cfg || !cfg.databaseURL) { setFbStatus('err','Falta databaseURL en la config'); return; }
+  setFbStatus('wait','Probando…');
+  if(!initFirebase(cfg)) { setFbStatus('err','Error al inicializar Firebase'); return; }
+  fbDb.ref('.info/connected').once('value')
+    .then(snap => {
+      setFbStatus('ok','¡Conexión exitosa!');
+      connectFirebase();
+    })
+    .catch(e => setFbStatus('err','No se pudo conectar: '+e.message));
+}
+
+function setFbStatus(state, msg) {
+  const dot  = document.getElementById('fb-dot');
+  const txt  = document.getElementById('fb-status-txt');
+  const cdot = document.getElementById('ctrl-fb-dot');
+  const ctxt = document.getElementById('ctrl-fb-txt');
+  const map  = {ok:'Conectado en vivo', wait:'Conectando…', err:'Sin conexión', none:'Sin configurar'};
+  const label = msg || map[state] || state;
+  [dot,cdot].forEach(d=>{ if(!d) return; d.className='fb-dot'; if(state==='ok'||state==='wait'||state==='err') d.classList.add(state); });
+  [txt,ctxt].forEach(t=>{ if(t) t.textContent=label; });
+}
+
+// BroadcastChannel (same browser, same computer)
+function handleBCMsg(data) {
+  if(data.type==='state')        applyRemoteState(data);
+  if(data.type==='results')      { applyRemoteState({...data,cmd:'results'}); }
+  if(data.type==='hide-results') { applyRemoteState({cmd:'hide-results'}); }
+  if(data.type==='reset')        doReset();
+}
+function bcBroadcast(data) { if(channel) channel.postMessage(data); }
+
+// ─────────────────────────────────────────────────
+// SYNC — push to both Firebase AND BroadcastChannel
+// ─────────────────────────────────────────────────
+function syncState(extra={}) {
+  saveLocal();
+  const pushed = pushToFirebase(extra);
+  bcBroadcast({type:'state', votes, ballotCount, ...extra});
+}
+
+// ─────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────
+function getInitials(name){ return name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase()||'?'; }
+function avatarInner(c){
+  if(c.photo) return `<img src="${c.photo}" alt="${c.name}">`;
   return getInitials(c.name);
 }
-
-function resizeImage(file, cb) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      const side = Math.min(img.width, img.height);
-      const sz   = Math.min(side, PHOTO_MAX_PX);
-      const canvas = document.createElement('canvas');
-      canvas.width = sz; canvas.height = sz;
-      const ctx = canvas.getContext('2d');
-      const sx = (img.width  - side) / 2;
-      const sy = (img.height - side) / 2;
-      ctx.drawImage(img, sx, sy, side, side, 0, 0, sz, sz);
-      cb(canvas.toDataURL('image/jpeg', PHOTO_QUALITY));
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+function resizeImage(file,cb){
+  const r=new FileReader(); r.onload=e=>{
+    const img=new Image(); img.onload=()=>{
+      const side=Math.min(img.width,img.height), sz=Math.min(side,PHOTO_MAX_PX);
+      const canvas=document.createElement('canvas'); canvas.width=sz; canvas.height=sz;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,sz,sz);
+      cb(canvas.toDataURL('image/jpeg',PHOTO_QUALITY));
+    }; img.src=e.target.result;
+  }; r.readAsDataURL(file);
 }
 
-// ── LANDING EDITOR ──────────────────────────────
-function buildLandingEditor() {
-  document.getElementById('cfg-church').value = churchName;
-  const grid = document.getElementById('candidates-editor');
-  grid.innerHTML = '';
-  candidates.forEach((c, i) => {
-    const div = document.createElement('div');
-    div.className = 'candidate-edit-row';
-    div.innerHTML = `
+// ─────────────────────────────────────────────────
+// LANDING EDITOR
+// ─────────────────────────────────────────────────
+function buildLandingEditor(){
+  document.getElementById('cfg-church').value=churchName;
+  document.getElementById('cfg-room').value=roomCode;
+  const grid=document.getElementById('candidates-editor'); grid.innerHTML='';
+  candidates.forEach((c,i)=>{
+    const div=document.createElement('div'); div.className='candidate-edit-row';
+    div.innerHTML=`
       <span class="cnum">${i+1}</span>
-      <div class="photo-upload-wrap" onclick="document.getElementById('file-inp-${i}').click()" title="Clic para subir foto">
-        <div class="photo-preview${c.photo ? ' has-photo' : ''}" id="prev-${i}" style="background:${c.color};">
-          ${c.photo ? `<img src="${c.photo}" alt="">` : getInitials(c.name)}
+      <div class="photo-upload-wrap" onclick="document.getElementById('fup-${i}').click()" title="Clic para subir foto">
+        <div class="photo-preview${c.photo?' has-photo':''}" id="prev-${i}" style="background:${c.color};">
+          ${c.photo?`<img src="${c.photo}" alt="">`:getInitials(c.name)}
         </div>
         <div class="photo-overlay">📷</div>
-        <input class="photo-file-input" type="file" id="file-inp-${i}" accept="image/*"
-               onchange="handlePhotoUpload(${i},this)">
+        <input class="photo-file-input" type="file" id="fup-${i}" accept="image/*" onchange="handlePhotoUpload(${i},this)">
       </div>
       <div class="candidate-edit-fields">
-        <input type="text" id="edit-name-${i}" value="${c.name}"
-               placeholder="Nombre del candidato" maxlength="40">
-        <button class="photo-clear-btn${c.photo ? ' visible' : ''}"
-                id="clear-${i}" onclick="clearPhoto(${i})">✕ Quitar foto</button>
-      </div>
-    `;
+        <input type="text" id="ename-${i}" value="${c.name}" placeholder="Nombre" maxlength="40">
+        <button class="photo-clear-btn${c.photo?' visible':''}" id="clr-${i}" onclick="clearPhoto(${i})">✕ Quitar foto</button>
+      </div>`;
     grid.appendChild(div);
   });
 }
 
-function handlePhotoUpload(idx, input) {
-  const file = input.files[0];
-  if (!file) return;
-  resizeImage(file, base64 => {
-    candidates[idx].photo = base64;
-    const prev = document.getElementById(`prev-${idx}`);
-    prev.innerHTML = `<img src="${base64}" alt="">`;
-    prev.classList.add('has-photo');
-    document.getElementById(`clear-${idx}`).classList.add('visible');
-    saveAll();
+function handlePhotoUpload(idx,input){
+  const file=input.files[0]; if(!file) return;
+  resizeImage(file,b64=>{
+    candidates[idx].photo=b64;
+    const prev=document.getElementById(`prev-${idx}`);
+    prev.innerHTML=`<img src="${b64}" alt="">`; prev.classList.add('has-photo');
+    document.getElementById(`clr-${idx}`).classList.add('visible');
+    saveLocal();
+    if(currentMode==='control'){ const av=document.querySelector(`#ctrl-c-${idx} .ccheck-avatar`); if(av) av.innerHTML=`<img src="${b64}" alt="">`; }
+    if(currentMode==='display'){ const av=document.querySelector(`#disp-c-${idx} .disp-avatar`); if(av) av.innerHTML=`<img src="${b64}" alt="">`; }
   });
-  input.value = '';
+  input.value='';
 }
 
-function clearPhoto(idx) {
-  candidates[idx].photo = null;
-  const prev = document.getElementById(`prev-${idx}`);
-  const name = (document.getElementById(`edit-name-${idx}`) || {}).value || candidates[idx].name;
-  prev.innerHTML = getInitials(name);
-  prev.classList.remove('has-photo');
-  document.getElementById(`clear-${idx}`).classList.remove('visible');
-  saveAll();
+function clearPhoto(idx){
+  candidates[idx].photo=null;
+  const prev=document.getElementById(`prev-${idx}`);
+  prev.innerHTML=getInitials(candidates[idx].name); prev.classList.remove('has-photo');
+  document.getElementById(`clr-${idx}`).classList.remove('visible');
+  saveLocal();
 }
 
-function saveConfig() {
-  candidates.forEach((c, i) => {
-    const inp = document.getElementById(`edit-name-${i}`);
-    if (inp) c.name = inp.value.trim() || `Candidato ${i+1}`;
-  });
-  const ch = document.getElementById('cfg-church').value.trim();
-  if (ch) churchName = ch;
-  saveAll();
-  // Refresh initials in previews for name-only candidates
-  candidates.forEach((c, i) => {
-    if (!c.photo) {
-      const prev = document.getElementById(`prev-${i}`);
-      if (prev) prev.textContent = getInitials(c.name);
-    }
-  });
-  const msg = document.getElementById('save-msg');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2200);
+function saveConfig(){
+  candidates.forEach((_,i)=>{ const inp=document.getElementById(`ename-${i}`); if(inp) candidates[i].name=inp.value.trim()||`Candidato ${i+1}`; });
+  const ch=document.getElementById('cfg-church').value.trim(); if(ch) churchName=ch;
+  const rm=document.getElementById('cfg-room').value.trim().replace(/\s+/g,'_'); if(rm) roomCode=rm;
+  saveLocal();
+  // Update initials in previews
+  candidates.forEach((c,i)=>{ if(!c.photo){ const p=document.getElementById(`prev-${i}`); if(p) p.textContent=getInitials(c.name); } });
+  const msg=document.getElementById('save-msg'); msg.classList.add('show'); setTimeout(()=>msg.classList.remove('show'),2200);
 }
 
-function backToLanding() {
-  document.getElementById('control').style.display = 'none';
-  document.getElementById('display').style.display = 'none';
-  document.getElementById('results-overlay').style.display = 'none';
-  document.getElementById('landing').style.display = 'flex';
-  currentMode = 'landing';
-  buildLandingEditor();
+function backToLanding(){
+  document.getElementById('control').style.display='none';
+  document.getElementById('display').style.display='none';
+  document.getElementById('results-overlay').style.display='none';
+  document.getElementById('landing').style.display='flex';
+  currentMode='landing'; buildLandingEditor();
 }
 
-// ── OPEN MODE ───────────────────────────────────
-function openMode(mode) {
+// ─────────────────────────────────────────────────
+// OPEN MODE
+// ─────────────────────────────────────────────────
+function openMode(mode){
   saveConfig();
-  currentMode = mode;
-  document.getElementById('landing').style.display = 'none';
-  document.getElementById('control').style.display = 'none';
-  document.getElementById('display').style.display = 'none';
-  if (mode === 'control') {
-    document.getElementById('control').style.display = 'flex';
+  connectFirebase(); // ensure connected
+  currentMode=mode;
+  document.getElementById('landing').style.display='none';
+  document.getElementById('control').style.display='none';
+  document.getElementById('display').style.display='none';
+  if(mode==='control'){
+    document.getElementById('control').style.display='flex';
     buildControlGrid(); updateControlTallies();
-    broadcast({type:'request-state'});
+    // Request current state from Firebase
+    if(fbRef) fbRef.once('value').then(s=>{ const d=s.val(); if(d){ votes=d.votes||votes; ballotCount=d.ballots||ballotCount; updateControlTallies(); } });
   }
-  if (mode === 'display') {
-    document.getElementById('display').style.display = 'flex';
-    document.getElementById('disp-church-sub').textContent = churchName;
+  if(mode==='display'){
+    document.getElementById('display').style.display='flex';
+    document.getElementById('disp-church-sub').textContent=churchName;
     buildDisplayGrid(); updateDisplayUI(false);
-    broadcast({type:'request-state'});
+    if(fbRef) fbRef.once('value').then(s=>{ const d=s.val(); if(d){ votes=d.votes||votes; ballotCount=d.ballots||ballotCount; updateDisplayUI(d.cmd==='results'); } });
   }
 }
 
-// ── CONTROL PANEL ───────────────────────────────
-function buildControlGrid() {
-  const grid = document.getElementById('ctrl-candidates');
-  grid.innerHTML = '';
-  candidates.forEach(c => {
-    const div = document.createElement('div');
-    div.className = 'candidate-check';
-    div.id = `ctrl-c-${c.id}`;
-    div.onclick = () => toggleSelect(c.id);
-    div.innerHTML = `
-      <div class="ccheck-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="ccheck-info">
-        <div class="ccheck-name">${c.name}</div>
-        <div class="ccheck-votes">Votos: <span id="ctrl-v-${c.id}">${votes[c.id]}</span></div>
-      </div>
-      <div class="ccheck-box" id="ctrl-box-${c.id}"></div>
-    `;
+// ─────────────────────────────────────────────────
+// CONTROL PANEL
+// ─────────────────────────────────────────────────
+function buildControlGrid(){
+  const grid=document.getElementById('ctrl-candidates'); grid.innerHTML='';
+  candidates.forEach(c=>{
+    const div=document.createElement('div'); div.className='candidate-check'; div.id=`ctrl-c-${c.id}`; div.onclick=()=>toggleSelect(c.id);
+    div.innerHTML=`<div class="ccheck-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+      <div class="ccheck-info"><div class="ccheck-name">${c.name}</div><div class="ccheck-votes">Votos: <span id="cv-${c.id}">${votes[c.id]}</span></div></div>
+      <div class="ccheck-box" id="cb-${c.id}"></div>`;
     grid.appendChild(div);
   });
 }
-
-function toggleSelect(id) {
-  if (selected.has(id)) selected.delete(id);
-  else { if (selected.size >= MAX_NOT_SELECTED) return; selected.add(id); }
-  updateSelectionUI();
-}
-
-function updateSelectionUI() {
-  candidates.forEach(c => {
-    const el  = document.getElementById(`ctrl-c-${c.id}`);
-    const box = document.getElementById(`ctrl-box-${c.id}`);
-    if (!el) return;
-    if (selected.has(c.id)) { el.classList.add('not-selected');    box.textContent = '✕'; }
-    else                     { el.classList.remove('not-selected'); box.textContent = ''; }
+function toggleSelect(id){ if(selected.has(id)) selected.delete(id); else{ if(selected.size>=MAX_NOT_SELECTED) return; selected.add(id); } updateSelectionUI(); }
+function updateSelectionUI(){
+  candidates.forEach(c=>{
+    const el=document.getElementById(`ctrl-c-${c.id}`), box=document.getElementById(`cb-${c.id}`); if(!el) return;
+    if(selected.has(c.id)){ el.classList.add('not-selected'); box.textContent='✕'; }
+    else{ el.classList.remove('not-selected'); box.textContent=''; }
   });
-  const n = selected.size;
-  const status = document.getElementById('sel-status');
-  const btn    = document.getElementById('submit-btn');
-  if (n >= 1 && n <= MAX_NOT_SELECTED) {
-    status.textContent = `✓ ${TOTAL_CANDIDATES - n} candidatos recibirán un voto`;
-    status.className = 'selection-status ok';
-    btn.classList.add('active');
-  } else if (n === 0) {
-    status.textContent = 'Selecciona los candidatos no elegidos en esta cédula';
-    status.className = 'selection-status';
-    btn.classList.remove('active');
-  } else {
-    status.textContent = `Máximo ${MAX_NOT_SELECTED} no elegidos por cédula`;
-    status.className = 'selection-status bad';
-    btn.classList.remove('active');
-  }
+  const n=selected.size, status=document.getElementById('sel-status'), btn=document.getElementById('submit-btn');
+  if(n>=1&&n<=MAX_NOT_SELECTED){ status.textContent=`✓ ${TOTAL_CANDIDATES-n} candidatos recibirán un voto`; status.className='selection-status ok'; btn.classList.add('active'); }
+  else if(n===0){ status.textContent='Selecciona los candidatos no elegidos en esta cédula'; status.className='selection-status'; btn.classList.remove('active'); }
+  else{ status.textContent=`Máximo ${MAX_NOT_SELECTED} no elegidos por cédula`; status.className='selection-status bad'; btn.classList.remove('active'); }
 }
-
-function submitVote() {
-  if (selected.size < 1 || selected.size > MAX_NOT_SELECTED) return;
-  const votedIds = [];
-  candidates.forEach(c => { if (!selected.has(c.id)) { votes[c.id]++; votedIds.push(c.id); } });
+function submitVote(){
+  if(selected.size<1||selected.size>MAX_NOT_SELECTED) return;
+  const votedIds=[];
+  candidates.forEach(c=>{ if(!selected.has(c.id)){ votes[c.id]++; votedIds.push(c.id); } });
   ballotCount++;
-  const counted = TOTAL_CANDIDATES - selected.size;
-  selected.clear();
-  updateSelectionUI(); updateControlTallies();
-  saveAll();
-  broadcast({type:'state', votes, ballotCount});
-  broadcast({type:'vote-animation', votedIds});
-  // Also animate locally if control and display are same window (edge case)
-  if (currentMode === 'display') votedIds.forEach(id => triggerVoteAnimation(id));
-  document.getElementById('flash-detail').textContent = `+1 para ${counted} candidatos`;
-  const flash = document.getElementById('vote-flash');
-  flash.classList.add('show');
-  setTimeout(() => flash.classList.remove('show'), 1100);
+  const counted=TOTAL_CANDIDATES-selected.size;
+  selected.clear(); updateSelectionUI(); updateControlTallies();
+  syncState({animateIds:votedIds});
+  document.getElementById('flash-detail').textContent=`+1 para ${counted} candidatos`;
+  const flash=document.getElementById('vote-flash'); flash.classList.add('show'); setTimeout(()=>flash.classList.remove('show'),1100);
+}
+function updateControlTallies(){
+  candidates.forEach(c=>{ const el=document.getElementById(`cv-${c.id}`); if(el) el.textContent=votes[c.id]; });
+  const el=document.getElementById('ballot-count'); if(el) el.textContent=ballotCount;
 }
 
-function updateControlTallies() {
-  candidates.forEach(c => {
-    const el = document.getElementById(`ctrl-v-${c.id}`);
-    if (el) el.textContent = votes[c.id];
-  });
-  const el = document.getElementById('ballot-count');
-  if (el) el.textContent = ballotCount;
-}
-
-// ── DISPLAY ─────────────────────────────────────
-function buildDisplayGrid() {
-  const grid = document.getElementById('disp-candidates');
-  grid.innerHTML = '';
-  candidates.forEach(c => {
-    const div = document.createElement('div');
-    div.className = 'disp-card';
-    div.id = `disp-c-${c.id}`;
-    div.innerHTML = `
-      <span class="disp-rank" id="disp-rank-${c.id}">#1</span>
-      <span class="disp-crown" id="disp-crown-${c.id}">✦</span>
-      <div class="disp-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-      <div class="disp-name">${c.name}</div>
-      <div class="disp-votes" id="disp-v-${c.id}">0</div>
-      <div class="disp-votes-label">votos</div>
-    `;
+// ─────────────────────────────────────────────────
+// DISPLAY (LED SCREEN)
+// ─────────────────────────────────────────────────
+function buildDisplayGrid(){
+  const grid=document.getElementById('disp-candidates'); grid.innerHTML='';
+  candidates.forEach(c=>{
+    const div=document.createElement('div'); div.className='disp-card'; div.id=`disp-c-${c.id}`;
+    div.innerHTML=`
+      <span class="disp-rank"  id="dr-${c.id}">#1</span>
+      <span class="disp-crown" id="dc-${c.id}">✦</span>
+      <div class="disp-avatar-wrap">
+        <div class="disp-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+      </div>
+      <div class="disp-info">
+        <div class="disp-name">${c.name}</div>
+        <div class="disp-votes" id="dv-${c.id}">0</div>
+        <div class="disp-votes-label">votos</div>
+      </div>`;
     grid.appendChild(div);
   });
 }
 
-function triggerVoteAnimation(id) {
-  const card = document.getElementById(`disp-c-${id}`);
-  const vEl  = document.getElementById(`disp-v-${id}`);
-  if (!card || !vEl) return;
-
-  // Floating +1
-  const badge = document.createElement('span');
-  badge.className = 'plus-one';
-  badge.textContent = '+1';
-  card.appendChild(badge);
-  setTimeout(() => badge.remove(), 1300);
-
-  // Number pop
-  vEl.classList.remove('num-pop');
-  void vEl.offsetWidth;
-  vEl.classList.add('num-pop');
-  setTimeout(() => vEl.classList.remove('num-pop'), 550);
-
-  // Card glow pulse
-  const isWinner = card.classList.contains('result-winner');
-  card.classList.remove('vote-pulse');
-  void card.offsetWidth;
-  card.classList.add('vote-pulse');
-  setTimeout(() => card.classList.remove('vote-pulse'), 1300);
+function triggerVoteAnimation(id){
+  const card=document.getElementById(`disp-c-${id}`), vEl=document.getElementById(`dv-${id}`);
+  if(!card||!vEl) return;
+  // +1 badge
+  const badge=document.createElement('span'); badge.className='plus-one'; badge.textContent='+1';
+  card.appendChild(badge); setTimeout(()=>badge.remove(),1400);
+  // num pop
+  vEl.classList.remove('num-pop'); void vEl.offsetWidth; vEl.classList.add('num-pop'); setTimeout(()=>vEl.classList.remove('num-pop'),600);
+  // card glow
+  card.classList.remove('vote-pulse'); void card.offsetWidth; card.classList.add('vote-pulse'); setTimeout(()=>card.classList.remove('vote-pulse'),1400);
 }
 
-function updateDisplayUI(showFinal) {
-  document.getElementById('disp-ballot-count').textContent = ballotCount;
-  const sorted = votes.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
-  const rankOf = {}; sorted.forEach((item,rank) => { rankOf[item.i] = rank; });
-  candidates.forEach(c => {
-    const vEl    = document.getElementById(`disp-v-${c.id}`);
-    const card   = document.getElementById(`disp-c-${c.id}`);
-    const rankEl = document.getElementById(`disp-rank-${c.id}`);
-    const crownEl= document.getElementById(`disp-crown-${c.id}`);
-    if (!vEl || !card) return;
-    vEl.textContent = votes[c.id];
-    const rank = rankOf[c.id];
-    rankEl.textContent = `#${rank+1}`;
+function updateDisplayUI(finalMode){
+  showFinalMode=finalMode;
+  document.getElementById('disp-ballot-count').textContent=ballotCount;
+  const sorted=votes.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
+  const rankOf={}; sorted.forEach((item,rank)=>{ rankOf[item.i]=rank; });
+  candidates.forEach(c=>{
+    const vEl=document.getElementById(`dv-${c.id}`), card=document.getElementById(`disp-c-${c.id}`);
+    const rankEl=document.getElementById(`dr-${c.id}`), crownEl=document.getElementById(`dc-${c.id}`);
+    if(!vEl||!card) return;
+    vEl.textContent=votes[c.id];
+    const rank=rankOf[c.id]; rankEl.textContent=`#${rank+1}`;
     card.classList.remove('result-winner','result-loser');
-    if (showFinal && ballotCount > 0) {
-      if (rank < TOTAL_TO_ELECT) {
-        card.classList.add('result-winner');
-        crownEl.textContent = rank===0?'★':'✦';
-      } else {
-        card.classList.add('result-loser');
-      }
+    if(finalMode&&ballotCount>0){
+      if(rank<TOTAL_TO_ELECT){ card.classList.add('result-winner'); crownEl.textContent=rank===0?'★':'✦'; }
+      else                    { card.classList.add('result-loser'); }
     }
   });
 }
 
-// ── RESULTS ─────────────────────────────────────
-function showResults() {
+// ─────────────────────────────────────────────────
+// RESULTS
+// ─────────────────────────────────────────────────
+function showResults(){
   renderResultsOverlay();
-  document.getElementById('results-overlay').style.display = 'flex';
-  broadcast({type:'results', votes, ballotCount});
-  if (currentMode === 'display') updateDisplayUI(true);
+  document.getElementById('results-overlay').style.display='flex';
+  syncState({cmd:'results'});
+  if(currentMode==='display') updateDisplayUI(true);
+}
+function renderResultsOverlay(){
+  const sorted=candidates.map(c=>({...c,votes:votes[c.id]})).sort((a,b)=>b.votes-a.votes);
+  document.getElementById('results-winners').innerHTML=sorted.slice(0,TOTAL_TO_ELECT).map((c,i)=>`
+    <div class="result-card win-card" style="animation-delay:${i*.07}s">
+      <span class="result-card-badge">${['🥇','🥈','🥉'][i]||'✦'}</span>
+      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+      <div class="result-card-name">${c.name}</div><div class="result-card-votes">${c.votes}</div>
+      <div class="result-card-label">votos</div></div>`).join('');
+  document.getElementById('results-losers').innerHTML=sorted.slice(TOTAL_TO_ELECT).map((c,i)=>`
+    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*.07}s">
+      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
+      <div class="result-card-name">${c.name}</div><div class="result-card-votes">${c.votes}</div>
+      <div class="result-card-label">votos</div></div>`).join('');
+}
+function hideResults(){
+  document.getElementById('results-overlay').style.display='none';
+  updateDisplayUI(false); syncState({cmd:'hide-results'});
 }
 
-function renderResultsOverlay() {
-  const sorted = candidates.map(c=>({...c, votes:votes[c.id]})).sort((a,b)=>b.votes-a.votes);
-  document.getElementById('results-winners').innerHTML =
-    sorted.slice(0, TOTAL_TO_ELECT).map((c,i) => `
-      <div class="result-card win-card" style="animation-delay:${i*0.07}s">
-        <span class="result-card-badge">${['🥇','🥈','🥉'][i]||'✦'}</span>
-        <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-        <div class="result-card-name">${c.name}</div>
-        <div class="result-card-votes">${c.votes}</div>
-        <div class="result-card-label">votos</div>
-      </div>`).join('');
-  document.getElementById('results-losers').innerHTML =
-    sorted.slice(TOTAL_TO_ELECT).map((c,i) => `
-      <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*0.07}s">
-        <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
-        <div class="result-card-name">${c.name}</div>
-        <div class="result-card-votes">${c.votes}</div>
-        <div class="result-card-label">votos</div>
-      </div>`).join('');
+// ─────────────────────────────────────────────────
+// RESET
+// ─────────────────────────────────────────────────
+function resetAll(fromLanding){
+  if(!confirm(fromLanding?'¿Reiniciar todos los votos? Nombres y fotos se conservarán.':'¿Reiniciar todos los votos?')) return;
+  doReset(); syncState({cmd:'reset'}); bcBroadcast({type:'reset'});
+}
+function doReset(){
+  votes=candidates.map(()=>0); ballotCount=0; selected.clear(); showFinalMode=false; saveLocal();
+  if(currentMode==='control'){ updateSelectionUI(); updateControlTallies(); }
+  if(currentMode==='display') updateDisplayUI(false);
+  document.getElementById('results-overlay').style.display='none';
 }
 
-function hideResults() {
-  document.getElementById('results-overlay').style.display = 'none';
-  updateDisplayUI(false);
-  broadcast({type:'hide-results'});
-}
-
-// ── RESET ────────────────────────────────────────
-function resetAll(fromLanding) {
-  const msg = fromLanding
-    ? '¿Reiniciar todos los votos? Los nombres y fotos se conservarán.'
-    : '¿Reiniciar todos los votos?';
-  if (!confirm(msg)) return;
-  doReset(); broadcast({type:'reset'});
-}
-function doReset() {
-  votes = candidates.map(()=>0); ballotCount = 0; selected.clear(); saveAll();
-  if (currentMode==='control') { updateSelectionUI(); updateControlTallies(); }
-  if (currentMode==='display') updateDisplayUI(false);
-  document.getElementById('results-overlay').style.display = 'none';
-}
-
-// ── INIT ─────────────────────────────────────────
-loadAll();
+// ─────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────
+loadLocal();
 buildLandingEditor();
 (function(){
-  const p = new URLSearchParams(window.location.search);
-  const m = p.get('modo') || p.get('mode');
-  if (m==='control')                   openMode('control');
-  if (m==='pantalla'||m==='display')   openMode('display');
+  const p=new URLSearchParams(window.location.search);
+  const m=p.get('modo')||p.get('mode');
+  if(m==='control')                  openMode('control');
+  if(m==='pantalla'||m==='display')  openMode('display');
 })();
 </script>
 </body>
