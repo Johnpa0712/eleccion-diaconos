@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elección de Diáconos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96e;
+    --gold-dark: #9a7a2e;
+    --bg-dark: #0d0f14;
+    --bg-card: #161a24;
+    --bg-card2: #1e2435;
+    --text: #f0ece0;
+    --text-dim: #8a8070;
+    --accent: #3d6b8e;
+    --win-glow: rgba(201,168,76,0.35);
+    --lose-filter: grayscale(1) brightness(0.45);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===================== LANDING ===================== */
+  #landing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 2rem;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 50% 30%, #1a2040 0%, var(--bg-dark) 70%);
+  }
+  #landing h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 40px rgba(201,168,76,0.4);
+  }
+  #landing p { color: var(--text-dim); text-align: center; max-width: 480px; line-height: 1.6; }
+  .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    padding: 0.9rem 2.2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: #1a1000;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(201,168,76,0.6); }
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-dark);
+  }
+  .btn-outline:hover { background: rgba(201,168,76,0.1); }
+  .btn-danger {
+    background: rgba(180,60,60,0.2);
+    color: #e08080;
+    border: 1px solid rgba(180,60,60,0.4);
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+  }
+  .btn-danger:hover { background: rgba(180,60,60,0.35); }
+
+  /* ===================== CONTROL ===================== */
+  #control {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #10131c 0%, #0d0f14 100%);
+  }
+  .ctrl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    background: rgba(0,0,0,0.3);
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .ctrl-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .ballot-counter {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .ballot-counter span { color: var(--gold-light); font-weight: 700; }
+  .ctrl-body { flex: 1; padding: 1.5rem; max-width: 900px; margin: 0 auto; width: 100%; }
+  .ctrl-instruction {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #c8b87a;
+  }
+  .ctrl-instruction strong { color: var(--gold-light); }
+  .candidates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .candidate-check {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .candidate-check:hover { border-color: rgba(201,168,76,0.3); background: var(--bg-card2); }
+  .candidate-check.selected {
+    border-color: #c04040;
+    background: rgba(180,40,40,0.15);
+  }
+  .candidate-check.selected .ccheck-name { color: #e08080; }
+  .ccheck-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .ccheck-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .ccheck-info { flex: 1; min-width: 0; }
+  .ccheck-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    letter-spacing: 0.03em;
+  }
+  .ccheck-votes {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .ccheck-votes span { color: var(--gold-light); font-weight: 700; }
+  .ccheck-box {
+    width: 22px; height: 22px;
+    border: 2px solid #555;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    transition: all 0.15s;
+  }
+  .candidate-check.selected .ccheck-box {
+    background: #c04040;
+    border-color: #c04040;
+  }
+  .ctrl-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.3);
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .selection-status {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+  .selection-status.ok { color: #6abf6a; }
+  .selection-status.bad { color: #e08080; }
+  .btn-submit {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2a6e2a, #3d9e3d);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(40,160,40,0.3);
+    transition: all 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .btn-submit.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .btn-submit.active:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(40,160,40,0.5); }
+  .vote-flash {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(61,157,61,0.95);
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    padding: 1.2rem 3rem;
+    border-radius: 12px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    transition: all 0.15s;
+  }
+  .vote-flash.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  /* ===================== DISPLAY (LED SCREEN) ===================== */
+  #display {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--bg-dark);
+    overflow: hidden;
+  }
+  .disp-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    position: relative;
+  }
+  .disp-header::after {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0.8rem auto 0;
+  }
+  .disp-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+  }
+  .disp-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+  .disp-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.7rem;
+    padding: 0.7rem 1rem 1rem;
+    min-height: 0;
+  }
+  @media (max-width: 700px) {
+    .disp-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .disp-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1.5px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.4rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .disp-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .disp-card.winner {
+    border-color: rgba(201,168,76,0.5);
+    background: linear-gradient(160deg, #1a1e2e, #1e2030);
+    box-shadow: 0 0 30px var(--win-glow), inset 0 0 20px rgba(201,168,76,0.05);
+  }
+  .disp-card.winner::before { opacity: 1; }
+  .disp-card.loser { filter: var(--lose-filter); }
+  .disp-card.pulse {
+    animation: cardPulse 0.5s ease;
+  }
+  @keyframes cardPulse {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); border-color: rgba(201,168,76,0.9); box-shadow: 0 0 40px rgba(201,168,76,0.6); }
+    100% { transform: scale(1); }
+  }
+  .disp-avatar {
+    width: clamp(50px, 8vw, 90px);
+    height: clamp(50px, 8vw, 90px);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.1rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    border: 2px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+  }
+  .disp-card.winner .disp-avatar { border-color: rgba(201,168,76,0.6); }
+  .disp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .disp-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.6rem, 1.3vw, 0.95rem);
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    letter-spacing: 0.04em;
+    line-height: 1.25;
+    margin-bottom: 0.3rem;
+  }
+  .disp-votes {
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    transition: all 0.3s;
+    line-height: 1;
+  }
+  .disp-card.winner .disp-votes { color: var(--gold-light); }
+  .disp-votes-label {
+    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .disp-rank {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--gold-dark);
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .disp-card.winner .disp-rank { opacity: 1; }
+  .disp-crown {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .disp-card.winner .disp-crown { opacity: 1; }
+  .disp-footer {
+    text-align: center;
+    padding: 0.6rem;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .total-ballots-disp {
+    text-align: center;
+    padding: 0.3rem;
+    font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .total-ballots-disp span { color: var(--gold); font-weight: 700; }
+
+  /* ===================== RESULTS OVERLAY ===================== */
+  #results-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, #0e1525 0%, #050709 100%);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  .results-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.3rem, 3vw, 2.2rem);
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 0 40px rgba(201,168,76,0.5);
+  }
+  .results-divider {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0.6rem auto 1.2rem;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 1000px;
+  }
+  .result-card {
+    border-radius: 14px;
+    padding: 1.2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: fadeInUp 0.5s both;
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-card.win-card {
+    background: linear-gradient(160deg, #1a2035, #161c2e);
+    border: 1.5px solid rgba(201,168,76,0.5);
+    box-shadow: 0 8px 32px rgba(201,168,76,0.2);
+  }
+  .result-card.lose-card {
+    background: #111318;
+    border: 1.5px solid rgba(255,255,255,0.06);
+    filter: grayscale(1) brightness(0.55);
+  }
+  .result-card-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+    border: 2px solid rgba(201,168,76,0.4);
+  }
+  .result-card.lose-card .result-card-avatar { border-color: transparent; }
+  .result-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .result-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .result-card-votes {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .result-card.lose-card .result-card-votes { color: #666; }
+  .result-card-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .result-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 1.1rem;
+  }
+  .results-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Separador de sección resultados */
+  .results-section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 0.3rem;
+    padding-left: 2px;
+  }
+  .results-section-label.elected { color: var(--gold-dark); }
+
+  /* Connection indicator */
+  .conn-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #888;
+    display: inline-block;
+    margin-right: 6px;
+    transition: background 0.3s;
+  }
+  .conn-dot.live { background: #4caf50; animation: blink 2s infinite; }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit:scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- =================== LANDING =================== -->
+<div id="landing">
+  <div style="font-size:3rem; filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));">✝️</div>
+  <h1>Elección de Diáconos</h1>
+  <p>Sistema de escrutinio en tiempo real para la pantalla LED de la iglesia.</p>
+  <div class="btn-group">
+    <button class="btn btn-gold" onclick="openMode('control')">🎛️ Panel de Control</button>
+    <button class="btn btn-outline" onclick="openMode('display')">📺 Pantalla LED</button>
+  </div>
+  <p style="margin-top:1rem; font-size:0.8rem; color:var(--text-dim);">
+    Abre el <strong style="color:var(--gold)">Panel de Control</strong> en el dispositivo del comunicador.<br>
+    Abre la <strong style="color:var(--gold)">Pantalla LED</strong> en la segunda ventana/TV.
+  </p>
+</div>
+
+<!-- =================== CONTROL =================== -->
+<div id="control">
+  <div class="ctrl-header">
+    <h2>✝ Panel de Control — Escrutinio</h2>
+    <div class="ballot-counter">
+      Cédulas procesadas: <span id="ballot-count">0</span>
+    </div>
+    <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
+      <span class="conn-dot live" id="ctrl-conn"></span>
+      <small style="color:var(--text-dim);font-size:0.72rem;">Sincronizando con pantalla</small>
+      <button class="btn btn-danger" onclick="resetAll()">↺ Reiniciar</button>
+      <button class="btn btn-outline" style="font-size:0.8rem;padding:0.5rem 1rem;" onclick="showResults()">Ver Resultados Finales</button>
+    </div>
+  </div>
+  <div class="ctrl-body">
+    <div class="ctrl-instruction">
+      Lee la cédula. Marca los <strong>2 candidatos que NO fueron elegidos</strong> en esa cédula.
+      Al presionar "Registrar", los 7 restantes recibirán un voto automáticamente.
+    </div>
+    <div class="candidates-grid" id="ctrl-candidates"></div>
+  </div>
+  <div class="ctrl-footer">
+    <div class="selection-status" id="sel-status">Selecciona exactamente 2 candidatos no elegidos</div>
+    <button class="btn-submit" id="submit-btn" onclick="submitVote()">✔ Registrar Voto</button>
+  </div>
+  <div class="vote-flash" id="vote-flash">¡Voto registrado!</div>
+</div>
+
+<!-- =================== DISPLAY (LED) =================== -->
+<div id="display">
+  <div class="disp-header">
+    <div class="disp-title">ELECCIÓN DE DIÁCONOS</div>
+    <div class="disp-subtitle">Escrutinio en vivo · <span id="disp-church">Iglesia Local</span></div>
+  </div>
+  <div class="total-ballots-disp">Cédulas contadas: <span id="disp-ballot-count">0</span></div>
+  <div class="disp-grid" id="disp-candidates"></div>
+  <div class="disp-footer">Sistema de votación · ✝</div>
+</div>
+
+<!-- =================== RESULTS OVERLAY =================== -->
+<div id="results-overlay">
+  <div class="results-title">🏅 RESULTADO FINAL</div>
+  <div class="results-divider"></div>
+  <div class="results-section-label elected">✦ Elegidos como Diáconos (7)</div>
+  <div class="results-grid" id="results-winners"></div>
+  <div class="results-section-label" style="margin-top:1.2rem;">✧ No elegidos (2)</div>
+  <div class="results-grid" id="results-losers"></div>
+  <div class="results-actions">
+    <button class="btn btn-gold" onclick="hideResults()">← Volver al Escrutinio</button>
+    <button class="btn btn-danger" onclick="resetAll()">↺ Nueva Elección</button>
+  </div>
+</div>
+
+<script>
+// =============================================
+// CONFIGURACIÓN DE CANDIDATOS
+// Edita aquí los nombres y (opcionalmente) las fotos
+// =============================================
+const CANDIDATES = [
+  { id: 0, name: "Juan Pérez",     photo: null, color: "#3d6b8e" },
+  { id: 1, name: "Carlos Ríos",    photo: null, color: "#6b3d8e" },
+  { id: 2, name: "Miguel Torres",  photo: null, color: "#8e6b3d" },
+  { id: 3, name: "Luis Herrera",   photo: null, color: "#3d8e5a" },
+  { id: 4, name: "Pedro Vargas",   photo: null, color: "#8e3d3d" },
+  { id: 5, name: "Ángel Rojas",    photo: null, color: "#3d7a8e" },
+  { id: 6, name: "Felipe Mora",    photo: null, color: "#8e843d" },
+  { id: 7, name: "Antonio Díaz",   photo: null, color: "#5a3d8e" },
+  { id: 8, name: "Roberto Luna",   photo: null, color: "#3d8e77" },
+];
+// Para agregar fotos: photo: "https://tu-servidor.com/foto.jpg"
+// o usa rutas relativas: photo: "fotos/juan.jpg"
+
+const TOTAL_TO_ELECT = 7;    // cuántos diáconos se eligen
+const NOT_SELECTED   = 2;    // cuántos marca el operador (= 9 - 7)
+const CHURCH_NAME    = "Iglesia Local"; // nombre para la pantalla
+
+// =============================================
+
+let votes = CANDIDATES.map(c => 0);
+let ballotCount = 0;
+let selected = new Set();
+let currentMode = 'landing';
+let channel;
+
+// BroadcastChannel para sincronizar entre ventanas
+try {
+  channel = new BroadcastChannel('diacono-election');
+  channel.onmessage = (e) => handleChannelMsg(e.data);
+} catch(err) { channel = null; }
+
+function handleChannelMsg(data) {
+  if (data.type === 'state') {
+    votes = data.votes;
+    ballotCount = data.ballotCount;
+    updateDisplayUI();
+    if (currentMode === 'control') updateControlTallies();
+  }
+  if (data.type === 'results') {
+    votes = data.votes;
+    ballotCount = data.ballotCount;
+    renderResultsOverlay();
+    document.getElementById('results-overlay').style.display = 'flex';
+  }
+  if (data.type === 'hide-results') {
+    document.getElementById('results-overlay').style.display = 'none';
+  }
+  if (data.type === 'reset') {
+    doReset();
+  }
+  if (data.type === 'request-state') {
+    broadcast({ type: 'state', votes, ballotCount });
+  }
+}
+
+function broadcast(data) {
+  if (channel) channel.postMessage(data);
+  saveState();
+}
+
+function saveState() {
+  localStorage.setItem('diacono-votes', JSON.stringify({ votes, ballotCount }));
+}
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('diacono-votes'));
+    if (s) { votes = s.votes; ballotCount = s.ballotCount; }
+  } catch(e) {}
+}
+
+// ====================== AVATAR ======================
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+}
+
+function avatarHTML(c, size='100%') {
+  if (c.photo) {
+    return `<img src="${c.photo}" alt="${c.name}" onerror="this.style.display='none';this.parentNode.innerHTML='${getInitials(c.name)}'">`;
+  }
+  return getInitials(c.name);
+}
+
+// ====================== MODES ======================
+function openMode(mode) {
+  currentMode = mode;
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('control').style.display = 'none';
+  document.getElementById('display').style.display = 'none';
+
+  loadState();
+
+  if (mode === 'control') {
+    document.getElementById('control').style.display = 'flex';
+    buildControlGrid();
+    updateControlTallies();
+    document.getElementById('ballot-count').textContent = ballotCount;
+    // Request sync
+    broadcast({ type: 'request-state' });
+  }
+  if (mode === 'display') {
+    document.getElementById('display').style.display = 'flex';
+    document.getElementById('disp-church').textContent = CHURCH_NAME;
+    buildDisplayGrid();
+    updateDisplayUI();
+    broadcast({ type: 'request-state' });
+  }
+}
+
+// ====================== CONTROL ======================
+function buildControlGrid() {
+  const grid = document.getElementById('ctrl-candidates');
+  grid.innerHTML = '';
+  CANDIDATES.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'candidate-check';
+    div.id = `ctrl-c-${c.id}`;
+    div.onclick = () => toggleSelect(c.id);
+    div.innerHTML = `
+      <div class="ccheck-avatar" style="background:${c.color};">${avatarHTML(c)}</div>
+      <div class="ccheck-info">
+        <div class="ccheck-name">${c.name}</div>
+        <div class="ccheck-votes">Votos: <span id="ctrl-v-${c.id}">0</span></div>
+      </div>
+      <div class="ccheck-box" id="ctrl-box-${c.id}"></div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function toggleSelect(id) {
+  if (selected.has(id)) {
+    selected.delete(id);
+  } else {
+    if (selected.size >= NOT_SELECTED) return; // max 2
+    selected.add(id);
+  }
+  updateSelectionUI();
+}
+
+function updateSelectionUI() {
+  CANDIDATES.forEach(c => {
+    const el = document.getElementById(`ctrl-c-${c.id}`);
+    const box = document.getElementById(`ctrl-box-${c.id}`);
+    if (selected.has(c.id)) {
+      el.classList.add('selected');
+      box.textContent = '✕';
+    } else {
+      el.classList.remove('selected');
+      box.textContent = '';
+    }
+  });
+  const n = selected.size;
+  const status = document.getElementById('sel-status');
+  const btn = document.getElementById('submit-btn');
+  if (n === NOT_SELECTED) {
+    status.textContent = `✓ Listo: los otros ${TOTAL_TO_ELECT} recibirán un voto`;
+    status.className = 'selection-status ok';
+    btn.classList.add('active');
+  } else if (n === 0) {
+    status.textContent = `Selecciona exactamente ${NOT_SELECTED} candidatos no elegidos`;
+    status.className = 'selection-status';
+    btn.classList.remove('active');
+  } else {
+    status.textContent = `Selecciona ${NOT_SELECTED - n} más`;
+    status.className = 'selection-status bad';
+    btn.classList.remove('active');
+  }
+}
+
+function submitVote() {
+  if (selected.size !== NOT_SELECTED) return;
+  // Add vote to everyone NOT in selected
+  CANDIDATES.forEach(c => {
+    if (!selected.has(c.id)) votes[c.id]++;
+  });
+  ballotCount++;
+  selected.clear();
+  updateSelectionUI();
+  updateControlTallies();
+  document.getElementById('ballot-count').textContent = ballotCount;
+  broadcast({ type: 'state', votes, ballotCount });
+
+  // Flash feedback
+  const flash = document.getElementById('vote-flash');
+  flash.classList.add('show');
+  setTimeout(() => flash.classList.remove('show'), 1000);
+}
+
+function updateControlTallies() {
+  CANDIDATES.forEach(c => {
+    const el = document.getElementById(`ctrl-v-${c.id}`);
+    if (el) el.textContent = votes[c.id];
+  });
+}
+
+// ====================== DISPLAY ======================
+function buildDisplayGrid() {
+  const grid = document.getElementById('disp-candidates');
+  grid.innerHTML = '';
+  CANDIDATES.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'disp-card';
+    div.id = `disp-c-${c.id}`;
+    div.innerHTML = `
+      <span class="disp-rank" id="disp-rank-${c.id}">#</span>
+      <span class="disp-crown" id="disp-crown-${c.id}">✦</span>
+      <div class="disp-avatar" style="background:${c.color};">${avatarHTML(c)}</div>
+      <div class="disp-name">${c.name}</div>
+      <div class="disp-votes" id="disp-v-${c.id}">0</div>
+      <div class="disp-votes-label">votos</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function updateDisplayUI() {
+  document.getElementById('disp-ballot-count').textContent = ballotCount;
+
+  // Sort to find ranks
+  const sorted = [...votes.map((v,i) => ({v, i}))].sort((a,b) => b.v - a.v);
+  const rankOf = {};
+  sorted.forEach((item, rank) => { rankOf[item.i] = rank; });
+
+  CANDIDATES.forEach(c => {
+    const vEl = document.getElementById(`disp-v-${c.id}`);
+    const card = document.getElementById(`disp-c-${c.id}`);
+    const rankEl = document.getElementById(`disp-rank-${c.id}`);
+    const crownEl = document.getElementById(`disp-crown-${c.id}`);
+    if (!vEl || !card) return;
+
+    const oldVal = parseInt(vEl.textContent) || 0;
+    const newVal = votes[c.id];
+    if (newVal !== oldVal) {
+      vEl.textContent = newVal;
+      card.classList.add('pulse');
+      setTimeout(() => card.classList.remove('pulse'), 500);
+    }
+
+    const rank = rankOf[c.id];
+    rankEl.textContent = `#${rank + 1}`;
+
+    if (ballotCount > 0) {
+      if (rank < TOTAL_TO_ELECT) {
+        card.classList.add('winner');
+        card.classList.remove('loser');
+        crownEl.textContent = rank === 0 ? '★' : '✦';
+      } else {
+        card.classList.remove('winner');
+        card.classList.add('loser');
+      }
+    }
+  });
+}
+
+// ====================== RESULTS ======================
+function showResults() {
+  renderResultsOverlay();
+  document.getElementById('results-overlay').style.display = 'flex';
+  broadcast({ type: 'results', votes, ballotCount });
+}
+
+function renderResultsOverlay() {
+  const sorted = [...CANDIDATES.map((c,i) => ({...c, votes: votes[c.id]}))].sort((a,b) => b.votes - a.votes);
+  const winners = sorted.slice(0, TOTAL_TO_ELECT);
+  const losers  = sorted.slice(TOTAL_TO_ELECT);
+
+  document.getElementById('results-winners').innerHTML = winners.map((c, i) => `
+    <div class="result-card win-card" style="animation-delay:${i*0.08}s">
+      <span class="result-card-badge">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'✦'}</span>
+      <div class="result-card-avatar" style="background:${c.color};">${c.photo ? `<img src="${c.photo}" alt="${c.name}">` : getInitials(c.name)}</div>
+      <div class="result-card-name">${c.name}</div>
+      <div class="result-card-votes">${c.votes}</div>
+      <div class="result-card-label">votos</div>
+    </div>
+  `).join('');
+
+  document.getElementById('results-losers').innerHTML = losers.map((c, i) => `
+    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*0.08}s">
+      <div class="result-card-avatar" style="background:${c.color};">${c.photo ? `<img src="${c.photo}" alt="${c.name}">` : getInitials(c.name)}</div>
+      <div class="result-card-name">${c.name}</div>
+      <div class="result-card-votes">${c.votes}</div>
+      <div class="result-card-label">votos</div>
+    </div>
+  `).join('');
+}
+
+function hideResults() {
+  document.getElementById('results-overlay').style.display = 'none';
+  broadcast({ type: 'hide-results' });
+}
+
+// ====================== RESET ======================
+function resetAll() {
+  if (!confirm('¿Reiniciar todos los votos? Esta acción no se puede deshacer.')) return;
+  doReset();
+  broadcast({ type: 'reset' });
+}
+
+function doReset() {
+  votes = CANDIDATES.map(() => 0);
+  ballotCount = 0;
+  selected.clear();
+  saveState();
+  if (currentMode === 'control') {
+    updateSelectionUI();
+    updateControlTallies();
+    document.getElementById('ballot-count').textContent = 0;
+  }
+  if (currentMode === 'display') {
+    updateDisplayUI();
+  }
+  document.getElementById('results-overlay').style.display = 'none';
+}
+
+// ====================== URL PARAMS ======================
+// Permite abrir directamente con ?modo=control o ?modo=pantalla
+(function() {
+  const p = new URLSearchParams(window.location.search);
+  const m = p.get('modo') || p.get('mode');
+  if (m === 'control') openMode('control');
+  if (m === 'pantalla' || m === 'display') openMode('display');
+})();
+</script>
+</body>
+</html>
