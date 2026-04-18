@@ -16,76 +16,203 @@
     --bg-card2: #1e2435;
     --text: #f0ece0;
     --text-dim: #8a8070;
-    --accent: #3d6b8e;
     --win-glow: rgba(201,168,76,0.35);
-    --lose-filter: grayscale(1) brightness(0.45);
+    --lose-filter: grayscale(1) brightness(0.42);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'Lato', sans-serif;
-    background: var(--bg-dark);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ===================== LANDING ===================== */
-  #landing {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    gap: 2rem;
-    padding: 2rem;
-    background: radial-gradient(ellipse at 50% 30%, #1a2040 0%, var(--bg-dark) 70%);
-  }
-  #landing h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.6rem, 4vw, 2.8rem);
-    color: var(--gold);
-    text-align: center;
-    letter-spacing: 0.08em;
-    text-shadow: 0 0 40px rgba(201,168,76,0.4);
-  }
-  #landing p { color: var(--text-dim); text-align: center; max-width: 480px; line-height: 1.6; }
-  .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+  /* ===== SHARED ===== */
   .btn {
     font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    letter-spacing: 0.1em;
-    padding: 0.9rem 2.2rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    padding: 0.85rem 2rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
-    text-decoration: none;
     display: inline-block;
+    text-align: center;
   }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
     color: #1a1000;
     font-weight: 700;
-    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+    box-shadow: 0 4px 20px rgba(201,168,76,0.35);
   }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(201,168,76,0.6); }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.55); }
   .btn-outline {
     background: transparent;
     color: var(--gold);
     border: 1px solid var(--gold-dark);
   }
-  .btn-outline:hover { background: rgba(201,168,76,0.1); }
-  .btn-danger {
-    background: rgba(180,60,60,0.2);
-    color: #e08080;
-    border: 1px solid rgba(180,60,60,0.4);
-    font-size: 0.8rem;
-    padding: 0.5rem 1.2rem;
+  .btn-outline:hover { background: rgba(201,168,76,0.08); }
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.45rem 1rem;
+    letter-spacing: 0.06em;
   }
-  .btn-danger:hover { background: rgba(180,60,60,0.35); }
+  .btn-danger {
+    background: rgba(180,60,60,0.15);
+    color: #e08080;
+    border: 1px solid rgba(180,60,60,0.35);
+  }
+  .btn-danger:hover { background: rgba(180,60,60,0.3); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
 
-  /* ===================== CONTROL ===================== */
+  /* ===== LANDING / SETUP ===== */
+  #landing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 3rem;
+    background: radial-gradient(ellipse at 50% 20%, #1a2040 0%, var(--bg-dark) 65%);
+  }
+  .landing-hero {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .landing-hero .cross { font-size: 2.8rem; filter: drop-shadow(0 0 18px rgba(201,168,76,0.5)); margin-bottom: 0.8rem; }
+  .landing-hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 35px rgba(201,168,76,0.4);
+    margin-bottom: 0.5rem;
+  }
+  .landing-hero p { color: var(--text-dim); font-size: 0.9rem; }
+
+  .setup-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 14px;
+    padding: 1.8rem;
+    width: 100%;
+    max-width: 780px;
+    margin-bottom: 1.5rem;
+  }
+  .setup-card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .setup-card h3::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.18);
+  }
+  .church-input-row {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .church-input-row label { font-size: 0.82rem; color: var(--text-dim); white-space: nowrap; }
+  .setup-input {
+    flex: 1;
+    min-width: 180px;
+    background: var(--bg-card2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 0.55rem 0.9rem;
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .setup-input:focus { border-color: var(--gold-dark); }
+
+  .candidates-editor {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+  }
+  .candidate-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--bg-card2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+  }
+  .cnum {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--gold-dark);
+    font-weight: 700;
+    min-width: 18px;
+  }
+  .candidate-edit-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+  .candidate-edit-row input:focus { border-bottom-color: var(--gold); }
+  .candidate-edit-row input::placeholder { color: var(--text-dim); }
+
+  .setup-save-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .save-msg {
+    font-size: 0.8rem;
+    color: #6abf6a;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-msg.show { opacity: 1; }
+
+  .launch-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .launch-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    max-width: 220px;
+  }
+  .launch-card:hover { border-color: var(--gold); background: var(--bg-card2); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .launch-card .lc-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+  .launch-card .lc-title { font-family: 'Cinzel', serif; font-size: 0.88rem; color: var(--gold); font-weight: 700; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+  .launch-card .lc-desc { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+
+  /* ===== CONTROL ===== */
   #control {
     display: none;
     flex-direction: column;
@@ -96,65 +223,57 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    background: rgba(0,0,0,0.3);
+    padding: 0.9rem 1.4rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    background: rgba(0,0,0,0.35);
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: 0.7rem;
   }
-  .ctrl-header h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-  }
-  .ballot-counter {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-  }
+  .ctrl-header h2 { font-family: 'Cinzel', serif; font-size: 0.92rem; color: var(--gold); letter-spacing: 0.1em; }
+  .ballot-counter { font-size: 0.82rem; color: var(--text-dim); }
   .ballot-counter span { color: var(--gold-light); font-weight: 700; }
-  .ctrl-body { flex: 1; padding: 1.5rem; max-width: 900px; margin: 0 auto; width: 100%; }
+  .ctrl-body { flex: 1; padding: 1.2rem 1.4rem; max-width: 920px; margin: 0 auto; width: 100%; }
   .ctrl-instruction {
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.18);
     border-radius: 8px;
-    padding: 0.9rem 1.2rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
     color: #c8b87a;
   }
   .ctrl-instruction strong { color: var(--gold-light); }
   .candidates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.85rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.2rem;
   }
   .candidate-check {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.75rem;
     background: var(--bg-card);
     border: 2px solid transparent;
     border-radius: 10px;
-    padding: 0.9rem 1rem;
+    padding: 0.85rem 0.95rem;
     cursor: pointer;
-    transition: all 0.18s;
+    transition: all 0.16s;
     user-select: none;
   }
-  .candidate-check:hover { border-color: rgba(201,168,76,0.3); background: var(--bg-card2); }
-  .candidate-check.selected {
-    border-color: #c04040;
-    background: rgba(180,40,40,0.15);
+  .candidate-check:hover { border-color: rgba(201,168,76,0.25); background: var(--bg-card2); }
+  .candidate-check.not-selected {
+    border-color: #b03030;
+    background: rgba(160,35,35,0.18);
   }
-  .candidate-check.selected .ccheck-name { color: #e08080; }
+  .candidate-check.not-selected .ccheck-name { color: #e07070; }
   .ccheck-avatar {
-    width: 44px; height: 44px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-family: 'Cinzel', serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: #fff;
     flex-shrink: 0;
@@ -162,522 +281,469 @@
   }
   .ccheck-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .ccheck-info { flex: 1; min-width: 0; }
-  .ccheck-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-    letter-spacing: 0.03em;
-  }
-  .ccheck-votes {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-top: 2px;
-  }
+  .ccheck-name { font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 600; color: var(--text); line-height: 1.3; letter-spacing: 0.03em; }
+  .ccheck-votes { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
   .ccheck-votes span { color: var(--gold-light); font-weight: 700; }
   .ccheck-box {
     width: 22px; height: 22px;
-    border: 2px solid #555;
+    border: 2px solid #444;
     border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: all 0.15s;
+    color: #fff;
   }
-  .candidate-check.selected .ccheck-box {
-    background: #c04040;
-    border-color: #c04040;
-  }
+  .candidate-check.not-selected .ccheck-box { background: #b03030; border-color: #b03030; }
   .ctrl-footer {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.2rem 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 1rem 1.4rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
     background: rgba(0,0,0,0.3);
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  .selection-status {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-  }
+  .selection-status { font-size: 0.88rem; color: var(--text-dim); }
   .selection-status.ok { color: #6abf6a; }
   .selection-status.bad { color: #e08080; }
   .btn-submit {
     font-family: 'Cinzel', serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     letter-spacing: 0.1em;
-    padding: 0.85rem 2.5rem;
+    padding: 0.8rem 2.2rem;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    background: linear-gradient(135deg, #2a6e2a, #3d9e3d);
+    background: linear-gradient(135deg, #2a6e2a, #3a9a3a);
     color: #fff;
     font-weight: 700;
-    box-shadow: 0 4px 16px rgba(40,160,40,0.3);
+    box-shadow: 0 4px 16px rgba(40,150,40,0.25);
     transition: all 0.2s;
-    opacity: 0.4;
+    opacity: 0.35;
     pointer-events: none;
   }
-  .btn-submit.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .btn-submit.active:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(40,160,40,0.5); }
+  .btn-submit.active { opacity: 1; pointer-events: all; }
+  .btn-submit.active:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(40,150,40,0.45); }
   .vote-flash {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    background: rgba(61,157,61,0.95);
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: rgba(42,120,42,0.96);
     color: #fff;
     font-family: 'Cinzel', serif;
-    font-size: 1.6rem;
-    padding: 1.2rem 3rem;
+    font-size: 1.5rem;
+    padding: 1.1rem 2.8rem;
     border-radius: 12px;
     opacity: 0;
     pointer-events: none;
     z-index: 999;
-    transition: all 0.15s;
+    transition: all 0.14s;
+    text-align: center;
   }
-  .vote-flash.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  .vote-flash.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
 
-  /* ===================== DISPLAY (LED SCREEN) ===================== */
+  /* ===== DISPLAY (LED) ===== */
   #display {
     display: none;
     flex-direction: column;
     min-height: 100vh;
     background: var(--bg-dark);
-    overflow: hidden;
   }
   .disp-header {
     text-align: center;
-    padding: 1.5rem 1rem 1rem;
-    position: relative;
+    padding: 1.4rem 1rem 0.8rem;
   }
   .disp-header::after {
     content: '';
     display: block;
-    width: 120px;
-    height: 2px;
+    width: 100px;
+    height: 1.5px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0.8rem auto 0;
+    margin: 0.7rem auto 0;
   }
   .disp-title {
     font-family: 'Cinzel', serif;
-    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-size: clamp(1.1rem, 2.8vw, 1.9rem);
     color: var(--gold);
     letter-spacing: 0.15em;
-    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    text-shadow: 0 0 28px rgba(201,168,76,0.45);
   }
-  .disp-subtitle {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-top: 0.3rem;
-  }
+  .disp-subtitle { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.25rem; }
+  .total-ballots-disp { text-align: center; padding: 0.3rem; font-size: clamp(0.62rem, 1.1vw, 0.78rem); color: var(--text-dim); letter-spacing: 0.1em; }
+  .total-ballots-disp span { color: var(--gold); font-weight: 700; }
   .disp-grid {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.7rem;
-    padding: 0.7rem 1rem 1rem;
+    gap: 0.6rem;
+    padding: 0.5rem 0.8rem 0.8rem;
     min-height: 0;
-  }
-  @media (max-width: 700px) {
-    .disp-grid { grid-template-columns: repeat(3, 1fr); }
   }
   .disp-card {
     background: var(--bg-card);
-    border-radius: 12px;
+    border-radius: 10px;
     border: 1.5px solid rgba(255,255,255,0.06);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.6rem 0.4rem;
+    padding: 0.5rem 0.3rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: border-color 0.4s, box-shadow 0.4s, filter 0.6s;
   }
-  .disp-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-  .disp-card.winner {
-    border-color: rgba(201,168,76,0.5);
+  /* Winner/loser only applied in results mode */
+  .disp-card.result-winner {
+    border-color: rgba(201,168,76,0.55);
     background: linear-gradient(160deg, #1a1e2e, #1e2030);
-    box-shadow: 0 0 30px var(--win-glow), inset 0 0 20px rgba(201,168,76,0.05);
+    box-shadow: 0 0 28px var(--win-glow);
   }
-  .disp-card.winner::before { opacity: 1; }
-  .disp-card.loser { filter: var(--lose-filter); }
-  .disp-card.pulse {
-    animation: cardPulse 0.5s ease;
-  }
+  .disp-card.result-loser { filter: var(--lose-filter); }
+  .disp-card.pulse { animation: cardPulse 0.45s ease; }
   @keyframes cardPulse {
     0% { transform: scale(1); }
-    40% { transform: scale(1.04); border-color: rgba(201,168,76,0.9); box-shadow: 0 0 40px rgba(201,168,76,0.6); }
+    38% { transform: scale(1.045); border-color: rgba(201,168,76,0.8); }
     100% { transform: scale(1); }
   }
   .disp-avatar {
-    width: clamp(50px, 8vw, 90px);
-    height: clamp(50px, 8vw, 90px);
+    width: clamp(46px, 7.5vw, 84px);
+    height: clamp(46px, 7.5vw, 84px);
     border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-family: 'Cinzel', serif;
-    font-size: clamp(1.1rem, 2.5vw, 2rem);
+    font-size: clamp(1rem, 2.2vw, 1.85rem);
     font-weight: 700;
     color: #fff;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.45rem;
     border: 2px solid rgba(255,255,255,0.1);
     flex-shrink: 0;
+    overflow: hidden;
+    transition: border-color 0.4s;
   }
-  .disp-card.winner .disp-avatar { border-color: rgba(201,168,76,0.6); }
+  .disp-card.result-winner .disp-avatar { border-color: rgba(201,168,76,0.6); }
   .disp-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .disp-name {
     font-family: 'Cinzel', serif;
-    font-size: clamp(0.6rem, 1.3vw, 0.95rem);
+    font-size: clamp(0.56rem, 1.2vw, 0.9rem);
     font-weight: 700;
     color: var(--text);
     text-align: center;
-    letter-spacing: 0.04em;
-    line-height: 1.25;
-    margin-bottom: 0.3rem;
+    letter-spacing: 0.03em;
+    line-height: 1.22;
+    margin-bottom: 0.28rem;
   }
   .disp-votes {
-    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    font-size: clamp(1.3rem, 3.2vw, 2.6rem);
     font-weight: 700;
     color: var(--text-dim);
     font-variant-numeric: tabular-nums;
-    transition: all 0.3s;
+    transition: color 0.4s;
     line-height: 1;
   }
-  .disp-card.winner .disp-votes { color: var(--gold-light); }
-  .disp-votes-label {
-    font-size: clamp(0.5rem, 1vw, 0.65rem);
-    color: var(--text-dim);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
+  .disp-card.result-winner .disp-votes { color: var(--gold-light); }
+  .disp-votes-label { font-size: clamp(0.48rem, 0.9vw, 0.62rem); color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
   .disp-rank {
-    position: absolute;
-    top: 6px;
-    left: 8px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-    opacity: 0;
-    transition: opacity 0.4s;
+    position: absolute; top: 5px; left: 7px;
+    font-family: 'Cinzel', serif; font-size: 0.6rem; color: var(--gold-dark); font-weight: 700;
+    opacity: 0; transition: opacity 0.4s;
   }
-  .disp-card.winner .disp-rank { opacity: 1; }
-  .disp-crown {
-    position: absolute;
-    top: 5px;
-    right: 8px;
-    font-size: 0.9rem;
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-  .disp-card.winner .disp-crown { opacity: 1; }
-  .disp-footer {
-    text-align: center;
-    padding: 0.6rem;
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.12);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .total-ballots-disp {
-    text-align: center;
-    padding: 0.3rem;
-    font-size: clamp(0.65rem, 1.2vw, 0.8rem);
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
-  .total-ballots-disp span { color: var(--gold); font-weight: 700; }
+  .disp-card.result-winner .disp-rank { opacity: 1; }
+  .disp-crown { position: absolute; top: 4px; right: 7px; font-size: 0.85rem; opacity: 0; transition: opacity 0.4s; }
+  .disp-card.result-winner .disp-crown { opacity: 1; }
+  .disp-footer { text-align: center; padding: 0.5rem; font-size: 0.65rem; color: rgba(255,255,255,0.1); letter-spacing: 0.15em; text-transform: uppercase; }
 
-  /* ===================== RESULTS OVERLAY ===================== */
+  /* ===== RESULTS OVERLAY ===== */
   #results-overlay {
     display: none;
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 40%, #0e1525 0%, #050709 100%);
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 35%, #0e1525 0%, #050709 100%);
     z-index: 100;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
     overflow-y: auto;
   }
   .results-title {
     font-family: 'Cinzel', serif;
-    font-size: clamp(1.3rem, 3vw, 2.2rem);
+    font-size: clamp(1.2rem, 2.8vw, 2rem);
     color: var(--gold);
     text-align: center;
     letter-spacing: 0.15em;
-    margin-bottom: 0.4rem;
-    text-shadow: 0 0 40px rgba(201,168,76,0.5);
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 36px rgba(201,168,76,0.5);
   }
-  .results-divider {
-    width: 200px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0.6rem auto 1.2rem;
-  }
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    max-width: 1000px;
-  }
-  .result-card {
-    border-radius: 14px;
-    padding: 1.2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    animation: fadeInUp 0.5s both;
-    position: relative;
-    overflow: hidden;
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .result-card.win-card {
-    background: linear-gradient(160deg, #1a2035, #161c2e);
-    border: 1.5px solid rgba(201,168,76,0.5);
-    box-shadow: 0 8px 32px rgba(201,168,76,0.2);
-  }
-  .result-card.lose-card {
-    background: #111318;
-    border: 1.5px solid rgba(255,255,255,0.06);
-    filter: grayscale(1) brightness(0.55);
-  }
-  .result-card-avatar {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.8rem;
-    overflow: hidden;
-    border: 2px solid rgba(201,168,76,0.4);
-  }
-  .result-card.lose-card .result-card-avatar { border-color: transparent; }
-  .result-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .result-card-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.04em;
-    line-height: 1.3;
-  }
-  .result-card-votes {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--gold-light);
-    line-height: 1;
-  }
-  .result-card.lose-card .result-card-votes { color: #666; }
-  .result-card-label {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    margin-top: 2px;
-  }
-  .result-card-badge {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    font-size: 1.1rem;
-  }
-  .results-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* Separador de sección resultados */
+  .results-divider { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0.6rem auto 1.1rem; }
   .results-section-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.25em;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-dim);
-    width: 100%;
-    max-width: 1000px;
-    margin-bottom: 0.3rem;
+    width: 100%; max-width: 960px;
+    margin-bottom: 0.4rem;
     padding-left: 2px;
   }
   .results-section-label.elected { color: var(--gold-dark); }
-
-  /* Connection indicator */
-  .conn-dot {
-    width: 8px; height: 8px;
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 0.9rem;
+    width: 100%; max-width: 960px;
+  }
+  .result-card {
+    border-radius: 13px;
+    padding: 1.1rem 0.9rem;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    animation: fadeInUp 0.45s both;
+    position: relative; overflow: hidden;
+  }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  .result-card.win-card {
+    background: linear-gradient(160deg, #1a2035, #161c2e);
+    border: 1.5px solid rgba(201,168,76,0.5);
+    box-shadow: 0 8px 28px rgba(201,168,76,0.18);
+  }
+  .result-card.lose-card {
+    background: #111318;
+    border: 1.5px solid rgba(255,255,255,0.05);
+    filter: grayscale(1) brightness(0.52);
+  }
+  .result-card-avatar {
+    width: 76px; height: 76px;
     border-radius: 50%;
-    background: #888;
-    display: inline-block;
-    margin-right: 6px;
-    transition: background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif; font-size: 1.7rem; font-weight: 700; color: #fff;
+    margin-bottom: 0.75rem; overflow: hidden;
+    border: 2px solid rgba(201,168,76,0.35);
   }
-  .conn-dot.live { background: #4caf50; animation: blink 2s infinite; }
-  @keyframes blink {
-    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
-  }
+  .result-card.lose-card .result-card-avatar { border-color: transparent; }
+  .result-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .result-card-name { font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.45rem; letter-spacing: 0.04em; line-height: 1.3; }
+  .result-card-votes { font-size: 2rem; font-weight: 700; color: var(--gold-light); line-height: 1; }
+  .result-card.lose-card .result-card-votes { color: #555; }
+  .result-card-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-top: 2px; }
+  .result-card-badge { position: absolute; top: 7px; right: 9px; font-size: 1rem; }
+  .results-actions { display: flex; gap: 0.9rem; margin-top: 1.4rem; flex-wrap: wrap; justify-content: center; }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
+  .conn-row { display: flex; align-items: center; gap: 0.5rem; }
+  .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; display: inline-block; transition: background 0.3s; }
+  .conn-dot.live { background: #4caf50; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit:scrollbar-thumb { background: #333; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
 </style>
 </head>
 <body>
 
-<!-- =================== LANDING =================== -->
+<!-- ======================================================
+     LANDING / SETUP
+     ====================================================== -->
 <div id="landing">
-  <div style="font-size:3rem; filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));">✝️</div>
-  <h1>Elección de Diáconos</h1>
-  <p>Sistema de escrutinio en tiempo real para la pantalla LED de la iglesia.</p>
-  <div class="btn-group">
-    <button class="btn btn-gold" onclick="openMode('control')">🎛️ Panel de Control</button>
-    <button class="btn btn-outline" onclick="openMode('display')">📺 Pantalla LED</button>
+  <div class="landing-hero">
+    <div class="cross">✝</div>
+    <h1>Elección de Diáconos</h1>
+    <p>Configura los candidatos, luego abre las dos ventanas para el escrutinio.</p>
   </div>
-  <p style="margin-top:1rem; font-size:0.8rem; color:var(--text-dim);">
-    Abre el <strong style="color:var(--gold)">Panel de Control</strong> en el dispositivo del comunicador.<br>
-    Abre la <strong style="color:var(--gold)">Pantalla LED</strong> en la segunda ventana/TV.
-  </p>
+
+  <!-- Configuración general -->
+  <div class="setup-card">
+    <h3>⚙ Configuración General</h3>
+    <div class="church-input-row" style="margin-bottom:0.9rem;">
+      <label>Nombre de la iglesia:</label>
+      <input class="setup-input" id="cfg-church" placeholder="Mi Iglesia Local" maxlength="60">
+    </div>
+    <div class="church-input-row">
+      <label>Cédulas esperadas (aprox.):</label>
+      <input class="setup-input" id="cfg-total" type="number" placeholder="Ej: 120" min="1" max="9999" style="max-width:120px;">
+    </div>
+  </div>
+
+  <!-- Editor de candidatos -->
+  <div class="setup-card">
+    <h3>👤 Candidatos (9)</h3>
+    <div class="candidates-editor" id="candidates-editor"></div>
+    <div class="setup-save-row">
+      <button class="btn btn-gold" onclick="saveConfig()">💾 Guardar Configuración</button>
+      <span class="save-msg" id="save-msg">✓ Guardado correctamente</span>
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.8rem;">
+      Los datos se guardan en este navegador/dispositivo y se mantienen al cerrar la página.
+      <br>Para añadir fotos, edita el código y coloca la URL en el campo <code style="color:var(--gold-dark)">photo</code>.
+    </p>
+  </div>
+
+  <!-- Botones de acceso -->
+  <div class="setup-card" style="text-align:center;">
+    <h3>🚀 Iniciar Escrutinio</h3>
+    <div class="launch-row">
+      <div class="launch-card" onclick="openMode('control')">
+        <div class="lc-icon">🎛️</div>
+        <div class="lc-title">Panel de Control</div>
+        <div class="lc-desc">Para el comunicador. Procesa cada cédula.</div>
+      </div>
+      <div class="launch-card" onclick="openMode('display')">
+        <div class="lc-icon">📺</div>
+        <div class="lc-title">Pantalla LED</div>
+        <div class="lc-desc">Para la pantalla grande. Muestra votos en vivo.</div>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">
+      Abre ambas ventanas en el mismo computador.
+      También puedes acceder directamente con <code style="color:var(--gold-dark)">?modo=control</code> o <code style="color:var(--gold-dark)">?modo=pantalla</code>.
+    </p>
+  </div>
+
+  <div style="margin-top:0.5rem;">
+    <button class="btn btn-danger btn-sm" onclick="resetAll(true)">↺ Reiniciar todos los votos</button>
+  </div>
 </div>
 
-<!-- =================== CONTROL =================== -->
+<!-- ======================================================
+     CONTROL
+     ====================================================== -->
 <div id="control">
   <div class="ctrl-header">
     <h2>✝ Panel de Control — Escrutinio</h2>
-    <div class="ballot-counter">
-      Cédulas procesadas: <span id="ballot-count">0</span>
-    </div>
-    <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
+    <div class="ballot-counter">Cédulas: <span id="ballot-count">0</span></div>
+    <div class="conn-row">
       <span class="conn-dot live" id="ctrl-conn"></span>
-      <small style="color:var(--text-dim);font-size:0.72rem;">Sincronizando con pantalla</small>
-      <button class="btn btn-danger" onclick="resetAll()">↺ Reiniciar</button>
-      <button class="btn btn-outline" style="font-size:0.8rem;padding:0.5rem 1rem;" onclick="showResults()">Ver Resultados Finales</button>
+      <small style="color:var(--text-dim);font-size:0.7rem;">Sincronizando</small>
+      <button class="btn btn-ghost btn-sm" onclick="showResults()">Ver Resultados</button>
+      <button class="btn btn-danger btn-sm" onclick="resetAll(false)">↺ Reiniciar</button>
+      <button class="btn btn-ghost btn-sm" onclick="backToLanding()">← Inicio</button>
     </div>
   </div>
   <div class="ctrl-body">
-    <div class="ctrl-instruction">
-      Lee la cédula. Marca los <strong>2 candidatos que NO fueron elegidos</strong> en esa cédula.
-      Al presionar "Registrar", los 7 restantes recibirán un voto automáticamente.
+    <div class="ctrl-instruction" id="ctrl-instruction">
+      Lee la cédula y marca los <strong>2 candidatos que NO fueron elegidos</strong>.
+      Los demás recibirán un voto automáticamente.<br>
+      <span style="font-size:0.8rem;opacity:0.75;">Si la cédula tiene menos de 7 marcas, selecciona los que falten.</span>
     </div>
     <div class="candidates-grid" id="ctrl-candidates"></div>
   </div>
   <div class="ctrl-footer">
-    <div class="selection-status" id="sel-status">Selecciona exactamente 2 candidatos no elegidos</div>
+    <div class="selection-status" id="sel-status">Selecciona los candidatos no elegidos en esta cédula</div>
     <button class="btn-submit" id="submit-btn" onclick="submitVote()">✔ Registrar Voto</button>
   </div>
-  <div class="vote-flash" id="vote-flash">¡Voto registrado!</div>
+  <div class="vote-flash" id="vote-flash">¡Voto registrado!<br><span id="flash-detail" style="font-size:0.8rem;font-family:'Lato',sans-serif;opacity:0.8;"></span></div>
 </div>
 
-<!-- =================== DISPLAY (LED) =================== -->
+<!-- ======================================================
+     DISPLAY (LED SCREEN)
+     ====================================================== -->
 <div id="display">
   <div class="disp-header">
     <div class="disp-title">ELECCIÓN DE DIÁCONOS</div>
-    <div class="disp-subtitle">Escrutinio en vivo · <span id="disp-church">Iglesia Local</span></div>
+    <div class="disp-subtitle" id="disp-church-sub">Iglesia Local</div>
   </div>
   <div class="total-ballots-disp">Cédulas contadas: <span id="disp-ballot-count">0</span></div>
   <div class="disp-grid" id="disp-candidates"></div>
-  <div class="disp-footer">Sistema de votación · ✝</div>
+  <div class="disp-footer">✝ Sistema de votación</div>
 </div>
 
-<!-- =================== RESULTS OVERLAY =================== -->
+<!-- ======================================================
+     RESULTS OVERLAY
+     ====================================================== -->
 <div id="results-overlay">
   <div class="results-title">🏅 RESULTADO FINAL</div>
   <div class="results-divider"></div>
   <div class="results-section-label elected">✦ Elegidos como Diáconos (7)</div>
   <div class="results-grid" id="results-winners"></div>
-  <div class="results-section-label" style="margin-top:1.2rem;">✧ No elegidos (2)</div>
+  <div class="results-section-label" style="margin-top:1.1rem;">✧ No elegidos (2)</div>
   <div class="results-grid" id="results-losers"></div>
   <div class="results-actions">
     <button class="btn btn-gold" onclick="hideResults()">← Volver al Escrutinio</button>
-    <button class="btn btn-danger" onclick="resetAll()">↺ Nueva Elección</button>
+    <button class="btn btn-danger" onclick="resetAll(false)">↺ Nueva Elección</button>
   </div>
 </div>
 
 <script>
-// =============================================
-// CONFIGURACIÓN DE CANDIDATOS
-// Edita aquí los nombres y (opcionalmente) las fotos
-// =============================================
-const CANDIDATES = [
-  { id: 0, name: "Juan Pérez",     photo: null, color: "#3d6b8e" },
-  { id: 1, name: "Carlos Ríos",    photo: null, color: "#6b3d8e" },
-  { id: 2, name: "Miguel Torres",  photo: null, color: "#8e6b3d" },
-  { id: 3, name: "Luis Herrera",   photo: null, color: "#3d8e5a" },
-  { id: 4, name: "Pedro Vargas",   photo: null, color: "#8e3d3d" },
-  { id: 5, name: "Ángel Rojas",    photo: null, color: "#3d7a8e" },
-  { id: 6, name: "Felipe Mora",    photo: null, color: "#8e843d" },
-  { id: 7, name: "Antonio Díaz",   photo: null, color: "#5a3d8e" },
-  { id: 8, name: "Roberto Luna",   photo: null, color: "#3d8e77" },
+// ============================================================
+// CONFIGURACIÓN BASE (se sobreescribe con localStorage)
+// ============================================================
+const DEFAULT_CANDIDATES = [
+  { id:0, name:"Candidato 1",  color:"#3d6b8e", photo:null },
+  { id:1, name:"Candidato 2",  color:"#6b3d8e", photo:null },
+  { id:2, name:"Candidato 3",  color:"#8e6b3d", photo:null },
+  { id:3, name:"Candidato 4",  color:"#3d8e5a", photo:null },
+  { id:4, name:"Candidato 5",  color:"#8e3d3d", photo:null },
+  { id:5, name:"Candidato 6",  color:"#3d7a8e", photo:null },
+  { id:6, name:"Candidato 7",  color:"#8e843d", photo:null },
+  { id:7, name:"Candidato 8",  color:"#5a3d8e", photo:null },
+  { id:8, name:"Candidato 9",  color:"#3d8e77", photo:null },
 ];
-// Para agregar fotos: photo: "https://tu-servidor.com/foto.jpg"
-// o usa rutas relativas: photo: "fotos/juan.jpg"
+const TOTAL_CANDIDATES = 9;
+const TOTAL_TO_ELECT   = 7;  // diáconos a elegir
+const MIN_NOT_SELECTED = 2;  // mínimo habitual
+const MAX_NOT_SELECTED = 4;  // máximo permitido (si cedula tiene 5 marcas)
 
-const TOTAL_TO_ELECT = 7;    // cuántos diáconos se eligen
-const NOT_SELECTED   = 2;    // cuántos marca el operador (= 9 - 7)
-const CHURCH_NAME    = "Iglesia Local"; // nombre para la pantalla
-
-// =============================================
-
-let votes = CANDIDATES.map(c => 0);
+// ============================================================
+// STATE
+// ============================================================
+let candidates = JSON.parse(JSON.stringify(DEFAULT_CANDIDATES));
+let votes      = candidates.map(() => 0);
 let ballotCount = 0;
-let selected = new Set();
+let churchName  = 'Iglesia Local';
+let selected    = new Set();
 let currentMode = 'landing';
 let channel;
 
-// BroadcastChannel para sincronizar entre ventanas
-try {
-  channel = new BroadcastChannel('diacono-election');
-  channel.onmessage = (e) => handleChannelMsg(e.data);
-} catch(err) { channel = null; }
+// ============================================================
+// PERSISTENCE (localStorage)
+// ============================================================
+function saveAll() {
+  localStorage.setItem('diac-candidates', JSON.stringify(candidates));
+  localStorage.setItem('diac-votes',      JSON.stringify(votes));
+  localStorage.setItem('diac-ballots',    String(ballotCount));
+  localStorage.setItem('diac-church',     churchName);
+}
 
-function handleChannelMsg(data) {
+function loadAll() {
+  try {
+    const c = localStorage.getItem('diac-candidates');
+    if (c) candidates = JSON.parse(c);
+    const v = localStorage.getItem('diac-votes');
+    if (v) votes = JSON.parse(v);
+    const b = localStorage.getItem('diac-ballots');
+    if (b) ballotCount = parseInt(b) || 0;
+    const ch = localStorage.getItem('diac-church');
+    if (ch) churchName = ch;
+  } catch(e) {}
+}
+
+// ============================================================
+// BROADCAST (sync across tabs in same browser)
+// ============================================================
+try {
+  channel = new BroadcastChannel('diacono-election-v2');
+  channel.onmessage = (e) => handleMsg(e.data);
+} catch(e) { channel = null; }
+
+function handleMsg(data) {
   if (data.type === 'state') {
     votes = data.votes;
     ballotCount = data.ballotCount;
-    updateDisplayUI();
+    if (currentMode === 'display') updateDisplayUI(false);
     if (currentMode === 'control') updateControlTallies();
   }
   if (data.type === 'results') {
     votes = data.votes;
     ballotCount = data.ballotCount;
-    renderResultsOverlay();
-    document.getElementById('results-overlay').style.display = 'flex';
+    if (currentMode === 'display') {
+      updateDisplayUI(true); // apply winner/loser
+      renderResultsOverlay();
+      document.getElementById('results-overlay').style.display = 'flex';
+    }
   }
   if (data.type === 'hide-results') {
-    document.getElementById('results-overlay').style.display = 'none';
+    if (currentMode === 'display') {
+      updateDisplayUI(false); // remove winner/loser styling
+      document.getElementById('results-overlay').style.display = 'none';
+    }
   }
   if (data.type === 'reset') {
     doReset();
@@ -689,72 +755,102 @@ function handleChannelMsg(data) {
 
 function broadcast(data) {
   if (channel) channel.postMessage(data);
-  saveState();
 }
 
-function saveState() {
-  localStorage.setItem('diacono-votes', JSON.stringify({ votes, ballotCount }));
-}
-
-function loadState() {
-  try {
-    const s = JSON.parse(localStorage.getItem('diacono-votes'));
-    if (s) { votes = s.votes; ballotCount = s.ballotCount; }
-  } catch(e) {}
-}
-
-// ====================== AVATAR ======================
+// ============================================================
+// HELPERS
+// ============================================================
 function getInitials(name) {
-  return name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+  return name.split(' ').filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
 }
-
-function avatarHTML(c, size='100%') {
-  if (c.photo) {
-    return `<img src="${c.photo}" alt="${c.name}" onerror="this.style.display='none';this.parentNode.innerHTML='${getInitials(c.name)}'">`;
-  }
+function avatarInner(c) {
+  if (c.photo) return `<img src="${c.photo}" alt="${c.name}" onerror="this.style.display='none'">`;
   return getInitials(c.name);
 }
 
-// ====================== MODES ======================
+// ============================================================
+// LANDING / SETUP
+// ============================================================
+function buildLandingEditor() {
+  const grid = document.getElementById('candidates-editor');
+  grid.innerHTML = '';
+  candidates.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'candidate-edit-row';
+    div.innerHTML = `
+      <span class="cnum">${i+1}</span>
+      <input type="text" id="edit-name-${i}" value="${c.name}" placeholder="Nombre del candidato" maxlength="40">
+    `;
+    grid.appendChild(div);
+  });
+  document.getElementById('cfg-church').value = churchName;
+}
+
+function saveConfig() {
+  candidates.forEach((c, i) => {
+    const inp = document.getElementById(`edit-name-${i}`);
+    if (inp) c.name = inp.value.trim() || `Candidato ${i+1}`;
+  });
+  const ch = document.getElementById('cfg-church').value.trim();
+  if (ch) churchName = ch;
+  saveAll();
+  // Flash save message
+  const msg = document.getElementById('save-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2200);
+}
+
+function backToLanding() {
+  document.getElementById('control').style.display = 'none';
+  document.getElementById('display').style.display = 'none';
+  document.getElementById('results-overlay').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+  currentMode = 'landing';
+  buildLandingEditor();
+}
+
+// ============================================================
+// OPEN MODE
+// ============================================================
 function openMode(mode) {
+  saveConfig(); // persist any edits before switching
   currentMode = mode;
   document.getElementById('landing').style.display = 'none';
   document.getElementById('control').style.display = 'none';
   document.getElementById('display').style.display = 'none';
-
-  loadState();
 
   if (mode === 'control') {
     document.getElementById('control').style.display = 'flex';
     buildControlGrid();
     updateControlTallies();
     document.getElementById('ballot-count').textContent = ballotCount;
-    // Request sync
     broadcast({ type: 'request-state' });
   }
   if (mode === 'display') {
     document.getElementById('display').style.display = 'flex';
-    document.getElementById('disp-church').textContent = CHURCH_NAME;
+    document.getElementById('disp-church-sub').textContent = churchName;
     buildDisplayGrid();
-    updateDisplayUI();
+    updateDisplayUI(false);
     broadcast({ type: 'request-state' });
   }
 }
 
-// ====================== CONTROL ======================
+// ============================================================
+// CONTROL PANEL
+// ============================================================
 function buildControlGrid() {
   const grid = document.getElementById('ctrl-candidates');
   grid.innerHTML = '';
-  CANDIDATES.forEach(c => {
+  candidates.forEach(c => {
     const div = document.createElement('div');
     div.className = 'candidate-check';
     div.id = `ctrl-c-${c.id}`;
     div.onclick = () => toggleSelect(c.id);
     div.innerHTML = `
-      <div class="ccheck-avatar" style="background:${c.color};">${avatarHTML(c)}</div>
+      <div class="ccheck-avatar" style="background:${c.color};">${avatarInner(c)}</div>
       <div class="ccheck-info">
         <div class="ccheck-name">${c.name}</div>
-        <div class="ccheck-votes">Votos: <span id="ctrl-v-${c.id}">0</span></div>
+        <div class="ccheck-votes">Votos: <span id="ctrl-v-${c.id}">${votes[c.id]}</span></div>
       </div>
       <div class="ccheck-box" id="ctrl-box-${c.id}"></div>
     `;
@@ -766,46 +862,65 @@ function toggleSelect(id) {
   if (selected.has(id)) {
     selected.delete(id);
   } else {
-    if (selected.size >= NOT_SELECTED) return; // max 2
+    // Allow up to MAX_NOT_SELECTED (e.g. if ballot only has 5 marks)
+    if (selected.size >= MAX_NOT_SELECTED) return;
     selected.add(id);
   }
   updateSelectionUI();
 }
 
 function updateSelectionUI() {
-  CANDIDATES.forEach(c => {
-    const el = document.getElementById(`ctrl-c-${c.id}`);
+  candidates.forEach(c => {
+    const el  = document.getElementById(`ctrl-c-${c.id}`);
     const box = document.getElementById(`ctrl-box-${c.id}`);
+    if (!el) return;
     if (selected.has(c.id)) {
-      el.classList.add('selected');
+      el.classList.add('not-selected');
       box.textContent = '✕';
     } else {
-      el.classList.remove('selected');
+      el.classList.remove('not-selected');
       box.textContent = '';
     }
   });
+
   const n = selected.size;
   const status = document.getElementById('sel-status');
-  const btn = document.getElementById('submit-btn');
-  if (n === NOT_SELECTED) {
-    status.textContent = `✓ Listo: los otros ${TOTAL_TO_ELECT} recibirán un voto`;
+  const btn    = document.getElementById('submit-btn');
+  const willVote = TOTAL_CANDIDATES - n;
+
+  if (n >= MIN_NOT_SELECTED && n <= MAX_NOT_SELECTED) {
+    status.textContent = `✓ ${willVote} candidatos recibirán un voto`;
     status.className = 'selection-status ok';
     btn.classList.add('active');
   } else if (n === 0) {
-    status.textContent = `Selecciona exactamente ${NOT_SELECTED} candidatos no elegidos`;
+    status.textContent = `Selecciona los candidatos no elegidos en esta cédula`;
     status.className = 'selection-status';
     btn.classList.remove('active');
-  } else {
-    status.textContent = `Selecciona ${NOT_SELECTED - n} más`;
+  } else if (n > MAX_NOT_SELECTED) {
+    status.textContent = `Máximo ${MAX_NOT_SELECTED} no elegidos por cédula`;
     status.className = 'selection-status bad';
     btn.classList.remove('active');
+  } else {
+    // n === 1 edge case — allow it too (someone voted for 8 out of 9)
+    if (n === 1) {
+      status.textContent = `✓ ${willVote} candidatos recibirán un voto`;
+      status.className = 'selection-status ok';
+      btn.classList.add('active');
+    } else {
+      status.textContent = `Selecciona al menos ${MIN_NOT_SELECTED} no elegidos`;
+      status.className = 'selection-status bad';
+      btn.classList.remove('active');
+    }
   }
 }
 
 function submitVote() {
-  if (selected.size !== NOT_SELECTED) return;
-  // Add vote to everyone NOT in selected
-  CANDIDATES.forEach(c => {
+  if (selected.size < 1 || selected.size > MAX_NOT_SELECTED) return;
+
+  const notVoted = [...selected].map(id => candidates.find(c => c.id === id).name).join(', ');
+  const counted  = TOTAL_CANDIDATES - selected.size;
+
+  candidates.forEach(c => {
     if (!selected.has(c.id)) votes[c.id]++;
   });
   ballotCount++;
@@ -813,33 +928,39 @@ function submitVote() {
   updateSelectionUI();
   updateControlTallies();
   document.getElementById('ballot-count').textContent = ballotCount;
+  saveAll();
   broadcast({ type: 'state', votes, ballotCount });
 
-  // Flash feedback
+  // Flash
+  document.getElementById('flash-detail').textContent = `+1 para ${counted} candidatos`;
   const flash = document.getElementById('vote-flash');
   flash.classList.add('show');
-  setTimeout(() => flash.classList.remove('show'), 1000);
+  setTimeout(() => flash.classList.remove('show'), 1100);
 }
 
 function updateControlTallies() {
-  CANDIDATES.forEach(c => {
+  candidates.forEach(c => {
     const el = document.getElementById(`ctrl-v-${c.id}`);
     if (el) el.textContent = votes[c.id];
   });
+  const el = document.getElementById('ballot-count');
+  if (el) el.textContent = ballotCount;
 }
 
-// ====================== DISPLAY ======================
+// ============================================================
+// DISPLAY (LED Screen)
+// ============================================================
 function buildDisplayGrid() {
   const grid = document.getElementById('disp-candidates');
   grid.innerHTML = '';
-  CANDIDATES.forEach(c => {
+  candidates.forEach(c => {
     const div = document.createElement('div');
     div.className = 'disp-card';
     div.id = `disp-c-${c.id}`;
     div.innerHTML = `
-      <span class="disp-rank" id="disp-rank-${c.id}">#</span>
+      <span class="disp-rank" id="disp-rank-${c.id}">#1</span>
       <span class="disp-crown" id="disp-crown-${c.id}">✦</span>
-      <div class="disp-avatar" style="background:${c.color};">${avatarHTML(c)}</div>
+      <div class="disp-avatar" style="background:${c.color};">${avatarInner(c)}</div>
       <div class="disp-name">${c.name}</div>
       <div class="disp-votes" id="disp-v-${c.id}">0</div>
       <div class="disp-votes-label">votos</div>
@@ -848,17 +969,18 @@ function buildDisplayGrid() {
   });
 }
 
-function updateDisplayUI() {
+// showFinal = true  → apply winner/loser styling (only on results screen)
+// showFinal = false → all cards look equal (during counting)
+function updateDisplayUI(showFinal) {
   document.getElementById('disp-ballot-count').textContent = ballotCount;
 
-  // Sort to find ranks
-  const sorted = [...votes.map((v,i) => ({v, i}))].sort((a,b) => b.v - a.v);
+  const sorted = votes.map((v, i) => ({ v, i })).sort((a, b) => b.v - a.v);
   const rankOf = {};
   sorted.forEach((item, rank) => { rankOf[item.i] = rank; });
 
-  CANDIDATES.forEach(c => {
-    const vEl = document.getElementById(`disp-v-${c.id}`);
-    const card = document.getElementById(`disp-c-${c.id}`);
+  candidates.forEach(c => {
+    const vEl   = document.getElementById(`disp-v-${c.id}`);
+    const card  = document.getElementById(`disp-c-${c.id}`);
     const rankEl = document.getElementById(`disp-rank-${c.id}`);
     const crownEl = document.getElementById(`disp-crown-${c.id}`);
     if (!vEl || !card) return;
@@ -868,41 +990,48 @@ function updateDisplayUI() {
     if (newVal !== oldVal) {
       vEl.textContent = newVal;
       card.classList.add('pulse');
-      setTimeout(() => card.classList.remove('pulse'), 500);
+      setTimeout(() => card.classList.remove('pulse'), 480);
     }
 
     const rank = rankOf[c.id];
     rankEl.textContent = `#${rank + 1}`;
 
-    if (ballotCount > 0) {
+    // Only apply styling if in final/results mode
+    card.classList.remove('result-winner', 'result-loser');
+    if (showFinal && ballotCount > 0) {
       if (rank < TOTAL_TO_ELECT) {
-        card.classList.add('winner');
-        card.classList.remove('loser');
+        card.classList.add('result-winner');
         crownEl.textContent = rank === 0 ? '★' : '✦';
       } else {
-        card.classList.remove('winner');
-        card.classList.add('loser');
+        card.classList.add('result-loser');
       }
     }
   });
 }
 
-// ====================== RESULTS ======================
+// ============================================================
+// RESULTS
+// ============================================================
 function showResults() {
   renderResultsOverlay();
   document.getElementById('results-overlay').style.display = 'flex';
   broadcast({ type: 'results', votes, ballotCount });
+  // Also update display styling to show winner/loser
+  if (currentMode === 'display') updateDisplayUI(true);
 }
 
 function renderResultsOverlay() {
-  const sorted = [...CANDIDATES.map((c,i) => ({...c, votes: votes[c.id]}))].sort((a,b) => b.votes - a.votes);
+  const sorted = candidates
+    .map(c => ({ ...c, votes: votes[c.id] }))
+    .sort((a, b) => b.votes - a.votes);
+
   const winners = sorted.slice(0, TOTAL_TO_ELECT);
   const losers  = sorted.slice(TOTAL_TO_ELECT);
 
   document.getElementById('results-winners').innerHTML = winners.map((c, i) => `
-    <div class="result-card win-card" style="animation-delay:${i*0.08}s">
-      <span class="result-card-badge">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'✦'}</span>
-      <div class="result-card-avatar" style="background:${c.color};">${c.photo ? `<img src="${c.photo}" alt="${c.name}">` : getInitials(c.name)}</div>
+    <div class="result-card win-card" style="animation-delay:${i * 0.07}s">
+      <span class="result-card-badge">${['🥇','🥈','🥉'][i] || '✦'}</span>
+      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-votes">${c.votes}</div>
       <div class="result-card-label">votos</div>
@@ -910,8 +1039,8 @@ function renderResultsOverlay() {
   `).join('');
 
   document.getElementById('results-losers').innerHTML = losers.map((c, i) => `
-    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT+i)*0.08}s">
-      <div class="result-card-avatar" style="background:${c.color};">${c.photo ? `<img src="${c.photo}" alt="${c.name}">` : getInitials(c.name)}</div>
+    <div class="result-card lose-card" style="animation-delay:${(TOTAL_TO_ELECT + i) * 0.07}s">
+      <div class="result-card-avatar" style="background:${c.color};">${avatarInner(c)}</div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-votes">${c.votes}</div>
       <div class="result-card-label">votos</div>
@@ -921,38 +1050,48 @@ function renderResultsOverlay() {
 
 function hideResults() {
   document.getElementById('results-overlay').style.display = 'none';
+  updateDisplayUI(false); // remove winner/loser from display
   broadcast({ type: 'hide-results' });
 }
 
-// ====================== RESET ======================
-function resetAll() {
-  if (!confirm('¿Reiniciar todos los votos? Esta acción no se puede deshacer.')) return;
+// ============================================================
+// RESET
+// ============================================================
+function resetAll(fromLanding) {
+  const msg = fromLanding
+    ? '¿Reiniciar todos los votos? Los nombres de candidatos se conservarán.'
+    : '¿Reiniciar todos los votos?';
+  if (!confirm(msg)) return;
   doReset();
   broadcast({ type: 'reset' });
 }
 
 function doReset() {
-  votes = CANDIDATES.map(() => 0);
+  votes = candidates.map(() => 0);
   ballotCount = 0;
   selected.clear();
-  saveState();
+  saveAll();
   if (currentMode === 'control') {
     updateSelectionUI();
     updateControlTallies();
-    document.getElementById('ballot-count').textContent = 0;
   }
   if (currentMode === 'display') {
-    updateDisplayUI();
+    updateDisplayUI(false);
   }
   document.getElementById('results-overlay').style.display = 'none';
 }
 
-// ====================== URL PARAMS ======================
-// Permite abrir directamente con ?modo=control o ?modo=pantalla
-(function() {
+// ============================================================
+// INIT
+// ============================================================
+loadAll();
+buildLandingEditor();
+
+// URL param shortcuts
+(function () {
   const p = new URLSearchParams(window.location.search);
   const m = p.get('modo') || p.get('mode');
-  if (m === 'control') openMode('control');
+  if (m === 'control')                   openMode('control');
   if (m === 'pantalla' || m === 'display') openMode('display');
 })();
 </script>
